@@ -10,6 +10,7 @@ const routes: Routes = [
   { path: 'users/edit/:id', component: UserEditComponent },
   { path: 'admin', component: BackOfficeComponent },
   { path: '', redirectTo: '/users', pathMatch: 'full' },
+
   //{ path:'**', component: PageNotFoundComponent}
 ];
 
