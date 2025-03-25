@@ -6,15 +6,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
 import { UserCreateComponent } from '../components/user-create/user-create.component';
 import { User } from '../models/user.model';
+import { ActivitiesComponent } from './activities/activities.component';
 
 @Component({
   selector: 'app-backoffice',
   templateUrl: './backoffice.component.html',
   styleUrls: ['./backoffice.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, UserCreateComponent]
+  imports: [CommonModule, FormsModule, UserCreateComponent, ActivitiesComponent]
 })
 export class BackOfficeComponent implements OnInit {
+  // Control de vista activa
+  activeView: 'users' | 'activities' = 'users';
+  
+  // Variables para la gestión de usuarios
   users: User[] = [];
   currentPage = 1;
   itemsPerPage = 5;
@@ -25,25 +30,9 @@ export class BackOfficeComponent implements OnInit {
   error = '';
   usuariosListados = false;
   showCreateModal = false;
-  showEditModal = false; // Propiedad para mostrar/ocultar el modal de edición
-  showViewModal = false; // Propiedad para mostrar/ocultar el modal de visualización
-  selectedUser: User | null = null; // Usuario seleccionado para editar o ver
-  
-  // Datos de ejemplo completos (para simulación)
-  allMockUsers: User[] = [
-    { _id: '1', username: 'Usuario1', email: 'usuario1@example.com', level: 1, bio: 'Bio de usuario 1', profilePicture: '', visible: true },
-    { _id: '2', username: 'Usuario2', email: 'usuario2@example.com', level: 2, bio: 'Bio de usuario 2', profilePicture: '', visible: true },
-    { _id: '3', username: 'Usuario3', email: 'usuario3@example.com', level: 3, bio: 'Bio de usuario 3', profilePicture: '', visible: true },
-    { _id: '4', username: 'Usuario4', email: 'usuario4@example.com', level: 1, bio: 'Bio de usuario 4', profilePicture: '', visible: true },
-    { _id: '5', username: 'Usuario5', email: 'usuario5@example.com', level: 2, bio: 'Bio de usuario 5', profilePicture: '', visible: true },
-    { _id: '6', username: 'Usuario6', email: 'usuario6@example.com', level: 3, bio: 'Bio de usuario 6', profilePicture: '', visible: true },
-    { _id: '7', username: 'Usuario7', email: 'usuario7@example.com', level: 1, bio: 'Bio de usuario 7', profilePicture: '', visible: true },
-    { _id: '8', username: 'Usuario8', email: 'usuario8@example.com', level: 2, bio: 'Bio de usuario 8', profilePicture: '', visible: true },
-    { _id: '9', username: 'Usuario9', email: 'usuario9@example.com', level: 3, bio: 'Bio de usuario 9', profilePicture: '', visible: true },
-    { _id: '10', username: 'Usuario10', email: 'usuario10@example.com', level: 1, bio: 'Bio de usuario 10', profilePicture: '', visible: true },
-    { _id: '11', username: 'Usuario11', email: 'usuario11@example.com', level: 2, bio: 'Bio de usuario 11', profilePicture: '', visible: true },
-    { _id: '12', username: 'Usuario12', email: 'usuario12@example.com', level: 3, bio: 'Bio de usuario 12', profilePicture: '', visible: true }
-  ];
+  showEditModal = false;
+  showViewModal = false;
+  selectedUser: User | null = null;
   
   constructor(
     private userService: UserService,
@@ -51,7 +40,25 @@ export class BackOfficeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // No cargamos usuarios automáticamente, esperamos a que el usuario haga clic en el botón
+  }
+
+  setActiveView(view: 'users' | 'activities'): void {
+    this.activeView = view;
+    
+    // Si cambiamos a la vista de usuarios y ya estaban listados, no hacemos nada
+    // Si no estaban listados, reiniciamos la vista
+    if (view === 'users' && !this.usuariosListados) {
+      this.resetUserView();
+    }
+  }
+
+  // Reiniciar la vista de usuarios
+  resetUserView(): void {
+    this.usuariosListados = false;
+    this.showCreateModal = false;
+    this.showEditModal = false;
+    this.showViewModal = false;
+    this.selectedUser = null;
   }
 
   obtenerUsuarios(): void {
@@ -68,9 +75,6 @@ export class BackOfficeComponent implements OnInit {
             }));
             this.totalUsers = response.totalUsers;
             this.totalPages = response.totalPages;
-          } else {
-            // Simulación de paginación con datos de prueba
-            this.simularPaginacion();
           }
           this.generatePageNumbers();
           this.loading = false;
@@ -82,29 +86,13 @@ export class BackOfficeComponent implements OnInit {
           this.loading = false;
           
           // En caso de error, simulamos paginación con datos de prueba
-          this.simularPaginacion();
           this.generatePageNumbers();
           this.usuariosListados = true;
         }
       });
   }
 
-  // Método para simular la paginación con datos de prueba
-  simularPaginacion(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = Math.min(startIndex + this.itemsPerPage, this.allMockUsers.length);
-    
-    // Obtener los usuarios de la página actual
-    this.users = this.allMockUsers.slice(startIndex, endIndex).map(user => ({
-      ...user,
-      visible: user.visible !== undefined ? user.visible : true // Inicializar visible a true si no está definido
-    }));
-    
-    // Calcular el total de usuarios y páginas
-    this.totalUsers = this.allMockUsers.length;
-    this.totalPages = Math.ceil(this.totalUsers / this.itemsPerPage);
-  }
-
+ 
   generatePageNumbers(): void {
     this.pages = [];
     for (let i = 1; i <= this.totalPages; i++) {
@@ -129,7 +117,7 @@ export class BackOfficeComponent implements OnInit {
 
   editarUsuario(user: User): void {
     console.log('Editar usuario:', user);
-    this.selectedUser = { ...user }; // Crear una copia para no modificar el original directamente
+    this.selectedUser = { ...user };
     this.showEditModal = true;
     this.showCreateModal = false;
     this.showViewModal = false;
@@ -144,7 +132,7 @@ export class BackOfficeComponent implements OnInit {
       if (result) {
         user.visible = !user.visible;
         console.log(`Usuario ${user._id} ${user.visible ? 'visible' : 'ocultado'}`);
-        // Aquí podrías llamar a un servicio para actualizar el estado del usuario en el backend si es necesario
+        // Aquí podríamos llamar a un servicio para actualizar el estado del usuario en el backend si es necesario
         // this.userService.updateUserVisibility(user._id, user.visible).subscribe();
       }
     });
@@ -162,11 +150,6 @@ export class BackOfficeComponent implements OnInit {
           next: () => {
             console.log(`Usuario ${user._id} eliminado`);
             
-            // Eliminar el usuario de nuestros datos de prueba también
-            const index = this.allMockUsers.findIndex(u => u._id === user._id);
-            if (index !== -1) {
-              this.allMockUsers.splice(index, 1);
-            }
             
             this.obtenerUsuarios(); // Recargar la lista después de eliminar
           },
@@ -189,7 +172,7 @@ export class BackOfficeComponent implements OnInit {
   onUserCreated(success: boolean): void {
     this.showCreateModal = false;
     if (success) {
-      this.obtenerUsuarios(); // Recargar la lista después de crear un nuevo usuario
+      this.obtenerUsuarios(); 
     }
   }
 

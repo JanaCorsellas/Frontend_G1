@@ -1,1 +1,184 @@
-<p>activity-edit works!</p>
+<div class="activity-edit-container">
+    <div class="header-with-back">
+      <button type="button" class="btn-back" (click)="cancel()">
+        <i class="material-icons">arrow_back</i> Volver
+      </button>
+      <h2>Editar Actividad</h2>
+    </div>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      <span class="spinner-border"></span>
+      <p>Cargando actividad...</p>
+    </div>
+  
+    <form *ngIf="!loading" [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      
+      <div class="form-group">
+        <label for="name">Nombre de la actividad*</label>
+        <input 
+          type="text" 
+          id="name"
+          formControlName="name" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': hasError('name', 'required') || hasError('name', 'minlength') }" 
+        />
+        <div *ngIf="hasError('name', 'required')" class="invalid-feedback">
+          El nombre de la actividad es obligatorio
+        </div>
+        <div *ngIf="hasError('name', 'minlength')" class="invalid-feedback">
+          El nombre debe tener al menos 3 caracteres
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="type">Tipo de actividad*</label>
+        <select 
+          id="type"
+          formControlName="type" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': hasError('type', 'required') }"
+        >
+          <option value="">Seleccionar tipo</option>
+          <option value="running">Running</option>
+          <option value="cycling">Ciclismo</option>
+          <option value="hiking">Senderismo</option>
+          <option value="walking">Caminata</option>
+        </select>
+        <div *ngIf="hasError('type', 'required')" class="invalid-feedback">
+          Debes seleccionar un tipo de actividad
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="startTime">Fecha/Hora inicio*</label>
+          <input 
+            type="datetime-local" 
+            id="startTime"
+            formControlName="startTime" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': hasError('startTime', 'required') }" 
+          />
+          <div *ngIf="hasError('startTime', 'required')" class="invalid-feedback">
+            La fecha/hora de inicio es obligatoria
+          </div>
+        </div>
+        
+        <div class="form-group form-group-half">
+          <label for="endTime">Fecha/Hora fin*</label>
+          <input 
+            type="datetime-local" 
+            id="endTime"
+            formControlName="endTime" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': hasError('endTime', 'required') }" 
+          />
+          <div *ngIf="hasError('endTime', 'required')" class="invalid-feedback">
+            La fecha/hora de fin es obligatoria
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="duration">Duración (minutos)*</label>
+          <input 
+            type="number" 
+            id="duration"
+            formControlName="duration" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': hasError('duration', 'required') || hasError('duration', 'min') }" 
+          />
+          <div *ngIf="hasError('duration', 'required')" class="invalid-feedback">
+            La duración es obligatoria
+          </div>
+          <div *ngIf="hasError('duration', 'min')" class="invalid-feedback">
+            La duración debe ser mayor a 0
+          </div>
+        </div>
+        
+        <div class="form-group form-group-half">
+          <label for="distance">Distancia (km)*</label>
+          <input 
+            type="number" 
+            id="distance"
+            formControlName="distance" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': hasError('distance', 'required') || hasError('distance', 'min') }" 
+          />
+          <div *ngIf="hasError('distance', 'required')" class="invalid-feedback">
+            La distancia es obligatoria
+          </div>
+          <div *ngIf="hasError('distance', 'min')" class="invalid-feedback">
+            La distancia debe ser válida
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="elevationGain">Elevación (m)*</label>
+          <input 
+            type="number" 
+            id="elevationGain"
+            formControlName="elevationGain" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': hasError('elevationGain', 'required') || hasError('elevationGain', 'min') }" 
+          />
+          <div *ngIf="hasError('elevationGain', 'required')" class="invalid-feedback">
+            La elevación es obligatoria
+          </div>
+        </div>
+        
+        <div class="form-group form-group-half">
+          <label for="averageSpeed">Velocidad promedio (km/h)*</label>
+          <input 
+            type="number" 
+            id="averageSpeed"
+            formControlName="averageSpeed" 
+            class="form-control" 
+            [ngClass]="{ 'is-invalid': hasError('averageSpeed', 'required') || hasError('averageSpeed', 'min') }" 
+          />
+          <div *ngIf="hasError('averageSpeed', 'required')" class="invalid-feedback">
+            La velocidad promedio es obligatoria
+          </div>
+          <div *ngIf="hasError('averageSpeed', 'min')" class="invalid-feedback">
+            La velocidad debe ser válida
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="caloriesBurned">Calorías quemadas</label>
+        <input 
+          type="number" 
+          id="caloriesBurned"
+          formControlName="caloriesBurned" 
+          class="form-control" 
+          [ngClass]="{ 'is-invalid': hasError('caloriesBurned', 'min') }" 
+        />
+        <div *ngIf="hasError('caloriesBurned', 'min')" class="invalid-feedback">
+          Las calorías deben ser un valor positivo
+        </div>
+      </div>
+  
+      <div class="form-actions">
+        <button 
+          type="button" 
+          class="btn btn-secondary" 
+          (click)="cancel()"
+        >
+          Cancelar
+        </button>
+        <button 
+          type="submit" 
+          class="btn btn-primary" 
+          [disabled]="loading || submitting"
+        >
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm mr-1"></span>
+          Guardar cambios
+        </button>
+      </div>
+    </form>
+  </div>

@@ -1,1 +1,105 @@
-<p>activities works!</p>
+<div class="activities-container">
+    <h2>Listado de Actividades</h2>
+    
+    <div class="action-buttons">
+      <button class="btn-create" (click)="showCreateActivityForm()">
+        <i class="material-icons">add</i> Crear nueva actividad
+      </button>
+    </div>
+    
+    <div *ngIf="loading" class="loading-spinner">
+      <span class="spinner-border"></span>
+      <p>Cargando actividades...</p>
+    </div>
+    
+    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+    
+    <div *ngIf="!loading && activities.length === 0" class="no-activities">
+      <p>No hay actividades registradas</p>
+      <button class="btn-primary" (click)="showCreateActivityForm()">Crear tu primera actividad</button>
+    </div>
+    
+    <div *ngIf="!loading && activities.length > 0" class="activities-grid">
+      <div *ngFor="let activity of activities; trackBy: trackByActivityId" class="activity-card">
+        <div class="activity-header">
+          <div class="activity-icon" [ngClass]="activity.type">
+            <i class="material-icons">
+              {{getIconByType(activity.type)}}
+            </i>
+          </div>
+          <div class="activity-title">
+            <h3>{{ activity.name }}</h3>
+            <p>{{ formatDate(activity.startTime) }}</p>
+          </div>
+        </div>
+        
+        <div class="activity-info">
+          <div class="activity-metric">
+            <span class="metric-label">Tipo</span>
+            <span class="metric-value">{{ getActivityTypeName(activity.type) }}</span>
+          </div>
+          <div class="activity-metric">
+            <span class="metric-label">Duración</span>
+            <span class="metric-value">{{ formatDuration(activity.duration) }}</span>
+          </div>
+          <div class="activity-metric">
+            <span class="metric-label">Distancia</span>
+            <span class="metric-value">{{ activity.distance }} km</span>
+          </div>
+          <div class="activity-metric">
+            <span class="metric-label">Velocidad</span>
+            <span class="metric-value">{{ activity.averageSpeed }} km/h</span>
+          </div>
+          <div class="activity-metric">
+            <span class="metric-label">Autor</span>
+            <span class="metric-value">{{ getUsernameById(activity.author) }}</span>
+          </div>
+        </div>
+        
+        <div class="activity-actions">
+          <button class="btn-view" (click)="viewActivity(activity._id)">
+            <i class="material-icons">visibility</i> Ver
+          </button>
+          <button class="btn-edit" (click)="editActivity(activity._id)">
+            <i class="material-icons">edit</i> Editar
+          </button>
+          <button class="btn-delete" (click)="deleteActivity(activity._id)">
+            <i class="material-icons">delete</i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Paginación -->
+    <div *ngIf="!loading && activities.length > 0" class="pagination-controls">
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === 1"
+        (click)="changePage(currentPage - 1)">
+        « Anterior
+      </button>
+      
+      <span *ngFor="let page of pages" 
+            class="page-number" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+        {{page}}
+      </span>
+      
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)">
+        Siguiente »
+      </button>
+    </div>
+    
+    <div *ngIf="!loading && activities.length > 0" class="pagination-info">
+      Mostrando página {{ currentPage }} de {{ totalPages }} 
+      ({{ totalActivities }} actividades en total)
+    </div>
+    
+    <div class="full-screen-form" *ngIf="showCreateModal">
+      <app-activity-create (activityCreated)="onActivityCreated($event)"></app-activity-create>
+    </div>
+  </div>

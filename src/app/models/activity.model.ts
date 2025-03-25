@@ -1,4 +1,5 @@
 export interface Activity {
+  _id: string;
   author: string;
   name: string;
   startTime: Date;
@@ -23,9 +24,10 @@ export class Activity {
     public distance: number, 
     public elevationGain: number,
     public averageSpeed: number,
-    public route: string[] = [],
-    public musicPlaylist: string[] = [],
     public type: "running" | "cycling" | "hiking" | "walking",
-    public caloriesBurned?: number
+    public _id: string,
+    public caloriesBurned?: number,
+    public route: string[] = [],
+    public musicPlaylist: string[] = []
   ) {}
 }

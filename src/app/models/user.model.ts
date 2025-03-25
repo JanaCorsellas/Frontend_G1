@@ -1,21 +1,21 @@
 export interface User {
-  _id: string; // Cambiado de number a string para alinearse con MongoDB ObjectId
+  _id: string; 
   username: string;
   bio: string;
   profilePicture: string;
   level: number;
-  email: string;
-  visible?: boolean;
+  email: string;      
+  activities: string[];
+  visible: boolean;
 }
-
 export class User implements User {
   constructor(
-    public _id: string, // Cambiado de number a string
+    public _id: string,
     public username: string,
+    public email: string,
+    public level: number,
     public bio: string,
     public profilePicture: string,
-    public level: number,
-    public email: string,
-    public visible?: boolean
-  ) {}
+    public activities: string[] = [],
+    public visible: boolean = true  ) {}
 }

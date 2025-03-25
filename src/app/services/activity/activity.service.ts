@@ -9,7 +9,7 @@ import { Activity } from '../../models/activity.model';
 export class ActivityService {
   private apiUrl= 'http://localhost:3000/api/activities';
   constructor(private http: HttpClient) { }
-
+  // Obtener activities paginadas
   getActivities(page:number=1, limit: number=5): Observable<any>{
     const params = new HttpParams()
     .set('page', page.toString())
