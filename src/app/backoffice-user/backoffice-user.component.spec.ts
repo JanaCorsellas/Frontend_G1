@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BackOfficeComponent } from './backoffice.component';
+import { UsersComponent } from './backoffice-user.component';
 
-describe('BackOfficeComponent', () => {
-  let component: BackOfficeComponent;
-  let fixture: ComponentFixture<BackOfficeComponent>;
+describe('UsersComponent', () => {
+  let component: UsersComponent;
+  let fixture: ComponentFixture<UsersComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BackOfficeComponent]
+      imports: [UsersComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BackOfficeComponent);
+    fixture = TestBed.createComponent(UsersComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

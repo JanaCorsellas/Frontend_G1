@@ -1,0 +1,135 @@
+<div class="profile-container">
+    <header class="profile-header">
+      <button class="back-btn" (click)="goToHome()">
+        <i class="material-icons">arrow_back</i> Volver
+      </button>
+      <h1>Mi Perfil</h1>
+      <button class="logout-btn" (click)="logout()">
+        <i class="material-icons">exit_to_app</i> Cerrar sesión
+      </button>
+    </header>
+  
+    <div *ngIf="loading" class="loading-spinner">
+      <div class="spinner"></div>
+      <p>Cargando datos del perfil...</p>
+    </div>
+  
+    <div *ngIf="error" class="error-message">
+      {{ error }}
+    </div>
+  
+    <div *ngIf="success" class="success-message">
+      {{ success }}
+    </div>
+  
+    <div *ngIf="user && !loading" class="profile-card">
+      <div class="profile-header">
+        <div class="profile-avatar">
+          <img [src]="user.profilePicture || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'" alt="Foto de perfil">
+        </div>
+        <div class="profile-info">
+          <h2>{{ user.username }}</h2>
+          <p class="user-email">{{ user.email }}</p>
+          <p class="user-level">Nivel: {{ user.level || 1 }}</p>
+        </div>
+        <button class="edit-btn" (click)="toggleEditMode()">
+          <i class="material-icons">{{ editMode ? 'close' : 'edit' }}</i>
+          {{ editMode ? 'Cancelar' : 'Editar perfil' }}
+        </button>
+      </div>
+  
+      <div class="profile-body">
+        <div *ngIf="!editMode" class="profile-details">
+          <div class="detail-item">
+            <span class="detail-label">Biografía:</span>
+            <span class="detail-value">{{ user.bio || 'Sin biografía' }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Distancia total:</span>
+            <span class="detail-value">{{ (user.totalDistance / 1000).toFixed(2) }} km</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Tiempo total:</span>
+            <span class="detail-value">{{ user.totalTime || 0 }} minutos</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Actividades:</span>
+            <span class="detail-value">{{ user.activities?.length || 0 }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Logros conseguidos:</span>
+            <span class="detail-value">{{ user.achievements?.length || 0 }}</span>
+          </div>
+          
+          <div class="detail-item">
+            <span class="detail-label">Retos completados:</span>
+            <span class="detail-value">{{ user.challengesCompleted?.length || 0 }}</span>
+          </div>
+        </div>
+  
+        <form *ngIf="editMode" [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="edit-form">
+          <div class="form-group">
+            <label for="username">Nombre de usuario:</label>
+            <input 
+              type="text" 
+              id="username" 
+              formControlName="username"
+              [class.is-invalid]="hasError('username', 'required') || hasError('username', 'minlength')"
+            >
+            <div *ngIf="hasError('username', 'required')" class="invalid-feedback">
+              El nombre de usuario es obligatorio
+            </div>
+            <div *ngIf="hasError('username', 'minlength')" class="invalid-feedback">
+              El nombre de usuario debe tener al menos 4 caracteres
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="email">Correo electrónico:</label>
+            <input 
+              type="email" 
+              id="email" 
+              formControlName="email"
+              [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
+            >
+            <div *ngIf="hasError('email', 'required')" class="invalid-feedback">
+              El correo electrónico es obligatorio
+            </div>
+            <div *ngIf="hasError('email', 'email')" class="invalid-feedback">
+              El formato del correo electrónico no es válido
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="profilePicture">URL de imagen de perfil:</label>
+            <input 
+              type="text" 
+              id="profilePicture" 
+              formControlName="profilePicture"
+            >
+          </div>
+          
+          <div class="form-group">
+            <label for="bio">Biografía:</label>
+            <textarea 
+              id="bio" 
+              formControlName="bio"
+              rows="4"
+            ></textarea>
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="toggleEditMode()">Cancelar</button>
+            <button type="submit" class="btn-save" [disabled]="profileForm.invalid || loading">
+              <span *ngIf="loading" class="spinner-sm"></span>
+              Guardar cambios
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>

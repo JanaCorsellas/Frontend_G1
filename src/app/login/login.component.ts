@@ -1,55 +1,70 @@
-import { CommonModule } from '@angular/common';
-import { Component, inject, EventEmitter, Output } from '@angular/core';
-import { FormGroup, FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { FormGroup, FormBuilder, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
-import { OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule, CommonModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css',
-  standalone: true
+  styleUrls: ['./login.component.css'],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule]
 })
-export class LoginComponent implements OnInit {
-  formLogin: FormGroup;
-  authService = inject(AuthService);
-  @Output() loggedin = new EventEmitter<string>();
+export class LoginComponent {
   @Output() exportLoggedIn = new EventEmitter<boolean>();
+  formLogin: FormGroup;
+  loading: boolean = false;
+  error: string = '';
 
-  constructor(private form: FormBuilder){
-    this.formLogin = this.form.group({
+  constructor(
+    private formBuilder: FormBuilder,
+    private router: Router,
+    private authService: AuthService
+  ) {
+    this.formLogin = this.formBuilder.group({
       username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]], 
+      password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
-ngOnInit(): void {
-    this.formLogin = this.form.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(8)]]
-    });
-  }
-  hasError(controlName:string, errorType:string){
-    return this.formLogin.get(controlName)?.hasError(errorType) && this.formLogin.get(controlName)?.touched;  
+
+  // Método para verificar si un control tiene un error específico
+  hasError(controlName: string, errorType: string): boolean {
+    const control = this.formLogin.get(controlName);
+    return !!control?.hasError(errorType) && control.touched;
   }
 
-  login(){
+  login() {
     if (this.formLogin.invalid) {
       this.formLogin.markAllAsTouched();
       return;
     }
 
-    const loginData = this.formLogin.value;
+    this.loading = true;
+    this.error = '';
 
-    this.authService.login(loginData).subscribe({
+    const credentials = this.formLogin.value;
+    console.log('Attempting login with credentials:', credentials);
+
+    this.authService.login(credentials).subscribe({
       next: (response) => {
-        console.log('Login exitoso:', response);
+        console.log('Login successful:', response);
+        this.loading = false;
         this.exportLoggedIn.emit(true);
-      
+
+        const user = response.user;
+        if (user.role === 'admin') {
+          this.router.navigate(['/admin']);
+        } else if (user.role === 'user') {
+          this.router.navigate(['/user-home']);
+        } else {
+          this.error = 'Rol desconocido. Contacte al administrador.';
+        }
       },
       error: (error) => {
-        console.error('Error en el login:', error);
-        alert('Error en el login, verifica tus credenciales');
+        console.error('Login error:', error);
+        this.loading = false;
+        this.error = error.error?.message || 'Error en el inicio de sesión';
       }
     });
   }

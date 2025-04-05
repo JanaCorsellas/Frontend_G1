@@ -1,0 +1,132 @@
+<div class="activity-create-container">
+    <div class="header-with-back">
+      <button type="button" class="btn-back" (click)="cancel()">
+        <i class="material-icons">arrow_back</i> Volver
+      </button>
+      <h2>Crear nova activitat</h2>
+    </div>
+  
+    <form [formGroup]="activityForm" (ngSubmit)="onSubmit()">
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      
+      <div class="form-group">
+        <label for="name">Nom de l'activitat*</label>
+        <input type="text" id="name" formControlName="name" class="form-control" 
+               [class.is-invalid]="hasError('name', 'required')">
+        <div *ngIf="hasError('name', 'required')" class="invalid-feedback">
+          El nom de l'activitat és obligatori
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="author">Autor*</label>
+        <select id="author" formControlName="author" class="form-control"
+                [class.is-invalid]="hasError('author', 'required')">
+          <option value="">Selecciona un usuari</option>
+          <option *ngFor="let user of users" [value]="user._id">
+            {{ user.username }}
+          </option>
+        </select>
+        <div *ngIf="hasError('author', 'required')" class="invalid-feedback">
+          L'autor és obligatori
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="type">Tipus d'actividad*</label>
+        <select id="type" formControlName="type" class="form-control">
+          <option value="running">Running</option>
+          <option value="cycling">Cycling</option>
+          <option value="hiking">Hiking</option>
+          <option value="walking">Walking</option>
+        </select>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="startTime">Data i hora d'inicio*</label>
+          <input type="datetime-local" id="startTime" formControlName="startTime" class="form-control"
+                 [class.is-invalid]="hasError('startTime', 'required')">
+          <div *ngIf="hasError('startTime', 'required')" class="invalid-feedback">
+            La data i hora d'inici és obligatòria
+          </div>
+        </div>
+        
+        <div class="form-group form-group-half">
+          <label for="endTime">Data i hora de finalització*</label>
+          <input type="datetime-local" id="endTime" formControlName="endTime" class="form-control"
+                 [class.is-invalid]="hasError('endTime', 'required')">
+          <div *ngIf="hasError('endTime', 'required')" class="invalid-feedback">
+            La data i hora de finalització és obligatòria
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="distance">Distància (metres)*</label>
+          <input type="number" id="distance" formControlName="distance" class="form-control"
+                 [class.is-invalid]="hasError('distance', 'required') || hasError('distance', 'min')">
+          <div *ngIf="hasError('distance', 'required')" class="invalid-feedback">
+            La distància és obligatoria
+          </div>
+          <div *ngIf="hasError('distance', 'min')" class="invalid-feedback">
+            La distància ha de ser més gran que 0
+          </div>
+        </div>
+        
+        <div class="form-group form-group-half">
+          <label for="duration">Duració (minuts)*</label>
+          <input type="number" id="duration" formControlName="duration" class="form-control"
+                 [class.is-invalid]="hasError('duration', 'required') || hasError('duration', 'min')">
+          <div *ngIf="hasError('duration', 'required')" class="invalid-feedback">
+            La duració és obligatòria
+          </div>
+          <div *ngIf="hasError('duration', 'min')" class="invalid-feedback">
+            La duració ha de ser més gran que 0
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-row">
+        <div class="form-group form-group-half">
+          <label for="elevationGain">Variació d'elevació (metres)*</label>
+          <input type="number" id="elevationGain" formControlName="elevationGain" class="form-control"
+                 [class.is-invalid]="hasError('elevationGain', 'required') || hasError('elevationGain', 'min')">
+          <div *ngIf="hasError('elevationGain', 'required')" class="invalid-feedback">
+            La variació d'elevació és obligatòria
+          </div>
+          <div *ngIf="hasError('elevationGain', 'min')" class="invalid-feedback">
+            La variació d'elevació no pot ser negativa
+          </div>
+        </div>
+        
+        <div class="form-group form-group-half">
+          <label for="averageSpeed">Velocitat mitja (km/h)*</label>
+          <input type="number" id="averageSpeed" formControlName="averageSpeed" class="form-control"
+                 [class.is-invalid]="hasError('averageSpeed', 'required') || hasError('averageSpeed', 'min')">
+          <div *ngIf="hasError('averageSpeed', 'required')" class="invalid-feedback">
+            La velocitat mitja és obligatòria
+          </div>
+          <div *ngIf="hasError('averageSpeed', 'min')" class="invalid-feedback">
+            La velocitat mijta no pot ser negativa
+          </div>
+        </div>
+      </div>
+  
+      <div class="form-group">
+        <label for="caloriesBurned">Calorías cremades</label>
+        <input type="number" id="caloriesBurned" formControlName="caloriesBurned" class="form-control">
+      </div>
+  
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-save" [disabled]="activityForm.invalid || loading">
+          <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+          Crear actividad
+        </button>
+      </div>
+    </form>
+  </div>

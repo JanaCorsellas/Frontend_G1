@@ -5,6 +5,7 @@ export interface User {
   profilePicture: string;
   level: number;
   email: string;
+  activities?: any[];
   visible?: boolean;
   visibility?: boolean;
 }
@@ -17,6 +18,7 @@ export class User implements User {
     public profilePicture: string,
     public level: number,
     public email: string,
+    public activities?: any[],
     public visible?: boolean,
     public visibility?: boolean
   ) {}

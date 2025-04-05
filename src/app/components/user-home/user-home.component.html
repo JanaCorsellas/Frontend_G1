@@ -1,0 +1,23 @@
+<div class="user-home-container">
+    <header class="app-header">
+      <h1 class="app-title">EA GRUP 1</h1>
+      <div class="user-controls" *ngIf="user">
+        <span class="username">Bienvenido/a, {{ user.username }}</span>
+        <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </header>
+  
+    <main class="main-content">
+      <div class="welcome-card">
+        <h2>Bienvenido/a a nuestra plataforma</h2>
+        <p>Aquí podrás gestionar tus actividades deportivas y hacer seguimiento de tus progresos.</p>
+        
+        <div class="action-buttons">
+          <button class="profile-btn" (click)="goToProfile()">
+            <i class="material-icons">person</i>
+            Ver mi perfil
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>

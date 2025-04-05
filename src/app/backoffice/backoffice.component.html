@@ -1,156 +1,26 @@
 <div class="container">
-  <!-- Botón para crear usuario -->
-  <div class="action-buttons">
-    <button class="btn-create" (click)="showCreateUserForm()">
-      <i class="material-icons">add</i> Crear nuevo usuario
+  <!-- Navegació per pestanyes per escollir entre usuaris o activitats -->
+  <div class="navigation-tabs">
+    <button class="nav-tab" [class.active]="activeTab === 'users'" (click)="setActiveTab('users')">
+      <i class="material-icons">people</i> Usuaris
+    </button>
+    <button class="nav-tab" [class.active]="activeTab === 'activities'" (click)="setActiveTab('activities')">
+      <i class="material-icons">directions_run</i> Activitats
     </button>
   </div>
   
-  <!-- Inicialmente solo mostrar el botón de listar usuarios -->
-  <div class="button-container" *ngIf="!usuariosListados">
-    <button class="btn-listar" (click)="obtenerUsuarios()">
-      Listar todos los usuarios
-    </button>
+  <!-- Visible secció d'usuaris (quan activeTab === 'users') -->
+  <div *ngIf="activeTab === 'users'">
+    <app-users></app-users>
   </div>
   
-  <!-- Lista paginada de usuarios (visible solo después de hacer clic en el botón) -->
-  <div class="users-container" *ngIf="usuariosListados">
-    <!-- Tabla de usuarios -->
-    <div class="users-grid">
-      <div *ngFor="let user of users; trackBy: trackByUserId" 
-           class="user-card"
-           [class.hidden]="!user.visible"> <!-- Aplica estilo si el usuario está oculto -->
-
-        <div class="user-header">
-          <img [src]="user.profilePicture || 'assets/default-profile.jpg'" 
-               alt="Foto de perfil" 
-               class="profile-image">
-          <h3 class="user-name">{{ user.username }}</h3>
-        </div>
-        <div class="user-info">
-          <p><strong>Email:</strong> {{ user.email }}</p>
-          <p><strong>Nivel:</strong> {{ user.level || 'N/A' }}</p>
-          <p class="user-bio"><strong>Bio:</strong> {{ user.bio || 'Sin biografía' }}</p>
-        </div>
-        <div class="user-actions">
-          <button class="btn-edit" (click)="editarUsuario(user)">
-            <i class="material-icons">edit</i> Editar
-          </button>
-          <button class="btn-hide" (click)="marcarUsuarioInvisible(user)">
-            <i class="material-icons">{{ user.visible ? 'visibility_off' : 'visibility' }}</i> 
-            {{ user.visible ? 'Ocultar' : 'Mostrar' }}
-            <span *ngIf="!user.visible" class="status-badge">(Oculto)</span>
-          </button>
-          <button class="btn-delete" (click)="eliminarUsuario(user)">
-            <i class="material-icons">delete</i> Eliminar
-          </button>
-          <button class="btn-view" (click)="verDetallesUsuario(user)">
-            <i class="material-icons">visibility</i> Ver
-          </button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Paginación -->
-    <div class="pagination-controls">
-      <button 
-        class="pagination-btn" 
-        [disabled]="currentPage === 1"
-        (click)="changePage(currentPage - 1)">
-        « Anterior
-      </button>
-      
-      <span *ngFor="let page of pages" 
-            class="page-number" 
-            [class.active]="page === currentPage"
-            (click)="changePage(page)">
-        {{page}}
-      </span>
-      
-      <button 
-        class="pagination-btn" 
-        [disabled]="currentPage === totalPages"
-        (click)="changePage(currentPage + 1)">
-        Siguiente »
-      </button>
-    </div>
-    
-    <div class="pagination-info">
-      Mostrando página {{ currentPage }} de {{ totalPages }} 
-      ({{ totalUsers }} usuarios en total)
-    </div>
-  </div>
-
-  <!-- Modal para crear usuario -->
-  <div class="full-screen-form" *ngIf="showCreateModal">
-    <app-user-create (userCreated)="onUserCreated($event)"></app-user-create>
-  </div>
-
-  <!-- Modal para editar usuario -->
-  <div class="full-screen-form" *ngIf="showEditModal && selectedUser">
-    <div class="modal-header">
-      <h2>Editar Usuario: {{ selectedUser.username }}</h2>
-      <button class="close-btn" (click)="showEditModal = false">×</button>
-    </div>
-    <div class="modal-body">
-      <form class="edit-form">
-        <div class="form-group">
-          <label for="edit-username">Nombre de usuario</label>
-          <input type="text" id="edit-username" [(ngModel)]="selectedUser.username" name="username" class="form-control">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-email">Email</label>
-          <input type="email" id="edit-email" [(ngModel)]="selectedUser.email" name="email" class="form-control">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-level">Nivel</label>
-          <input type="number" id="edit-level" [(ngModel)]="selectedUser.level" name="level" class="form-control">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-bio">Biografía</label>
-          <textarea id="edit-bio" [(ngModel)]="selectedUser.bio" name="bio" class="form-control" rows="3"></textarea>
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-profilePicture">URL de imagen de perfil</label>
-          <input type="text" id="edit-profilePicture" [(ngModel)]="selectedUser.profilePicture" name="profilePicture" class="form-control">
-        </div>
-        
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" (click)="showEditModal = false">Cancelar</button>
-          <button type="button" class="btn-save" (click)="onUserEdited(true)">Guardar cambios</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Modal para ver detalles de usuario -->
-  <div class="full-screen-form view-details" *ngIf="showViewModal && selectedUser">
-    <div class="modal-header">
-      <h2>Detalles del Usuario</h2>
-      <button class="close-btn" (click)="closeViewModal()">×</button>
-    </div>
-    <div class="modal-body user-details">
-      <div class="user-profile">
-        <img [src]="selectedUser.profilePicture || 'assets/default-profile.jpg'" alt="Foto de perfil" class="profile-image-large">
-        <h3>{{ selectedUser.username }}</h3>
-      </div>
-      
-      <div class="user-details-info">
-        <p><strong>ID:</strong> {{ selectedUser._id }}</p>
-        <p><strong>Email:</strong> {{ selectedUser.email }}</p>
-        <p><strong>Nivel:</strong> {{ selectedUser.level }}</p>
-        <p><strong>Estado:</strong> {{ selectedUser.visible ? 'Visible' : 'Oculto' }}</p>
-        <p><strong>Biografía:</strong></p>
-        <div class="bio-text">{{ selectedUser.bio || 'Este usuario no tiene biografía.' }}</div>
-      </div>
-      
-      <div class="form-actions">
-        <button type="button" class="btn-back" (click)="closeViewModal()">Volver a la lista</button>
-      </div>
-    </div>
+  <!-- Secció d'activitats (visible quan activeTab === 'activities') -->
+  <div *ngIf="activeTab === 'activities'">
+    <app-activities></app-activities>
   </div>
 </div>
+<div class="backoffice-container">
+  <h1>Panel de Administración</h1>
+  <button (click)="logout()" class="btn btn-danger">Cerrar Sesión</button>
+</div>
+

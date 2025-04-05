@@ -1,0 +1,129 @@
+<div class="activity-history-container">
+  <div class="history-header">
+    <h3>Historial de cambios</h3>
+    <div class="history-stats" *ngIf="!loading && histories.length > 0">
+      <span>Total: {{totalItems}} registros</span>
+    </div>
+  </div>
+  
+  <div *ngIf="loading" class="loading-spinner">
+    <div class="spinner"></div>
+    <p>Cargando historial...</p>
+  </div>
+  
+  <div *ngIf="error" class="alert-error">
+    <div class="alert-icon">⚠️</div>
+    <div class="alert-message">{{ error }}</div>
+  </div>
+  
+  <div *ngIf="!loading && histories.length === 0" class="no-history">
+    <div class="empty-icon">📋</div>
+    <p>No hay registros de cambios disponibles para esta actividad.</p>
+  </div>
+  
+  <div *ngIf="!loading && histories.length > 0" class="history-list">
+    <div class="history-item" *ngFor="let history of histories">
+      <div class="history-item-header" [class.active]="isSelected(history)" (click)="toggleDetails(history)">
+        <div class="history-date">
+          <i class="material-icons history-icon">event</i>
+          {{ history.timestamp | date:'dd/MM/yyyy HH:mm' }}
+        </div>
+        
+        <div class="history-user">
+          <i class="material-icons history-icon">person</i>
+          {{ getUserName(history) }}
+        </div>
+        
+        <div class="history-type">
+          <span class="history-badge" 
+                [ngClass]="{
+                  'badge-create': history.changeType === 'create',
+                  'badge-update': history.changeType === 'update', 
+                  'badge-delete': history.changeType === 'delete'
+                }">
+            {{ getChangeTypeLabel(history.changeType) }}
+          </span>
+        </div>
+        
+        <div class="history-fields">
+          <span *ngIf="history.changedFields?.length">
+            {{ getChangedFieldsText(history) }}
+          </span>
+          <span *ngIf="!history.changedFields?.length">-</span>
+        </div>
+        
+        <div class="history-toggle">
+          <i class="material-icons">{{ isSelected(history) ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</i>
+        </div>
+      </div>
+      
+      <div class="history-details" *ngIf="isSelected(history)">
+        <div [ngSwitch]="history.changeType">
+          <div *ngSwitchCase="'create'" class="history-create">
+            <h6 class="details-title">Datos de la actividad creada:</h6>
+            <div class="details-card">
+              <pre>{{ history.newValues | json }}</pre>
+            </div>
+          </div>
+          
+          <div *ngSwitchCase="'update'" class="history-update">
+            <div class="update-comparison">
+              <div class="previous-values">
+                <h6 class="details-title">Valores anteriores:</h6>
+                <div class="details-card">
+                  <pre>{{ history.previousValues | json }}</pre>
+                </div>
+              </div>
+              
+              <div class="new-values">
+                <h6 class="details-title">Nuevos valores:</h6>
+                <div class="details-card">
+                  <pre>{{ history.newValues | json }}</pre>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngSwitchCase="'delete'" class="history-delete">
+            <h6 class="details-title">Datos de la actividad eliminada:</h6>
+            <div class="details-card">
+              <pre>{{ history.previousValues | json }}</pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Paginación mejorada -->
+  <div class="pagination-container" *ngIf="totalPages > 1">
+    <div class="pagination">
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === 1"
+        (click)="onPageChange(currentPage - 1)">
+        <i class="material-icons">chevron_left</i>
+      </button>
+      
+      <div class="page-numbers">
+        <span *ngFor="let page of [].constructor(totalPages); let i = index" 
+              class="page-number" 
+              [class.active]="currentPage === i + 1"
+              (click)="onPageChange(i + 1)">
+          {{ i + 1 }}
+        </span>
+      </div>
+      
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === totalPages"
+        (click)="onPageChange(currentPage + 1)">
+        <i class="material-icons">chevron_right</i>
+      </button>
+    </div>
+    
+    <div class="page-info">
+      Página {{ currentPage }} de {{ totalPages }}
+    </div>
+  </div>
+</div>

@@ -38,7 +38,7 @@ export class UserListComponent implements OnInit {
           this.generatePageNumbers();
         },
         error: (error) => {
-          console.error('Error loading users:', error);
+          console.error('Error carregant usuaris:', error);
         }
       });
   }
@@ -64,7 +64,7 @@ export class UserListComponent implements OnInit {
 
   deleteUser(userId: string): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: '¿Estás seguro de que deseas eliminar este usuario?' }
+      data: { message: 'Estàs segur de que vols eliminar aquest usuari?' }
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -74,7 +74,7 @@ export class UserListComponent implements OnInit {
             this.loadUsers();
           },
           error: (error) => {
-            console.error('Error deleting user:', error);
+            console.error('Error eliminant usuari:', error);
           }
         });
       }

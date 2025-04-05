@@ -9,7 +9,7 @@ export class NombrePipe implements PipeTransform {
     if (query === '' || query === undefined) {
       return value;
     }
-    return value.filter((user) => user.name.toLowerCase().indexOf(query.toLowerCase()) != -1);
+    return value.filter((user) => user.username.toLowerCase().indexOf(query.toLowerCase()) != -1);
   }
 
 }

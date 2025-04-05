@@ -1,0 +1,294 @@
+<div class="container">
+  <!-- Botó per crear activitat -->
+  <div class="action-buttons">
+    <button class="btn-create" (click)="showCreateActivityForm()">
+      <i class="material-icons">add</i> Crear nova activitat
+    </button>
+    <button class="btn-refresh-activities" (click)="getActivities()">
+      <i class="material-icons">refresh</i> Actualitzar
+    </button>
+  </div>
+  
+  <!-- Llista paginada d'activitats -->
+  <div class="activities-container" *ngIf="loadedActivities">
+    <h2>Activitats</h2>
+    
+    <!-- Filtre per tipus d'activitat -->
+    <div class="filter-container">
+      <label for="activity-type">Filtrar per tipus:</label>
+      <select id="activity-type" [(ngModel)]="selectedType" (change)="filterActivities()">
+        <option value="">Tots</option>
+        <option value="running">Running</option>
+        <option value="cycling">Cycling</option>
+        <option value="hiking">Hiking</option>
+        <option value="walking">Walking</option>
+      </select>
+    </div>
+    
+    <!-- Contenidor de quadrícules per les activitats -->
+    <div class="activities-grid">
+      <div *ngFor="let activity of paginatedActivities; trackBy: trackByActivityId" 
+          class="activity-card">
+        <div class="activity-header">
+          <div class="activity-type-badge" [ngClass]="activity.type">
+            {{ activity.type }}
+          </div>
+          <h3 class="activity-name">{{ activity.name }}</h3>
+        </div>
+        <div class="activity-info">
+          <p><strong>Autor:</strong> {{ activity.authorName || 'Desconegut' }}</p>
+          <p><strong>Data:</strong> {{ activity.startTime | date:'dd/MM/yyyy HH:mm' }}</p>
+          <p><strong>Duració:</strong> {{ activity.duration }}min</p>
+          <p><strong>Distància:</strong> {{ (activity.distance / 1000).toFixed(2) }} km</p>
+          <p><strong>Velocitat mitja:</strong> {{ activity.averageSpeed.toFixed(1) }} km/h</p>
+        </div>
+        <div class="activity-actions">
+          <button class="btn-edit" (click)="updateActivity(activity)">
+            <i class="material-icons">edit</i> Editar
+          </button>
+          <button class="btn-delete" (click)="deleteActivity(activity)">
+            <i class="material-icons">delete</i> Eliminar
+          </button>
+          <button class="btn-view" (click)="getActivityDetails(activity)">
+            <i class="material-icons">visibility</i> Detalls
+          </button>
+          <button class="btn-history" (click)="openActivityHistory(activity._id)">
+            <i class="material-icons">history</i> Historial
+          </button>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- Missatge si no hi ha activitats -->
+    <div *ngIf="filteredActivities.length === 0" class="no-activities">
+      <div class="empty-state">
+        <i class="material-icons large">hiking</i>
+        <h3>No s'han trobat activitats</h3>
+        <p>No hi ha activitats que coincideixin amb els criteris de búsqueda.</p>
+        <button class="btn-create" (click)="showCreateActivityForm()">
+          <i class="material-icons">add</i> Crear nova activitat
+        </button>
+      </div>
+    </div>
+    
+    <!-- Paginació -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === 1"
+        (click)="changePage(currentPage - 1)">
+        « Anterior
+      </button>
+      
+      <span *ngFor="let page of pages" 
+            class="page-number" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+        {{page}}
+      </span>
+      
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)">
+        Siguiente »
+      </button>
+    </div>
+    
+    <div class="pagination-info" *ngIf="totalActivities > 0">
+      Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
+      ({{ totalActivities }} activitats en total)
+    </div>
+  </div>
+
+  <!-- Crear activitat -->
+  <div class="full-screen-form" *ngIf="showCreateModal">
+    <app-activity-create (activityCreated)="onActivityCreated($event)"></app-activity-create>
+  </div>
+
+  <!-- Editar activitat -->
+  <div class="full-screen-form" *ngIf="showEditModal && selectedActivity">
+    <div class="edit-modal">
+      <div class="edit-modal-header">
+        <h2>Editar Activitat: {{ selectedActivity.name }}</h2>
+        <button class="close-btn" (click)="showEditModal = false">&times;</button>
+      </div>
+      <div class="edit-modal-body">
+        <form class="edit-form">
+          <div class="form-group">
+            <label for="edit-name">Nom de l'activitat</label>
+            <input type="text" id="edit-name" [(ngModel)]="selectedActivity.name" name="name" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-type">Tipus</label>
+            <select id="edit-type" [(ngModel)]="selectedActivity.type" name="type" class="form-control">
+              <option value="running">Running</option>
+              <option value="cycling">Cycling</option>
+              <option value="hiking">Hiking</option>
+              <option value="walking">Walking</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-startTime">Dia i hora d'inici</label>
+            <input type="datetime-local" id="edit-startTime" 
+                  [(ngModel)]="formattedStartTime" name="startTime" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-endTime">Dia i hora de finalització</label>
+            <input type="datetime-local" id="edit-endTime" 
+                  [(ngModel)]="formattedEndTime" name="endTime" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-duration">Duració (minuts)</label>
+            <input type="number" id="edit-duration" [(ngModel)]="selectedActivity.duration" 
+                  name="duration" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-distance">Distància (metres)</label>
+            <input type="number" id="edit-distance" [(ngModel)]="selectedActivity.distance" 
+                  name="distance" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-elevationGain">Desnivell positiu (metres)</label>
+            <input type="number" id="edit-elevationGain" [(ngModel)]="selectedActivity.elevationGain" 
+                  name="elevationGain" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-averageSpeed">Velocitat mitjana (km/h)</label>
+            <input type="number" id="edit-averageSpeed" [(ngModel)]="selectedActivity.averageSpeed" 
+                  name="averageSpeed" class="form-control">
+          </div>
+          
+          <div class="form-group">
+            <label for="edit-caloriesBurned">Calories cremades</label>
+            <input type="number" id="edit-caloriesBurned" [(ngModel)]="selectedActivity.caloriesBurned" 
+                  name="caloriesBurned" class="form-control">
+          </div>
+          
+          <div class="form-actions">
+            <button type="button" class="btn-cancel" (click)="showEditModal = false">Cancelar</button>
+            <button type="button" class="btn-save" (click)="onActivityEdited(true)">Guardar canvis</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Detalls de la activitat -->
+  <div class="full-screen-form view-details" *ngIf="showViewModal && selectedActivity">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Detalls de l'activitat</h2>
+        <button class="close-btn" (click)="closeViewModal()">×</button>
+      </div>
+      
+      <div class="modal-body activity-details">
+        <!-- Indicador de càrrega -->
+        <div *ngIf="loading" class="loading-indicator">
+          <div class="spinner"></div>
+          <p>Carregant detalls de l'activitat...</p>
+        </div>
+      
+        <div class="activity-profile">
+          <div class="activity-type-badge large" [ngClass]="selectedActivity.type">
+            {{ selectedActivity.type | uppercase }}
+          </div>
+          <h3 class="activity-title">{{ selectedActivity.name }}</h3>
+        </div>
+        
+        <div class="details-container">
+          <div class="detail-item">
+            <div class="detail-label">ID:</div>
+            <div class="detail-value">{{ selectedActivity._id }}</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Autor:</div>
+            <div class="detail-value">
+              <strong>{{ 
+                selectedActivity.authorName || 
+                (selectedActivity.author && typeof selectedActivity.author === 'object' && selectedActivity.author.username 
+                  ? selectedActivity.author.username 
+                  : 'Desconegut') 
+              }}</strong>
+            </div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Data d'inici:</div>
+            <div class="detail-value">{{ selectedActivity.startTime | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Data de fi:</div>
+            <div class="detail-value">{{ selectedActivity.endTime | date:'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Duració:</div>
+            <div class="detail-value">{{ formatDuration(selectedActivity.duration) }}</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Distància:</div>
+            <div class="detail-value">{{ (selectedActivity.distance / 1000).toFixed(2) }} km</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Desnivell positiu (metres):</div>
+            <div class="detail-value">{{ selectedActivity.elevationGain }} m</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Velocitat mitjana:</div>
+            <div class="detail-value">{{ selectedActivity.averageSpeed.toFixed(1) }} km/h</div>
+          </div>
+          
+          <div class="detail-item">
+            <div class="detail-label">Calories cremades (metres):</div>
+            <div class="detail-value">{{ selectedActivity.caloriesBurned || 'No especificado' }}</div>
+          </div>
+          
+          <div class="detail-item" *ngIf="selectedActivity.route && selectedActivity.route.length > 0">
+            <div class="detail-label">Punts de ruta:</div>
+            <div class="detail-value">{{ selectedActivity.route.length }} punts</div>
+          </div>
+          
+          <div class="detail-item" *ngIf="selectedActivity.musicPlaylist && selectedActivity.musicPlaylist.length > 0">
+            <div class="detail-label">Playlist:</div>
+            <div class="detail-value">{{ selectedActivity.musicPlaylist.length }} cançons</div>
+          </div>
+        </div>
+        
+        <div class="form-actions">
+          <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="history-modal" *ngIf="showHistoryModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2><i class="material-icons">history</i> Historial de Cambios</h2>
+        <button type="button" class="close-btn" (click)="closeHistoryModal()">
+          &times;
+        </button>
+      </div>
+      <div class="modal-body">
+        <app-activity-history 
+          [activityId]="selectedActivityForHistory"
+          *ngIf="selectedActivityForHistory">
+        </app-activity-history>
+      </div>
+    </div>
+  </div>
