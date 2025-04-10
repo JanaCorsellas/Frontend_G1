@@ -1,63 +1,52 @@
-# AngularSeminari6
+# Frontend Projecte EA
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.0.
+## Requisits previs
+Abans d'executar el projecte, assegura't de tenir instal·lat:
+- [Node.js](https://nodejs.org/)
+- [Angular](https://www.angular.dev/)
 
-## Development server
+A més a més, el servidor assumeix de que estàs fent servir el [backend](https://github.com/JanaCorsellas/Backend_G1/), amb el port assignat a **3000**.
 
-To start a local development server, run:
-
-```bash
-ng serve
+## Organització carpetes del projecte
+```
+├── public
+├── src: El codi font de la pàgina web
+    └── app
+        ├── backoffice: 
+        ├── backoffice-activity: El panell d'administració de les activitats
+        ├── backoffice-user: El panell d'administració dels usuaris creats
+        ├── confirm-dialog: Advertència genèrica per avisar d'una acció important
+        ├── login: El formulari per iniciar sessió
+        ├── models: La descripció del elements que es toquen en la pàgina web
+        ├── pipes
+        ├── register: El formulari per crear-se un compte
+        ├── services: La descripció de l'API que fa servir la pàgina web
+        ├── app.component.css
+        ├── app.component.html
+        ├── app.component.spec.ts
+        ├── app.component.ts
+        ├── app.config.ts
+        ├── app.module.ts
+        ├── app.routes.ts
+        └── app-routing.module.ts
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Instal·lació
+Clona el repositori i executa la següent comanda per instal·lar les dependències:
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+```sh
+npm install
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Execució
+Per compilar i executar el servidor web:
 
-```bash
-ng generate --help
+```sh
+npm run build
+npm run start
 ```
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
+Una vegada que la pàgina web està en marxa, es pot accedir a ella a través del següent enllaç:
 ```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
+http://localhost:4200/
 ```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
-
-## Fonts d'informació
-
-El mateix codi de referència.

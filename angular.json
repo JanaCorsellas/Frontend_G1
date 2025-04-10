@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "angular-seminari6": {
+    "frontend-g1": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/angular-seminari6",
+            "outputPath": "dist/frontend-g1",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -43,7 +43,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumError": "9kB"
                 }
               ],
               "outputHashing": "all"
@@ -60,10 +60,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "angular-seminari6:build:production"
+              "buildTarget": "frontend-g1:build:production"
             },
             "development": {
-              "buildTarget": "angular-seminari6:build:development"
+              "buildTarget": "frontend-g1:build:development"
             }
           },
           "defaultConfiguration": "development"
