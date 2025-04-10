@@ -6,7 +6,6 @@
     <app-backoffice></app-backoffice>
 }
 @else  {
-    <app-register></app-register>
     <app-login (exportLoggedIn)="getLoggedIn($event)"></app-login>
 }
 
