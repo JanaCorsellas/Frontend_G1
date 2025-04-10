@@ -1,7 +1,10 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { UserService } from '../../services/user.service';
+import { AuthService } from '../../services/auth.service'; 
+import { Subscription } from 'rxjs';
+import { first } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user-create',
@@ -10,78 +13,103 @@ import { UserService } from '../../services/user.service';
   templateUrl: './user-create.component.html',
   styleUrls: ['./user-create.component.css']
 })
-export class UserCreateComponent implements OnInit {
-  userForm: FormGroup;
+export class UserCreateComponent implements OnInit, OnDestroy {
+  userForm!: FormGroup; 
   submitted = false;
   loading = false;
   error = '';
+  isAdmin = false;
+  availableRoles: Array<'user' | 'admin'> = ['user', 'admin'];
+  private componentSubscriptions = new Subscription();
 
   @Output() userCreated = new EventEmitter<boolean>();
 
   constructor(
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private authService: AuthService 
   ) {
-    this.userForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(4)]],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      bio: [''],
-      profilePicture: [''],
-      level: [1, [Validators.required, Validators.min(1)]]
-    });
+     this.userForm = this.formBuilder.group({
+        username: ['', [Validators.required, Validators.minLength(4)]],
+        email: ['', [Validators.required, Validators.email]],
+        password: ['', [Validators.required, Validators.minLength(6)]],
+        bio: [''],
+        profilePicture: [''],
+        level: [1, [Validators.required, Validators.min(1)]],
+        role: [{ value: 'user', disabled: true }, Validators.required]
+     });
   }
 
   ngOnInit(): void {
-    // Inicialización adicional si es necesaria
+    this.isAdmin = this.authService.isAdmin(); 
+
+    if (this.isAdmin) {
+      this.userForm.get('role')?.enable();
+    } else {
+      this.userForm.get('role')?.disable();
+    }
+    this.userForm.get('role')?.setValue('user');
   }
 
-  // Getter para facilitar el acceso a los campos del formulario
-  get f() { 
-    return this.userForm.controls; 
+  ngOnDestroy(): void {
+    this.componentSubscriptions.unsubscribe();
   }
 
-  // Verificar si un campo tiene error
-  hasError(controlName: string, errorType: string) {
-    return this.userForm.get(controlName)?.hasError(errorType) && 
-           (this.userForm.get(controlName)?.touched || this.submitted);
+  get f() {
+    return this.userForm.controls;
+  }
+
+  hasError(controlName: string, errorType: string): boolean {
+    const control = this.userForm.get(controlName);
+    return !!(control?.hasError(errorType) && (control?.touched || this.submitted));
   }
 
   onSubmit() {
     this.submitted = true;
+    this.error = '';
 
-    // Detener si el formulario no es válido
     if (this.userForm.invalid) {
+       Object.values(this.userForm.controls).forEach(control => {
+        control.markAsTouched();
+       });
       return;
     }
 
     this.loading = true;
-    this.error = '';
+    const userData = this.userForm.getRawValue(); 
 
-    this.userService.createUser(this.userForm.value).subscribe({
-      next: () => {
+    const createSub = this.userService.createUser(userData).pipe(first()).subscribe({
+      next: (response) => {
         this.loading = false;
+        alert('Usuario creado con éxito!');
         this.userCreated.emit(true);
         this.resetForm();
       },
       error: (error) => {
         this.loading = false;
-        this.error = error.message || 'Error al crear usuario. Por favor, inténtalo de nuevo.';
+        this.error = 'Error al crear usuario: ' + (error.error?.message || error.message || 'Error desconocido.');
         console.error('Error al crear usuario:', error);
       }
     });
+    this.componentSubscriptions.add(createSub);
   }
 
-  // Restablecer el formulario
   resetForm() {
     this.submitted = false;
+    this.error = '';
     this.userForm.reset({
-      level: 1
+      level: 1,
+      role: 'user' 
     });
+     if (!this.isAdmin) {
+        this.userForm.get('role')?.disable();
+     } else {
+        this.userForm.get('role')?.enable();
+     }
   }
 
-  // Cancelar la creación
   cancel() {
+    this.resetForm();
     this.userCreated.emit(false);
   }
 }

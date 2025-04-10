@@ -1,22 +1,21 @@
 <div class="user-create-container">
   <div class="header-with-back">
     <button type="button" class="btn-back" (click)="cancel()">
-      <i class="material-icons">arrow_back</i> Tornar
-    </button>
+      <span>&larr;</span> Tornar </button>
     <h2>Crear nou usuari</h2>
   </div>
 
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-    
-    <div class="form-group">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
+    <div *ngIf="error && !loading" class="alert alert-danger mt-3">{{ error }}</div>
+
+    <div class="form-group mt-3">
       <label for="username">Nom d'usuari*</label>
-      <input 
-        type="text" 
+      <input
+        type="text"
         id="username"
-        formControlName="username" 
-        class="form-control" 
-        [ngClass]="{ 'is-invalid': hasError('username', 'required') || hasError('username', 'minlength') }" 
+        formControlName="username"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': hasError('username', 'required') || hasError('username', 'minlength') }"
       />
       <div *ngIf="hasError('username', 'required')" class="invalid-feedback">
         El nom d'usuari és obligatori
@@ -26,14 +25,14 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mt-3">
       <label for="email">Correu electrònic*</label>
-      <input 
-        type="email" 
+      <input
+        type="email"
         id="email"
-        formControlName="email" 
-        class="form-control" 
-        [ngClass]="{ 'is-invalid': hasError('email', 'required') || hasError('email', 'email') }" 
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': hasError('email', 'required') || hasError('email', 'email') }"
       />
       <div *ngIf="hasError('email', 'required')" class="invalid-feedback">
         El correu electrònic és obligatori
@@ -43,14 +42,14 @@
       </div>
     </div>
 
-    <div class="form-group">
+    <div class="form-group mt-3">
       <label for="password">Contrasenya*</label>
-      <input 
-        type="password" 
+      <input
+        type="password"
         id="password"
-        formControlName="password" 
-        class="form-control" 
-        [ngClass]="{ 'is-invalid': hasError('password', 'required') || hasError('password', 'minlength') }" 
+        formControlName="password"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': hasError('password', 'required') || hasError('password', 'minlength') }"
       />
       <div *ngIf="hasError('password', 'required')" class="invalid-feedback">
         La contrasenya és obligatòria
@@ -60,60 +59,76 @@
       </div>
     </div>
 
-    <div class="form-row">
-      <div class="form-group form-group-half">
-        <label for="level">Nivell*</label>
-        <input 
-          type="number" 
-          id="level"
-          formControlName="level" 
-          class="form-control" 
-          [ngClass]="{ 'is-invalid': hasError('level', 'required') || hasError('level', 'min') }" 
-        />
-        <div *ngIf="hasError('level', 'required')" class="invalid-feedback">
-          El nivell és obligatori
+     <div class="form-group mt-3">
+        <label for="role">Rol Inicial:</label>
+        <select *ngIf="isAdmin" id="role" class="form-select" formControlName="role"
+                [ngClass]="{ 'is-invalid': hasError('role', 'required') }">
+            <option *ngFor="let roleOption of availableRoles" [value]="roleOption">
+                {{ roleOption | titlecase }}
+            </option>
+        </select>
+        <input *ngIf="!isAdmin" type="text" id="role-display" class="form-control" value="User" readonly disabled>
+         <div *ngIf="!isAdmin" class="form-text text-muted">El rol inicial será 'User'.</div>
+        <div *ngIf="isAdmin && hasError('role', 'required')" class="invalid-feedback">
+             El rol es requerido.
         </div>
-        <div *ngIf="hasError('level', 'min')" class="invalid-feedback">
-          El nivell no pot ser inferior a 1
-        </div>
-      </div>
-      
-      <div class="form-group form-group-half">
-        <label for="profilePicture">Enllaç de l'imatge de perfil</label>
-        <input 
-          type="text" 
-          id="profilePicture"
-          formControlName="profilePicture" 
-          class="form-control" 
-        />
-      </div>
     </div>
 
-    <div class="form-group">
+    <div class="row mt-3"> <div class="col-md-6"> <div class="form-group">
+             <label for="level">Nivell*</label>
+             <input
+                type="number"
+                id="level"
+                formControlName="level"
+                class="form-control"
+                [ngClass]="{ 'is-invalid': hasError('level', 'required') || hasError('level', 'min') }"
+             />
+             <div *ngIf="hasError('level', 'required')" class="invalid-feedback">
+                El nivell és obligatori
+             </div>
+             <div *ngIf="hasError('level', 'min')" class="invalid-feedback">
+                El nivell no pot ser inferior a 1
+             </div>
+          </div>
+       </div>
+
+       <div class="col-md-6"> <div class="form-group">
+             <label for="profilePicture">Enllaç de l'imatge de perfil</label>
+             <input
+                type="text"
+                id="profilePicture"
+                formControlName="profilePicture"
+                class="form-control"
+             />
+          </div>
+       </div>
+    </div>
+
+    <div class="form-group mt-3">
       <label for="bio">Biografia</label>
-      <textarea 
+      <textarea
         id="bio"
-        formControlName="bio" 
-        class="form-control" 
+        formControlName="bio"
+        class="form-control"
         rows="3"
       ></textarea>
     </div>
 
-    <div class="form-actions">
-      <button 
-        type="button" 
-        class="btn btn-secondary" 
+    <div class="form-actions mt-4 d-flex justify-content-end gap-2"> <button
+        type="button"
+        class="btn btn-secondary"
         (click)="cancel()"
+        [disabled]="loading"
       >
         Cancelar
       </button>
-      <button 
-        type="submit" 
-        class="btn btn-primary" 
-        [disabled]="loading"
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="loading || userForm.invalid"
       >
-        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-        Crear usuari
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
+        {{ loading ? 'Creant...' : 'Crear usuari' }}
       </button>
     </div>
   </form>

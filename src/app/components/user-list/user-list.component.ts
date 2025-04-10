@@ -1,19 +1,25 @@
-// src/app/components/user-list/user-list.component.ts
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { UserService } from '../../services/user.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog'; 
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { CommonModule } from '@angular/common'; 
 
 @Component({
   selector: 'app-user-list',
+  standalone: true,
+  imports: [
+    CommonModule,      
+    RouterModule,      
+    MatDialogModule   
+    // ConfirmDialogComponent
+  ],
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
-  imports : [CommonModule]
+  // Removed duplicate imports property
 })
 export class UserListComponent implements OnInit {
-  users: any[] = [];
+  users: any[] = []; 
   currentPage = 1;
   itemsPerPage = 10;
   totalItems = 0;
@@ -53,15 +59,15 @@ export class UserListComponent implements OnInit {
   }
 
   changePage(page: number): void {
-    if (page < 1 || page > this.totalPages) {
-      return;
-    }
-    this.currentPage = page;
-    this.loadUsers();
+     if (page < 1 || page > this.totalPages) {
+        return; // Evitar números de pàgina invàlids
+     }
+     this.currentPage = page;
+     this.loadUsers();
   }
 
   editUser(userId: string): void {
-    this.router.navigate(['/users/edit', userId]);
+    this.router.navigate(['/users/edit', userId]); 
   }
 
   deleteUser(userId: string): void {
@@ -77,6 +83,7 @@ export class UserListComponent implements OnInit {
           },
           error: (error) => {
             console.error('Error eliminant usuari:', error);
+            // TODO: Mostrar error al usuario
           }
         });
       }

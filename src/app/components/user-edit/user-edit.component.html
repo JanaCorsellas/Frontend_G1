@@ -1,82 +1,97 @@
 <div class="container">
-  <h2>Editar Usuario</h2>
-  
-  <div *ngIf="loading" class="spinner-border text-primary" role="status">
-    <span class="sr-only">Cargando...</span>
+  <h2>Editar Usuario {{ userForm.value.username || '' }}</h2>
+
+  <div *ngIf="loading" class="d-flex justify-content-center my-3">
+     <div class="spinner-border text-primary" role="status">
+         <span class="visually-hidden">Cargando...</span> </div>
   </div>
-  
-  <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
-  
-  <form *ngIf="!loading" [formGroup]="userForm" (ngSubmit)="onSubmit()">
-    <div class="form-group">
-      <label for="username">Nombre de usuario</label>
-      <input 
-        type="text" 
+
+
+  <div *ngIf="error && !loading" class="alert alert-danger">{{ error }}</div>
+
+  <form *ngIf="userForm && !loading" [formGroup]="userForm" (ngSubmit)="onSubmit()" novalidate>
+    <div class="form-group mt-3">
+      <label for="username">Nombre de usuario*</label>
+      <input
+        type="text"
         id="username"
-        formControlName="username" 
-        class="form-control" 
-        [class.is-invalid]="submitted && f['username'].errors" 
+        formControlName="username"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['username'].errors }"
       />
       <div *ngIf="submitted && f['username'].errors" class="invalid-feedback">
         <div *ngIf="f['username'].errors['required']">El nombre de usuario es obligatorio</div>
       </div>
     </div>
-    
+
     <div class="form-group mt-3">
-      <label for="email">Email</label>
-      <input 
-        type="email" 
+      <label for="email">Email*</label>
+      <input
+        type="email"
         id="email"
-        formControlName="email" 
-        class="form-control" 
-        [class.is-invalid]="submitted && f['email'].errors" 
+        formControlName="email"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['email'].errors }"
       />
       <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
         <div *ngIf="f['email'].errors['required']">El email es obligatorio</div>
         <div *ngIf="f['email'].errors['email']">El email debe ser válido</div>
       </div>
     </div>
-    
+
+    <div class="form-group mt-3">
+        <label for="role">Rol:</label>
+        <select *ngIf="isAdmin" id="role" class="form-select" formControlName="role"
+                [ngClass]="{ 'is-invalid': submitted && f['role'].errors }">
+            <option *ngFor="let roleOption of availableRoles" [value]="roleOption">
+                {{ roleOption | titlecase }}
+            </option>
+        </select>
+        <input *ngIf="!isAdmin" type="text" id="role-display" class="form-control" [value]="f['role'].value | titlecase" readonly disabled>
+        <div *ngIf="isAdmin && submitted && f['role'].errors" class="invalid-feedback">
+             <div *ngIf="f['role'].errors['required']">El rol es requerido.</div>
+        </div>
+    </div>
+
     <div class="form-group mt-3">
       <label for="bio">Biografía</label>
-      <textarea 
+      <textarea
         id="bio"
-        formControlName="bio" 
-        class="form-control" 
+        formControlName="bio"
+        class="form-control"
+        rows="3"
       ></textarea>
     </div>
-    
+
     <div class="form-group mt-3">
       <label for="profilePicture">URL de la foto de perfil</label>
-      <input 
-        type="text" 
+      <input
+        type="text"
         id="profilePicture"
-        formControlName="profilePicture" 
-        class="form-control" 
+        formControlName="profilePicture"
+        class="form-control"
       />
     </div>
-    
+
     <div class="form-group mt-3">
-      <label for="level">Nivel</label>
-      <input 
-        type="number" 
+      <label for="level">Nivel*</label>
+      <input
+        type="number"
         id="level"
-        formControlName="level" 
-        class="form-control" 
-        [class.is-invalid]="submitted && f['level'].errors" 
+        formControlName="level"
+        class="form-control"
+        [ngClass]="{ 'is-invalid': submitted && f['level'].errors }"
       />
       <div *ngIf="submitted && f['level'].errors" class="invalid-feedback">
         <div *ngIf="f['level'].errors['required']">El nivel es obligatorio</div>
         <div *ngIf="f['level'].errors['min']">El nivel debe ser al menos 1</div>
       </div>
     </div>
-    
-    <div class="form-group mt-3">
-      <button type="submit" class="btn btn-primary" [disabled]="loading">
-        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+
+    <div class="form-group mt-4 d-flex gap-2"> <button type="submit" class="btn btn-primary" [disabled]="loading">
+        <span *ngIf="loading" class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span>
         Guardar
       </button>
-      <a routerLink="/users" class="btn btn-link">Cancelar</a>
-    </div>
+      <a routerLink="/admin/users" class="btn btn-secondary">Cancelar</a> </div>
   </form>
 </div>

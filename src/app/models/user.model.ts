@@ -4,6 +4,7 @@ export interface User {
   bio: string;
   profilePicture: string;
   level: number;
+  role: 'user' | 'admin';
   email: string;
   activities?: any[];
   visible?: boolean;
