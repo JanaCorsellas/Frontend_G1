@@ -1,11 +1,19 @@
-<div class="container" id="title"><h1>BackOffice</h1>
-</div>
-
-@if(loggedin)
-{
-    <app-backoffice></app-backoffice>
-}
-@else  {
+<div class="container" id="title">
+    <h1></h1>
+  </div>
+  
+  <!-- Verificar si está logueado y redirigir según el rol -->
+  <div *ngIf="loggedin; else notLoggedIn">
+    <div *ngIf="isAdmin; else userView">
+      <app-backoffice></app-backoffice>
+    </div>
+    <ng-template #userView>
+      <!-- Usar router-outlet para la navegación dentro de la vista de usuario -->
+      <router-outlet></router-outlet>
+    </ng-template>
+  </div>
+  
+  <ng-template #notLoggedIn>
     <app-register></app-register>
     <app-login (exportLoggedIn)="getLoggedIn($event)"></app-login>
   </ng-template>

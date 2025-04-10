@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
+import { RegisterComponent } from './register/register.component';
 import { BackOfficeComponent } from './backoffice/backoffice.component';
 import { UserHomeComponent } from './components/user-home/user-home.component';
 import { UserProfileComponent } from './components/user-profile/user-profile.component'; // Añadido UserProfileComponent
@@ -15,6 +16,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     CommonModule,
     RouterModule,
     LoginComponent,
+    RegisterComponent,
     BackOfficeComponent,
     UserHomeComponent,
     UserProfileComponent // Importado UserProfileComponent
@@ -35,5 +37,4 @@ export class AppComponent {
       this.isAdmin = false;
     }
   }
-  title = 'frontend-g1';
 }
