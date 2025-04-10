@@ -32,12 +32,12 @@ export class UsersComponent implements OnInit {
   
   // Dades d'exemple
   allMockUsers: User[] = [
-    { _id: '1', username: 'Usuari1', email: 'usuari1@example.com', level: 1, bio: "Bio d'usuari 1", profilePicture: '', visible: true, visibility: true },
-    { _id: '2', username: 'Usuari2', email: 'usuari2@example.com', level: 2, bio: "Bio d'usuari 2", profilePicture: '', visible: true, visibility: true },
-    { _id: '3', username: 'Usuari3', email: 'usuari3@example.com', level: 3, bio: "Bio d'usuari 3", profilePicture: '', visible: false, visibility: false },
-    { _id: '4', username: 'Usuari4', email: 'usuari4@example.com', level: 1, bio: "Bio d'usuari 4", profilePicture: '', visible: true, visibility: true },
-    { _id: '5', username: 'Usuari5', email: 'usuari5@example.com', level: 2, bio: "Bio d'usuari 5", profilePicture: '', visible: false, visibility: false },
-    { _id: '6', username: 'Usuari6', email: 'usuari6@example.com', level: 3, bio: "Bio d'usuari 1", profilePicture: '', visible: true, visibility: true },
+    { _id: '1', username: 'Usuari1', email: 'usuari1@example.com', level: 1, bio: "Bio d'usuari 1", profilePicture: '', visible: true, visibility: true, role: 'admin' },
+    { _id: '2', username: 'Usuari2', email: 'usuari2@example.com', level: 2, bio: "Bio d'usuari 2", profilePicture: '', visible: true, visibility: true, role: 'user' },
+    { _id: '3', username: 'Usuari3', email: 'usuari3@example.com', level: 3, bio: "Bio d'usuari 3", profilePicture: '', visible: false, visibility: false, role: 'user' },  
+    { _id: '4', username: 'Usuari4', email: 'usuari4@example.com', level: 1, bio: "Bio d'usuari 4", profilePicture: '', visible: true, visibility: true, role: 'user' },
+    { _id: '5', username: 'Usuari5', email: 'usuari5@example.com', level: 2, bio: "Bio d'usuari 5", profilePicture: '', visible: false, visibility: false, role: 'user' },
+    { _id: '6', username: 'Usuari6', email: 'usuari6@example.com', level: 3, bio: "Bio d'usuari 1", profilePicture: '', visible: true, visibility: true, role: 'user' },
   ];
   
   constructor(

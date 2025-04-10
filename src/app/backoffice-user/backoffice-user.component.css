@@ -279,6 +279,49 @@
   border-radius: 4px;
 }
 
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Make the select element consistent with input fields */
+.custom-select {
+  width: 103%;
+  height: 33px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: #fff;
+  appearance: none; /* Remove default dropdown arrow */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  line-height: normal;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.custom-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Add a custom dropdown arrow */
+.custom-select-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid #666;
+  border-bottom: 2px solid #666;
+  transform: rotate(-45deg) translateY(-50%);
+  pointer-events: none;
+}
+
 .edit-form .form-actions {
   display: flex;
   justify-content: flex-end;

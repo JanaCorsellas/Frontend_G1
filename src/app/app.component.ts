@@ -18,8 +18,6 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     LoginComponent,
     RegisterComponent,
     BackOfficeComponent,
-    UserHomeComponent,
-    UserProfileComponent // Importado UserProfileComponent
   ]
 })
 export class AppComponent {
