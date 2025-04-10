@@ -16,6 +16,7 @@ export class LoginComponent implements OnInit {
   authService = inject(AuthService);
   @Output() loggedin = new EventEmitter<string>();
   @Output() exportLoggedIn = new EventEmitter<boolean>();
+  formLogin: FormGroup;
   loading: boolean = false;
   error: string = '';
 
