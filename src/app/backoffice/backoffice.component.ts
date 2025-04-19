@@ -1,17 +1,16 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivitiesComponent } from '../backoffice-activity/backoffice-activity.component';
 import { UsersComponent } from '../backoffice-user/backoffice-user.component';
 import { AuthService } from '../services/auth.service'; // Adjust the path as needed
-
+import{ AchievementComponent} from '../backoffice/backoffice-achievement/backoffice-achievement.component';
 @Component({
   selector: 'app-backoffice',
   templateUrl: './backoffice.component.html',
   styleUrls: ['./backoffice.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ActivitiesComponent, UsersComponent]
+  imports: [CommonModule, FormsModule, ActivitiesComponent, UsersComponent,AchievementComponent ]
 })
 export class BackOfficeComponent implements OnInit {
   

@@ -1,0 +1,69 @@
+<div class="achievement-create-container">
+    <div class="header-with-back">
+      <button type="button" class="btn-back" (click)="cancel()">
+        <i class="material-icons">arrow_back</i> Volver
+      </button>
+      <h2>Crear nou achievement</h2>
+    </div>
+  
+    <form [formGroup]="achievementForm" (ngSubmit)="onSubmit()">
+    @if(error){ 
+       <div  class="alert alert-danger">{{ error }}</div>
+    }
+      <div class="form-group">
+        <label for="name">Títol de l'achievement*</label>
+        <input type="text" id="name" formControlName="name" class="form-control" 
+               [class.is-invalid]="hasError('name', 'required')">
+        @if(hasError('name', 'required')){
+           <div class="invalid-feedback">
+            El títol de l'achievement és obligatori
+          </div>        
+        }
+    </div>
+
+      <div class="form-group">
+        <label for="name">Descripció*</label>
+        <input type="text" id="name" formControlName="description" class="form-control" 
+               [class.is-invalid]="hasError('description', 'required')">
+        @if(hasError('description', 'required')){
+            <div  class="invalid-feedback">
+                La descripció de l'achievement és obligatoria
+            </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="name">Condició del achievement*</label>
+        <input type="text" id="name" formControlName="condition" class="form-control" 
+               [class.is-invalid]="hasError('condition', 'required')">
+        @if(hasError('condition', 'required')){
+            <div class="invalid-feedback">
+                La condició de l'achievement és obligatoria
+            </div>
+        } 
+      </div>
+
+      <div class="form-group">
+        <label for="name">Icona de l'achievement*</label>
+        <input type="text" id="name" formControlName="icon" class="form-control" 
+               [class.is-invalid]="hasError('icon', 'required')">
+        @if(hasError('icon', 'required')){
+            <div class="invalid-feedback">
+                La icona de l'achievement és obligatoria
+            </div>
+        } 
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-save" [disabled]="achievementForm.invalid || loading">
+          @if(loading){
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+          }
+          Crear achievement
+        </button>
+      </div>
+    </form>
+  </div>

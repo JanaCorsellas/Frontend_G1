@@ -1,0 +1,232 @@
+<div class="container">
+    <!-- Botó per crear un achievement -->
+    <div class="action-buttons">
+      <button class="btn-create" (click)="showCreateAchievementForm()">
+        <i class="material-icons">add</i> Crear nou achievement
+      </button>
+      <button class="btn-refresh-achievement" (click)="getAchievements()">
+        <i class="material-icons">refresh</i> Actualitzar
+      </button>
+    </div><!-- Llista paginada d'achievements -->
+    <div class="activities-container" *ngIf="loadedAchievements">
+      <h2>Achievements</h2>
+      
+      <!-- Contenidor de quadrícules pels achievements -->
+      <div class="achievement-grid">
+        <div *ngFor="let achievement of paginatedAchievements; trackBy: trackByAchievementId" 
+            class="achievement-card">
+          <div class="achievement-header">
+            <div class="achievmeent-type-badge" [ngClass]="achievement.type">
+              {{ achievement.type }}
+            </div>
+            <h3 class="achievement">{{ achievement.name }}</h3>
+          </div>
+          <div class="achievement">
+            <p><strong>Descripció:</strong> {{ achievement.description || 'Sense descripció' }}</p>
+            <p><strong>Condició:</strong> {{ achievement.condition || 'Sense condició' }}</p>
+            <p><strong>Icona:</strong> {{ achievement.icon || 'Sense icona' }}</p>
+          </div>
+          <div class="achievement-actions">
+            <button class="btn-edit" (click)="updateAchievement(achievement)">
+              <i class="material-icons">edit</i> Editar
+            </button>
+            <button class="btn-delete" (click)="deleteAchievement(achievement)">
+              <i class="material-icons">delete</i> Eliminar
+            </button>
+           <!-- <button class="btn-view" (click)="getAchievementDetails(achievement)">
+              <i class="material-icons">visibility</i> Detalls
+            </button>-->
+          </div>
+        </div>
+      </div>
+  
+  
+  
+      <!-- Missatge si no hi ha achievements 
+      <div *ngIf="filteredAchievements.length === 0" class="no-achievements">
+        <div class="empty-state">
+          <i class="material-icons large">hiking</i>
+          <h3>No s'han trobat activitats</h3>
+          <p>No hi ha activitats que coincideixin amb els criteris de búsqueda.</p>
+          <button class="btn-create" (click)="showCreateActivityForm()">
+            <i class="material-icons">add</i> Crear nova activitat
+          </button>
+        </div>
+      </div>
+    -->
+      <!-- Paginació -->
+      @if(totalPages > 1){
+      <div class="pagination-controls" >
+        <button 
+            class="pagination-btn" 
+            [disabled]="currentPage === 1"
+            (click)="changePage(currentPage - 1)">
+            « Anterior
+        </button>
+    
+    <span *ngFor="let page of pages" 
+          class="page-number" 
+          [class.active]="page === currentPage"
+          (click)="changePage(page)">
+      {{page}}
+    </span>
+    
+    <button 
+      class="pagination-btn" 
+      [disabled]="currentPage === totalPages"
+      (click)="changePage(currentPage + 1)">
+      Siguiente »
+    </button>
+  </div>
+}
+       
+      @if(totalAchievements > 0){
+      <div class="pagination-info">
+        Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
+        ({{ totalAchievements }} achievements en total)
+      </div>
+}
+  
+    <!-- Crear achievement -->
+    <div class="full-screen-form" *ngIf="showCreateModal">
+      <app-achievement-create (achievementCreated)="onAchievementCreated($event)"></app-achievement-create>
+    </div>
+
+    <!-- Editar achievement 
+    <div class="full-screen-form" *ngIf="showEditModal && selectedAchievement">
+      <div class="edit-modal">
+        <div class="edit-modal-header">
+          <h2>Editar Achievement: {{ selectedAchievement.name }}</h2>
+          <button class="close-btn" (click)="showEditModal = false">&times;</button>
+        </div>
+        <div class="edit-modal-body">
+          <form class="edit-form">
+            <div class="form-group">
+              <label for="edit-name">Títol de l'achievement</label>
+              <input type="text" id="edit-name" [(ngModel)]="selectedAchievement.name" name="name" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-description">Descripció</label>
+                <textarea id="edit-description" 
+                [(ngModel)]="selectedAchievement.description" name="description" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="edit-condition">Condició</label>
+              <input type="text" id="edit-condition" 
+              [(ngModel)]="selectedAchievement.condition" name="condition" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="edit-icon">URL icona </label>
+                <input type="text" id="edit-icon" 
+                [(ngModel)]="selectedAchievement.icon" name="icon" class="form-control">
+              </div>
+            
+            <div class="form-actions">
+              <button type="button" class="btn-cancel" (click)="showEditModal = false">Cancelar</button>
+              <button type="button" class="btn-save" (click)="onAchievementEdited(true)">Guardar canvis</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  
+
+
+    Detalls de l'achievement 
+    <div class="full-screen-form view-details" *ngIf="showViewModal && selectedAchievement">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Detalls de l'achievement</h2>
+            <button class="close-btn" (click)="closeViewModal()">×</button>
+          </div>
+          
+          <div class="modal-body activity-details">
+             Indicador de càrrega 
+            <div *ngIf="loading" class="loading-indicator">
+              <div class="spinner"></div>
+              <p>Carregant detalls de l'activitat...</p>
+            </div>
+          
+            <div class="activity-profile">
+              <div class="activity-type-badge large" [ngClass]="selectedActivity.type">
+                {{ selectedActivity.type | uppercase }}
+              </div>
+              <h3 class="activity-title">{{ selectedActivity.name }}</h3>
+            </div>
+            
+            <div class="details-container">
+              <div class="detail-item">
+                <div class="detail-label">ID:</div>
+                <div class="detail-value">{{ selectedActivity._id }}</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Autor:</div>
+                <div class="detail-value">
+                  <strong>{{ 
+                    selectedActivity.authorName || 
+                    (selectedActivity.author && typeof selectedActivity.author === 'object' && selectedActivity.author.username 
+                      ? selectedActivity.author.username 
+                      : 'Desconegut') 
+                  }}</strong>
+                </div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Data d'inici:</div>
+                <div class="detail-value">{{ selectedActivity.startTime | date:'dd/MM/yyyy HH:mm' }}</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Data de fi:</div>
+                <div class="detail-value">{{ selectedActivity.endTime | date:'dd/MM/yyyy HH:mm' }}</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Duració:</div>
+                <div class="detail-value">{{ formatDuration(selectedActivity.duration) }}</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Distància:</div>
+                <div class="detail-value">{{ (selectedActivity.distance / 1000).toFixed(2) }} km</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Desnivell positiu (metres):</div>
+                <div class="detail-value">{{ selectedActivity.elevationGain }} m</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Velocitat mitjana:</div>
+                <div class="detail-value">{{ selectedActivity.averageSpeed.toFixed(1) }} km/h</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Calories cremades (metres):</div>
+                <div class="detail-value">{{ selectedActivity.caloriesBurned || 'No especificado' }}</div>
+              </div>
+              
+              <div class="detail-item" *ngIf="selectedActivity.route && selectedActivity.route.length > 0">
+                <div class="detail-label">Punts de ruta:</div>
+                <div class="detail-value">{{ selectedActivity.route.length }} punts</div>
+              </div>
+              
+              <div class="detail-item" *ngIf="selectedActivity.musicPlaylist && selectedActivity.musicPlaylist.length > 0">
+                <div class="detail-label">Playlist:</div>
+                <div class="detail-value">{{ selectedActivity.musicPlaylist.length }} cançons</div>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+    -->
+</div>
