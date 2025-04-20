@@ -5,7 +5,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AchievementCreateComponent } from '../../components/achievement-create/achievement-create.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-backoffice-achievement',
@@ -35,11 +34,37 @@ export class AchievementComponent implements OnInit {
   
   constructor(
     private achievementService: AchievementService,
-    private userService: UserService,
     private dialog: MatDialog
   ) {}
 
   allMockAchievements: any[] = [
+    { 
+      _id: '1', 
+      title: 'Running en el parc', 
+      description: 'asdsa', 
+      condition: 'asdda',
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
+      usersUnlocked: '1234', 
+
+    },
+    { 
+      _id: '1', 
+      title: 'Running en el parc', 
+      description: 'asdsa', 
+      condition: 'asdda',
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
+      usersUnlocked: '1234', 
+
+    },
+    { 
+      _id: '1', 
+      title: 'Running en el parc', 
+      description: 'asdsa', 
+      condition: 'asdda',
+      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
+      usersUnlocked: '1234', 
+
+    },
     { 
       _id: '1', 
       title: 'Running en el parc', 
@@ -81,17 +106,19 @@ export class AchievementComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Dades rebudes del servidor:', response);
+          console.log('achievements rebuts:',response.achievement)
           
           if (Array.isArray(response)) {
             this.achievements = response;
             this.totalAchievements = response.length;
             this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
-          } else if (response && response.achievements) {
-            this.achievements = response.achievements;
-            this.totalAchievements = response.totalUsers || response.achievements.length;
+            console.log(this.achievements);
+          } else if (response && response.achievement) {
+            this.achievements = response.achievement;
+            this.totalAchievements = response.totalUsers || response.achievement.length;
             this.totalPages = response.totalPages || Math.ceil(this.totalAchievements / this.itemsPerPage);
           } else {
-            console.warn("No s'han rebut achievemejts del servidor.");
+            console.warn("No s'han rebut achievements del servidor.");
             this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
             this.totalAchievements = this.allMockAchievements.length;
             this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);

@@ -8,7 +8,7 @@
         <i class="material-icons">refresh</i> Actualitzar
       </button>
     </div><!-- Llista paginada d'achievements -->
-    <div class="activities-container" *ngIf="loadedAchievements">
+    <div class="achievement-container" *ngIf="loadedAchievements">
       <h2>Achievements</h2>
       
       <!-- Contenidor de quadrícules pels achievements -->
@@ -16,15 +16,14 @@
         <div *ngFor="let achievement of paginatedAchievements; trackBy: trackByAchievementId" 
             class="achievement-card">
           <div class="achievement-header">
-            <div class="achievmeent-type-badge" [ngClass]="achievement.type">
-              {{ achievement.type }}
-            </div>
-            <h3 class="achievement">{{ achievement.name }}</h3>
+            <img [src]="achievement.icon || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+                 alt="Foto del achievement" 
+                 class="icon-image">
+            <h3 class="achievement-name">{{ achievement.title }}</h3>
           </div>
-          <div class="achievement">
+          <div class="achievement-info">
             <p><strong>Descripció:</strong> {{ achievement.description || 'Sense descripció' }}</p>
             <p><strong>Condició:</strong> {{ achievement.condition || 'Sense condició' }}</p>
-            <p><strong>Icona:</strong> {{ achievement.icon || 'Sense icona' }}</p>
           </div>
           <div class="achievement-actions">
             <button class="btn-edit" (click)="updateAchievement(achievement)">

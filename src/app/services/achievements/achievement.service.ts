@@ -57,6 +57,6 @@ export class AchievementService {
 */
   // Eliminar un usuari
   deleteAchievement(achievementId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${achievementId}`);
+    return this.http.delete(`${this.apiUrl}/delete/${achievementId}`);
   }
 }
