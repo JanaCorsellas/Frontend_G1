@@ -328,26 +328,4 @@ export class AchievementComponent implements OnInit {
     trackByAchievementId(index: number, achievement: any): string {
       return achievement._id;
     }
-    
-    onAchievementEdited(success: boolean): void {
-      if (success && this.selectedAchievement) {
-        const updateData = {
-          ...this.selectedAchievement,
-        };
-        
-        // Actualizar el achievement en la base de datos
-        this.achievementService.updateAchievement(this.selectedAchievement._id, updateData).subscribe({
-          next: (updatedAchievement) => {
-            console.log(`Achievement ${this.selectedAchievement?._id} actualizado correctamente`, updatedAchievement);
-            this.showEditModal = false;
-            this.getAchievements();
-          },
-          error: (error) => {
-            console.error("Error al actualizar el achievement:", error);
-          }
-        });
-      } else {
-        this.showEditModal = false;
-      }
-    }
   }
