@@ -88,52 +88,15 @@
   
     <!-- Crear achievement -->
     <div class="full-screen-form" *ngIf="showCreateModal">
-      <app-achievement-create (achievementCreated)="onAchievementCreated($event)"></app-achievement-create>
+      <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="null"></app-achievement-form>
     </div>
-
-    <!-- Editar achievement 
+   
+    <!-- Editar achievement -->
     <div class="full-screen-form" *ngIf="showEditModal && selectedAchievement">
-      <div class="edit-modal">
-        <div class="edit-modal-header">
-          <h2>Editar Achievement: {{ selectedAchievement.name }}</h2>
-          <button class="close-btn" (click)="showEditModal = false">&times;</button>
-        </div>
-        <div class="edit-modal-body">
-          <form class="edit-form">
-            <div class="form-group">
-              <label for="edit-name">Títol de l'achievement</label>
-              <input type="text" id="edit-name" [(ngModel)]="selectedAchievement.name" name="name" class="form-control">
-            </div>
-            
-            <div class="form-group">
-                <label for="edit-description">Descripció</label>
-                <textarea id="edit-description" 
-                [(ngModel)]="selectedAchievement.description" name="description" class="form-control" rows="3"></textarea>
-            </div>
-
-            <div class="form-group">
-              <label for="edit-condition">Condició</label>
-              <input type="text" id="edit-condition" 
-              [(ngModel)]="selectedAchievement.condition" name="condition" class="form-control">
-            </div>
-            
-            <div class="form-group">
-                <label for="edit-icon">URL icona </label>
-                <input type="text" id="edit-icon" 
-                [(ngModel)]="selectedAchievement.icon" name="icon" class="form-control">
-              </div>
-            
-            <div class="form-actions">
-              <button type="button" class="btn-cancel" (click)="showEditModal = false">Cancelar</button>
-              <button type="button" class="btn-save" (click)="onAchievementEdited(true)">Guardar canvis</button>
-            </div>
-          </form>
-        </div>
-      </div>
+      <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="selectedAchievement"></app-achievement-form>
     </div>
-  
 
-
+<!--
     Detalls de l'achievement 
     <div class="full-screen-form view-details" *ngIf="showViewModal && selectedAchievement">
         <div class="modal-content">

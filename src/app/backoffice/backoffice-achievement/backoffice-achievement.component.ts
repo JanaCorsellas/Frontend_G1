@@ -3,12 +3,12 @@ import { AchievementService } from '../../services/achievements/achievement.serv
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AchievementCreateComponent } from '../../components/achievement-create/achievement-create.component';
+import { AchievementFormComponent } from '../../components/achievement-create/achievement-form.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-backoffice-achievement',
-  imports: [CommonModule, FormsModule, AchievementCreateComponent],
+  imports: [CommonModule, FormsModule, AchievementFormComponent],
   templateUrl: './backoffice-achievement.component.html',
   styleUrl: './backoffice-achievement.component.css'
 })
@@ -307,12 +307,14 @@ export class AchievementComponent implements OnInit {
       }
     }
   */
-    onAchievementCreated(success: boolean): void {
+    onAchievementCreated(achievement: any): void {
       this.showCreateModal = false;
-      if (success) {
+      this.showEditModal = false;
+      if (achievement) {
         this.getAchievements(); // Recargar la llista després de crear un nou achievement
       }
     }
+
     closeViewModal(): void {
       this.showViewModal = false;
       this.selectedAchievement = null;

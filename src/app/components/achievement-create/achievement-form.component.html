@@ -3,7 +3,7 @@
       <button type="button" class="btn-back" (click)="cancel()">
         <i class="material-icons">arrow_back</i> Volver
       </button>
-      <h2>Crear nou achievement</h2>
+      <h2>{{ achievementToEdit ? 'Editar achievement' : 'Crear nou achievement' }}</h2>
     </div>
   
     <form [formGroup]="achievementForm" (ngSubmit)="onSubmit()">
@@ -12,9 +12,9 @@
     }
       <div class="form-group">
         <label for="name">Títol de l'achievement*</label>
-        <input type="text" id="name" formControlName="name" class="form-control" 
-               [class.is-invalid]="hasError('name', 'required')">
-        @if(hasError('name', 'required')){
+        <input type="text" id="name" formControlName="title" class="form-control" 
+               [class.is-invalid]="hasError('title', 'required')">
+        @if(hasError('title', 'required')){
            <div class="invalid-feedback">
             El títol de l'achievement és obligatori
           </div>        
@@ -58,11 +58,11 @@
         <button type="button" class="btn-cancel" (click)="cancel()">
           Cancelar
         </button>
-        <button type="submit" class="btn-primary" [disabled]="loading">
+        <button type="submit" class="btn-create" [disabled]="loading">
           @if(loading){
             <span class="spinner-border spinner-border-sm mr-1"></span>
           }
-          Crear achievement
+          {{ achievementToEdit ? 'Guardar canvis' : 'Crear achievement' }}
         </button>
       </div>
     </form>

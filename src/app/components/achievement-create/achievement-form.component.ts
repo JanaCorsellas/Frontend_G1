@@ -1,27 +1,25 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { AchievementService } from '../../services/achievements/achievement.service';
-import { UserService } from '../../services/user.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
-  selector: 'app-achievement-create',
+  selector: 'app-achievement-form',
   imports: [CommonModule,ReactiveFormsModule],
-  templateUrl: './achievement-create.component.html',
-  styleUrl: './achievement-create.component.css'
+  templateUrl: './achievement-form.component.html',
+  styleUrl: './achievement-form.component.css'
 })
-export class AchievementCreateComponent {
+export class AchievementFormComponent implements OnChanges{
   achievementForm: FormGroup;
-  users:any[] = [];
   loading=false;
   error='';
-
-  @Output()achievementCreated=new EventEmitter<boolean>();
+  
+  @Input() achievementToEdit: any = null;
+  @Output()achievementCreated=new EventEmitter<any>();
 
   constructor(
     private formBuilder:FormBuilder,
     private achievementService: AchievementService,
-    private userService: UserService
   ){
     this.achievementForm=this.formBuilder.group({
       title:['',[Validators.required]],
@@ -32,6 +30,17 @@ export class AchievementCreateComponent {
     });
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['achievementToEdit'] && this.achievementToEdit) {
+      this.achievementForm.patchValue({
+        title: this.achievementToEdit.title || '',
+        description: this.achievementToEdit.description || '',
+        condition: this.achievementToEdit.condition || '',
+        icon: this.achievementToEdit.icon || '',
+        usersUnlocked: this.achievementToEdit.usersUnlocked || []
+      });
+    }
+  }
   onSubmit():void{
     if(this.achievementForm.invalid){
       this.achievementForm.markAllAsTouched();
@@ -41,16 +50,21 @@ export class AchievementCreateComponent {
     this.loading=true;
     this.error='';
 
-    this.achievementService.createAchievement(this.achievementForm.value).subscribe({
+    const achievementData=this.achievementForm.value;
+    const request$ = this.achievementToEdit
+    ? this.achievementService.updateAchievement(this.achievementToEdit._id, achievementData)
+    : this.achievementService.createAchievement(achievementData);
+
+    request$.subscribe({
       next:()=>{
         this.loading=false;
-        this.achievementCreated.emit(true);
+        this.achievementCreated.emit(achievementData);
         this.resetForm();
       },
       error:(error)=>{
         this.loading=false;
-        this.error=error.message || 'Error al crear l\'achievement. Torna-ho a intentar.';
-        console.error('Error al crear l\'achievement:', error);
+        this.error=error.message || 'Error al guardar l\'achievement. Torna-ho a intentar.';
+        console.error('Error al guardar l\'achievement:', error);
       }
     });
   }
@@ -63,6 +77,7 @@ export class AchievementCreateComponent {
       icon:'',
       usersUnlocked:[]
     });
+    this.achievementToEdit=null;
   }
   cancel():void{
     this.achievementCreated.emit(false);

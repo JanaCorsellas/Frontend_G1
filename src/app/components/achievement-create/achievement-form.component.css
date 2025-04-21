@@ -22,6 +22,19 @@
     color: #3f51b5;
   }
   
+  .btn-create {
+    display: flex;
+    align-items: center;
+    background-color: #673ab7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+  }
+  
   .btn-back {
     display: flex;
     align-items: center;

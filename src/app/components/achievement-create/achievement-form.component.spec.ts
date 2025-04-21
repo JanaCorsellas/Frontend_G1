@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AchievementCreateComponent } from './achievement-create.component';
+import { AchievementFormComponent } from './achievement-form.component';
 
 describe('AchievementCreateComponent', () => {
-  let component: AchievementCreateComponent;
-  let fixture: ComponentFixture<AchievementCreateComponent>;
+  let component: AchievementFormComponent;
+  let fixture: ComponentFixture<AchievementFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AchievementCreateComponent]
+      imports: [AchievementFormComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AchievementCreateComponent);
+    fixture = TestBed.createComponent(AchievementFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
