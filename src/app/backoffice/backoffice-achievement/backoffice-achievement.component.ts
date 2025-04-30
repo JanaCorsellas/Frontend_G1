@@ -147,7 +147,6 @@ export class AchievementComponent implements OnInit {
       });
   }
 
-
   updatePaginatedAchievements(): void {
     const startIndex = (this.currentPage - 1) * this.itemsPerPage;
     const endIndex = startIndex + this.itemsPerPage;
@@ -169,153 +168,98 @@ export class AchievementComponent implements OnInit {
     this.updatePaginatedAchievements();
   }
 
-    showCreateAchievementForm(): void {
-      this.showCreateModal = true;
-      this.showEditModal = false;
-      this.showViewModal = false;
-      this.selectedAchievement = null;
-    }
-  
-    updateAchievement(achievement: any): void {
-      console.log('Editar achievement:', achievement);
-      this.selectedAchievement = { ...achievement }; // Crear una còpia per no modificar l'original
-      
-      this.showEditModal = true;
-      this.showCreateModal = false;
-      this.showViewModal = false;
-    }
-  
-    deleteAchievement(achievement: any): void {
-      console.log('Eliminar achievement:', achievement);
-      const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: { message: `Estàs segur de que vols eliminar l'achievement "${achievement.name}"?` }
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.achievementService.deleteAchievement(achievement._id).subscribe({
-            next: () => {
-              console.log(`Achievement ${achievement._id} eliminat`);
-              
-              // Eliminar l'achievement de les dades de prova
-              const index = this.allMockAchievements.findIndex(a => a._id === achievement._id);
-              if (index !== -1) {
-                this.allMockAchievements.splice(index, 1);
-              }
-              
-              this.getAchievements();
-            },
-            error: (error) => {
-              console.error("Error al eliminar l'achievement:", error);
-            }
-          });
-        }
-      });
-    }
-  
-  
-  
-  ///
-  ///
-  //modificar esta función para archievements
-  ///
-  ///
-  /*
-    getAchievementsDetails(achievement: any): void {
-      console.log("Veure detalls de l'achievement:", achievement);
-      
-      // Si l'achievement té un ID vàlid, intentem carregar des del servidor els detalls
-      if (achievement._id) {
-        this.loading = true;
-        
-        // Primer guardem les dades bàsiques que ja tenim
-        this.selectedAchievement = { ...achievement };
-        
-        // Si ja tenim l'informació de l'autor en objecte, extreiem directament el nom de l'autor
-        if (this.selectedAchievement.author && typeof this.selectedAchievement.author === 'object') {
-          if (this.selectedAchievement.author.username) {
-            this.selectedAchievement.authorName = this.selectedAchievement.author.username;
-          }
-        }
-        
-        this.showViewModal = true;
-        
-        // Després intentem obtenir dades més completes del servidor
-        this.achievementService.getAchievementById(achievement._id).subscribe({
-          next: (detailedAchievement) => {
-            console.log("Dades completes de l'activitat:", detailedAchievement);
+  showCreateAchievementForm(): void {
+    this.showCreateModal = true;
+    this.showEditModal = false;
+    this.showViewModal = false;
+    this.selectedAchievement = null;
+  }
+
+  updateAchievement(achievement: any): void {
+    console.log('Editar achievement:', achievement);
+    this.selectedAchievement = { ...achievement }; // Crear una còpia per no modificar l'original
+    
+    this.showEditModal = true;
+    this.showCreateModal = false;
+    this.showViewModal = false;
+  }
+
+  deleteAchievement(achievement: any): void {
+    console.log('Eliminar achievement:', achievement);
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: { message: `Estàs segur de que vols eliminar l'achievement "${achievement.name}"?` }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.achievementService.deleteAchievement(achievement._id).subscribe({
+          next: () => {
+            console.log(`Achievement ${achievement._id} eliminat`);
             
-            // Crear una còpia per no perdre les dades que ja tenim
-            const updatedAchievement = { ...this.selectedAchievement };
-            
-            // Actualitzar amb les noves dades mantenint el nom de l'autor si ja el tenim
-            Object.assign(updatedAchievement, detailedAchievement);
-            
-
-
-//revisar como se hace el codigo, está mal
-
-
-
-            // Manejar específicament el camp author que pot ser un objecte o un string
-            if (detailedAchievement._id) {
-              if (typeof detailedAchievement._id === 'object') {
-                // Si l'autor és un objecte, extreiem el seu nom d'usuari
-                if (detailedAchievement.author.username) {
-                  updatedAchievement.authorName = detailedAchievement.author.username;
-                }
-                // Guardem la referència a l'autor
-                updatedAchievement.authorId = detailedAchievement.author._id;
-              } else if (typeof detailedAchievement.author === 'string') {
-                // Si és un string, carreguem l'usuari associat a l'ID
-                updatedAchievement.authorId = detailedAchievement.author;
-                
-                this.userService.getUserById(detailedAchievement.author).subscribe({
-                  next: (user) => {
-                    if (user && user.username) {
-                      updatedAchievement.authorName = user.username;
-                      this.selectedAchievement = updatedAchievement;
-                    }
-                  },
-                  error: () => {
-                    // Mantenir el que ja teniem
-                  }
-                });
-              }
+            // Eliminar l'achievement de les dades de prova
+            const index = this.allMockAchievements.findIndex(a => a._id === achievement._id);
+            if (index !== -1) {
+              this.allMockAchievements.splice(index, 1);
             }
             
-            // Actualizar l'estat amb les dades processades
-            this.selectedAchievement = updatedAchievement;
-            this.loading = false;
+            this.getAchievements();
           },
           error: (error) => {
-            console.error("Error al carregar els detalls de l'activitat:", error);
-            // Mantenem les dades que ja teniem
-            this.loading = false;
+            console.error("Error al eliminar l'achievement:", error);
           }
         });
-      } else {
-        // Si no hi ha ID, només mostrar les dades que ja tenim
-        this.selectedAchievement = { ...achievement };
-        // Processar el autor si és un objecte
-        if (this.selectedAchievement.author && typeof this.selectedAchievement.author === 'object') {
-          if (this.selectedAchievement.author.username) {
-            this.selectedAchievement.authorName = this.selectedAchievement.author.username;
-          }
-        }
-        this.showViewModal = true;
       }
-    }
-  */
-    onAchievementCreated(achievement: any): void {
+    });
+  }
+
+  getAchievementsDetails(achievement: any): void {
+    console.log("Veure detalls de l'achievement:", achievement);
+    
+    // Si l'achievement té un ID vàlid, intentem carregar des del servidor els detalls
+    if (achievement._id) {
+      this.loading = true;
+      
+      // Primer guardem les dades bàsiques que ja tenim
+      this.selectedAchievement = { ...achievement };
+
+      this.showViewModal = true;
+      
+      // Després intentem obtenir dades més completes del servidor
+      this.achievementService.getAchievementById(achievement._id).subscribe({
+        next: (detailedAchievement) => {
+          console.log("Dades completes de l'achievement:", detailedAchievement);
+          
+      // Crear una còpia per no perdre les dades que ja tenim
+        const updatedAchievement = { ...this.selectedAchievement };
+          
+      // Actualitzar amb les noves dades
+        Object.assign(updatedAchievement, detailedAchievement);
+      // Actualizar l'estat amb les dades processades
+        this.selectedAchievement = updatedAchievement;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error("Error al carregar els detalls de l'achievement:", error);
+       // Mantenim les dades que ja teniem
+        this.loading = false;
+      }
+    });
+  } else {
+  // Si no hi ha ID, només mostrar les dades que ja tenim
+      this.selectedAchievement = { ...achievement };
+      this.showViewModal = true;
+   }
+  }
+    
+  onAchievementCreated(achievement: any): void {
       this.showCreateModal = false;
       this.showEditModal = false;
       if (achievement) {
         this.getAchievements(); // Recargar la llista després de crear un nou achievement
       }
-    }
+  }
 
-    closeViewModal(): void {
+  closeViewModal(): void {
       this.showViewModal = false;
       this.selectedAchievement = null;
       
@@ -323,9 +267,9 @@ export class AchievementComponent implements OnInit {
       if (this.loadedAchievements) {
         this.getAchievements();
       }
-    }
-   
-    trackByAchievementId(index: number, achievement: any): string {
-      return achievement._id;
-    }
   }
+   
+  trackByAchievementId(index: number, achievement: any): string {
+      return achievement._id;
+  }
+}

@@ -29,6 +29,9 @@
             <button class="btn-edit" (click)="updateAchievement(achievement)">
               <i class="material-icons">edit</i> Editar
             </button>
+            <button class="btn-view" (click)="getAchievementsDetails(achievement)">
+              <i class="material-icons">visibility</i> Detalls
+            </button>
             <button class="btn-delete" (click)="deleteAchievement(achievement)">
               <i class="material-icons">delete</i> Eliminar
             </button>
@@ -96,8 +99,7 @@
       <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="selectedAchievement"></app-achievement-form>
     </div>
 
-<!--
-    Detalls de l'achievement 
+   <!-- Detalls de l'achievement -->
     <div class="full-screen-form view-details" *ngIf="showViewModal && selectedAchievement">
         <div class="modal-content">
           <div class="modal-header">
@@ -105,83 +107,51 @@
             <button class="close-btn" (click)="closeViewModal()">×</button>
           </div>
           
-          <div class="modal-body activity-details">
-             Indicador de càrrega 
-            <div *ngIf="loading" class="loading-indicator">
-              <div class="spinner"></div>
-              <p>Carregant detalls de l'activitat...</p>
-            </div>
-          
-            <div class="activity-profile">
-              <div class="activity-type-badge large" [ngClass]="selectedActivity.type">
-                {{ selectedActivity.type | uppercase }}
+          <div class="modal-body achievement-details">
+
+            @if(loading){
+              <div class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Carregant detalls de l'achievement...</p>
               </div>
-              <h3 class="activity-title">{{ selectedActivity.name }}</h3>
+            } 
+            <div class="achievement-profile">
+             <!--<div class="achievement-type-badge large" [ngClass]="selectedAchievement.type">
+                {{ selectedAchievement.type | uppercase }}
+              </div>-->
+              <h3 class="achievement-title">{{ selectedAchievement.name }}</h3>
             </div>
             
             <div class="details-container">
               <div class="detail-item">
                 <div class="detail-label">ID:</div>
-                <div class="detail-value">{{ selectedActivity._id }}</div>
+                <div class="detail-value">{{ selectedAchievement._id }}</div>
+              </div>
+                            
+              <div class="detail-item">
+                <div class="detail-label">Description:</div>
+                <div class="detail-value achievement-description">{{ selectedAchievement.description}}</div>
               </div>
               
               <div class="detail-item">
-                <div class="detail-label">Autor:</div>
+                <div class="detail-label">Condition:</div>
+                <div class="detail-value">{{ selectedAchievement.condition}}</div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">Icon:</div>
+                <div class="detail-value">{{ selectedAchievement.icon}}</div>
+              </div>
+
+              <div class="detail-item" *ngIf="selectedAchievement.usersUnlocked && selectedAchievement.usersUnlocked.length > 0">
+                <div class="detail-label">Users unlocked:</div>
                 <div class="detail-value">
-                  <strong>{{ 
-                    selectedActivity.authorName || 
-                    (selectedActivity.author && typeof selectedActivity.author === 'object' && selectedActivity.author.username 
-                      ? selectedActivity.author.username 
-                      : 'Desconegut') 
-                  }}</strong>
+                  <div *ngFor="let user of selectedAchievement.usersUnlocked">
+                    {{ user.username }}
+                  </div>
                 </div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Data d'inici:</div>
-                <div class="detail-value">{{ selectedActivity.startTime | date:'dd/MM/yyyy HH:mm' }}</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Data de fi:</div>
-                <div class="detail-value">{{ selectedActivity.endTime | date:'dd/MM/yyyy HH:mm' }}</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Duració:</div>
-                <div class="detail-value">{{ formatDuration(selectedActivity.duration) }}</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Distància:</div>
-                <div class="detail-value">{{ (selectedActivity.distance / 1000).toFixed(2) }} km</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Desnivell positiu (metres):</div>
-                <div class="detail-value">{{ selectedActivity.elevationGain }} m</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Velocitat mitjana:</div>
-                <div class="detail-value">{{ selectedActivity.averageSpeed.toFixed(1) }} km/h</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Calories cremades (metres):</div>
-                <div class="detail-value">{{ selectedActivity.caloriesBurned || 'No especificado' }}</div>
-              </div>
-              
-              <div class="detail-item" *ngIf="selectedActivity.route && selectedActivity.route.length > 0">
-                <div class="detail-label">Punts de ruta:</div>
-                <div class="detail-value">{{ selectedActivity.route.length }} punts</div>
-              </div>
-              
-              <div class="detail-item" *ngIf="selectedActivity.musicPlaylist && selectedActivity.musicPlaylist.length > 0">
-                <div class="detail-label">Playlist:</div>
-                <div class="detail-value">{{ selectedActivity.musicPlaylist.length }} cançons</div>
-              </div>
             </div>
+            
             
             <div class="form-actions">
               <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
@@ -189,6 +159,4 @@
           </div>
         </div>
       </div>
-      
-    -->
 </div>
