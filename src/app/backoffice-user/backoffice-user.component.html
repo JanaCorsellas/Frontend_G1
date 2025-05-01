@@ -24,6 +24,7 @@
             <h3 class="user-name">{{ user.username }}</h3>
           </div>
           <div class="user-info">
+            <p><strong>Rol:</strong> {{ user.role }}</p>
             <p><strong>Correu electrònic:</strong> {{ user.email }}</p>
             <p><strong>Nivell:</strong> {{ user.level || 'N/A' }}</p>
             <p class="user-bio"><strong>Bio:</strong> {{ user.bio || 'Sense biografia' }}</p>
@@ -94,6 +95,16 @@
           <label for="edit-username">Nom d'usuari</label>
           <input type="text" id="edit-username" [(ngModel)]="selectedUser.username" name="username" class="form-control">
         </div>
+
+        <div class="form-group">
+          <label for="edit-role">Rol</label>
+          <div class="custom-select-wrapper">
+            <select id="edit-role" [(ngModel)]="selectedUser.role" name="type" class="custom-select">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+        </div>
         
         <div class="form-group">
           <label for="edit-email">Correu electrònic</label>
@@ -140,6 +151,7 @@
         <p><strong>Correu electrònic:</strong> {{ selectedUser.email }}</p>
         <p><strong>Nivell:</strong> {{ selectedUser.level }}</p>
         <p><strong>Estat:</strong> {{ selectedUser.visible ? 'Visible' : 'Ocult' }}</p>
+        <p><strong>Rol:</strong> {{ selectedUser.role }}</p>
         <p><strong>Activitats:</strong></p>
         <ul>
           <li *ngFor="let activity of selectedUser.activities">

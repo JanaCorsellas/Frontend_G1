@@ -1,5 +1,6 @@
 // src/app/components/user-list/user-list.component.ts
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -10,7 +11,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
-  imports: [CommonModule],
+  imports: [CommonModule]
 })
 export class UserListComponent implements OnInit {
   users: any[] = [];
