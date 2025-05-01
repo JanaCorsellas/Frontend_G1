@@ -115,7 +115,7 @@ export class AchievementComponent implements OnInit {
             console.log(this.achievements);
           } else if (response && response.achievement) {
             this.achievements = response.achievement;
-            this.totalAchievements = response.totalUsers || response.achievement.length;
+            this.totalAchievements = response.totalAchievements || response.achievement.length;
             this.totalPages = response.totalPages || Math.ceil(this.totalAchievements / this.itemsPerPage);
           } else {
             console.warn("No s'han rebut achievements del servidor.");
@@ -187,7 +187,7 @@ export class AchievementComponent implements OnInit {
   deleteAchievement(achievement: any): void {
     console.log('Eliminar achievement:', achievement);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: `Estàs segur de que vols eliminar l'achievement "${achievement.name}"?` }
+      data: { message: `Estàs segur de que vols eliminar l'achievement "${achievement.title}"?` }
     });
 
     dialogRef.afterClosed().subscribe(result => {

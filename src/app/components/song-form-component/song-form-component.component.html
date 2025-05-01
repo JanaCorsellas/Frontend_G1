@@ -1,0 +1,58 @@
+<div class="song-form-container">
+    <div class="header-with-back">
+      <button type="button" class="btn-back" (click)="cancel()">
+        <i class="material-icons">arrow_back</i> Volver
+      </button>
+      <h2>{{ songToEdit ? 'Editar canço' : 'Crear nova canço' }}</h2>
+    </div>
+  
+    <form [formGroup]="songForm" (ngSubmit)="onSubmit()">
+    @if(error){ 
+       <div  class="alert alert-danger">{{ error }}</div>
+    }
+      <div class="form-group">
+        <label for="name">Títol de la canço*</label>
+        <input type="text" id="name" formControlName="title" class="form-control" 
+               [class.is-invalid]="hasError('title', 'required')">
+        @if(hasError('title', 'required')){
+           <div class="invalid-feedback">
+            El títol de la canço és obligatori
+          </div>        
+        }
+    </div>
+
+    <div class="form-group">
+        <label for="name">Artista de la canço*</label>
+        <input type="text" id="name" formControlName="artist" class="form-control" 
+               [class.is-invalid]="hasError('artist', 'required')">
+        @if(hasError('artist', 'required')){
+            <div class="invalid-feedback">
+                L'artista de la canço és obligatori
+            </div>
+        } 
+      </div>
+
+    <div class="form-group">
+        <label for="name">Àlbum de la canço*</label>
+        <input type="text" id="name" formControlName="album" class="form-control" 
+               [class.is-invalid]="hasError('album', 'required')">
+        @if(hasError('album', 'required')){
+            <div class="invalid-feedback">
+                L'àlbum de la canço és obligatori
+            </div>
+        } 
+    </div>
+
+    <div class="form-actions">
+        <button type="button" class="btn-cancel" (click)="cancel()">
+          Cancelar
+        </button>
+        <button type="submit" class="btn-create" [disabled]="loading">
+          @if(loading){
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+          }
+          {{ songToEdit ? 'Guardar canvis' : 'Crear achievement' }}
+        </button>
+    </div>
+  </form>
+</div>

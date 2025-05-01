@@ -23,10 +23,6 @@ export class AchievementService {
       .set('page', page.toString())
       .set('limit', limit.toString());
     
-    if (includeHidden) {
-      params = params.set('includeInvisible', 'false');
-    }
-    
     return this.http.get<any>(this.apiUrl, { params });
   }
 
@@ -55,7 +51,7 @@ export class AchievementService {
 
   }
 */
-  // Eliminar un usuari
+  // Eliminar un achievement
   deleteAchievement(achievementId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/delete/${achievementId}`);
   }
