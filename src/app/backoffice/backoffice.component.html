@@ -7,6 +7,9 @@
     <button class="nav-tab" [class.active]="activeTab === 'activities'" (click)="setActiveTab('activities')">
       <i class="material-icons">directions_run</i> Activitats
     </button>
+    <button class="nav-tab" [class.active]="activeTab === 'achievements'" (click)="setActiveTab('achievements')">
+      <i class="material-icons">directions_run</i> Achievements
+    </button>
   </div>
   
   <!-- Visible secció d'usuaris (quan activeTab === 'users') -->
@@ -17,6 +20,11 @@
   <!-- Secció d'activitats (visible quan activeTab === 'activities') -->
   <div *ngIf="activeTab === 'activities'">
     <app-activities></app-activities>
+  </div>
+  
+  <!-- Secció d'achievements (visible quan activeTab === 'achievements') -->
+  <div *ngIf="activeTab === 'achievements'">
+    <app-backoffice-achievement></app-backoffice-achievement>
   </div>
 </div>
 

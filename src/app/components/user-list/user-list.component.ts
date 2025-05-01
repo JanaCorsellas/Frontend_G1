@@ -5,12 +5,13 @@ import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css'],
-  imports : [CommonModule]
+  imports: [CommonModule]
 })
 export class UserListComponent implements OnInit {
   users: any[] = [];

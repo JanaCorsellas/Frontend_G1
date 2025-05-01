@@ -1,0 +1,162 @@
+<div class="container">
+    <!-- Botó per crear un achievement -->
+    <div class="action-buttons">
+      <button class="btn-create" (click)="showCreateAchievementForm()">
+        <i class="material-icons">add</i> Crear nou achievement
+      </button>
+      <button class="btn-refresh-achievement" (click)="getAchievements()">
+        <i class="material-icons">refresh</i> Actualitzar
+      </button>
+    </div><!-- Llista paginada d'achievements -->
+    <div class="achievement-container" *ngIf="loadedAchievements">
+      <h2>Achievements</h2>
+      
+      <!-- Contenidor de quadrícules pels achievements -->
+      <div class="achievement-grid">
+        <div *ngFor="let achievement of paginatedAchievements; trackBy: trackByAchievementId" 
+            class="achievement-card">
+          <div class="achievement-header">
+            <img [src]="achievement.icon || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+                 alt="Foto del achievement" 
+                 class="icon-image">
+            <h3 class="achievement-name">{{ achievement.title }}</h3>
+          </div>
+          <div class="achievement-info">
+            <p><strong>Descripció:</strong> {{ achievement.description || 'Sense descripció' }}</p>
+            <p><strong>Condició:</strong> {{ achievement.condition || 'Sense condició' }}</p>
+          </div>
+          <div class="achievement-actions">
+            <button class="btn-edit" (click)="updateAchievement(achievement)">
+              <i class="material-icons">edit</i> Editar
+            </button>
+            <button class="btn-view" (click)="getAchievementsDetails(achievement)">
+              <i class="material-icons">visibility</i> Detalls
+            </button>
+            <button class="btn-delete" (click)="deleteAchievement(achievement)">
+              <i class="material-icons">delete</i> Eliminar
+            </button>
+           <!-- <button class="btn-view" (click)="getAchievementDetails(achievement)">
+              <i class="material-icons">visibility</i> Detalls
+            </button>-->
+          </div>
+        </div>
+      </div>
+  
+  
+  
+      <!-- Missatge si no hi ha achievements 
+      <div *ngIf="filteredAchievements.length === 0" class="no-achievements">
+        <div class="empty-state">
+          <i class="material-icons large">hiking</i>
+          <h3>No s'han trobat activitats</h3>
+          <p>No hi ha activitats que coincideixin amb els criteris de búsqueda.</p>
+          <button class="btn-create" (click)="showCreateActivityForm()">
+            <i class="material-icons">add</i> Crear nova activitat
+          </button>
+        </div>
+      </div>
+    -->
+      <!-- Paginació -->
+      @if(totalPages > 1){
+      <div class="pagination-controls" >
+        <button 
+            class="pagination-btn" 
+            [disabled]="currentPage === 1"
+            (click)="changePage(currentPage - 1)">
+            « Anterior
+        </button>
+    
+    <span *ngFor="let page of pages" 
+          class="page-number" 
+          [class.active]="page === currentPage"
+          (click)="changePage(page)">
+      {{page}}
+    </span>
+    
+    <button 
+      class="pagination-btn" 
+      [disabled]="currentPage === totalPages"
+      (click)="changePage(currentPage + 1)">
+      Siguiente »
+    </button>
+  </div>
+}
+       
+      @if(totalAchievements > 0){
+      <div class="pagination-info">
+        Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
+        ({{ totalAchievements }} achievements en total)
+      </div>
+}
+  
+    <!-- Crear achievement -->
+    <div class="full-screen-form" *ngIf="showCreateModal">
+      <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="null"></app-achievement-form>
+    </div>
+   
+    <!-- Editar achievement -->
+    <div class="full-screen-form" *ngIf="showEditModal && selectedAchievement">
+      <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="selectedAchievement"></app-achievement-form>
+    </div>
+
+   <!-- Detalls de l'achievement -->
+    <div class="full-screen-form view-details" *ngIf="showViewModal && selectedAchievement">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h2>Detalls de l'achievement</h2>
+            <button class="close-btn" (click)="closeViewModal()">×</button>
+          </div>
+          
+          <div class="modal-body achievement-details">
+
+            @if(loading){
+              <div class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Carregant detalls de l'achievement...</p>
+              </div>
+            } 
+            <div class="achievement-profile">
+             <!--<div class="achievement-type-badge large" [ngClass]="selectedAchievement.type">
+                {{ selectedAchievement.type | uppercase }}
+              </div>-->
+              <h3 class="achievement-title">{{ selectedAchievement.name }}</h3>
+            </div>
+            
+            <div class="details-container">
+              <div class="detail-item">
+                <div class="detail-label">ID:</div>
+                <div class="detail-value">{{ selectedAchievement._id }}</div>
+              </div>
+                            
+              <div class="detail-item">
+                <div class="detail-label">Description:</div>
+                <div class="detail-value achievement-description">{{ selectedAchievement.description}}</div>
+              </div>
+              
+              <div class="detail-item">
+                <div class="detail-label">Condition:</div>
+                <div class="detail-value">{{ selectedAchievement.condition}}</div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">Icon:</div>
+                <div class="detail-value">{{ selectedAchievement.icon}}</div>
+              </div>
+
+              <div class="detail-item" *ngIf="selectedAchievement.usersUnlocked && selectedAchievement.usersUnlocked.length > 0">
+                <div class="detail-label">Users unlocked:</div>
+                <div class="detail-value">
+                  <div *ngFor="let user of selectedAchievement.usersUnlocked">
+                    {{ user.username }}
+                  </div>
+                </div>
+            </div>
+            
+            
+            <div class="form-actions">
+              <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
+            </div>
+          </div>
+        </div>
+      </div>
+</div>

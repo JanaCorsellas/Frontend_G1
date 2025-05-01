@@ -5,7 +5,6 @@ import { ActivityService } from '../services/activity.service';
 import { UserService } from '../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { Activity } from '../models/activity.model';
 import { ActivityCreateComponent } from '../components/activity-create/activity-create.component';
 import { ActivityHistoryComponent } from '../activity-history/activity-history.component';
 
