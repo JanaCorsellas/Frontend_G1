@@ -3,7 +3,7 @@ export interface Song{
     title: string;
     artist: string;
     album: string;
-    genre?: string;
+    genre: string;
     duration?: number;
     spotifyLink?: string;
     bpm?: number;
@@ -15,7 +15,7 @@ export class Song implements Song {
         public title: string,
         public artist: string,
         public album: string,
-        public genre?: string,
+        public genre: string,
         public duration?:number,
         public spotifyLink?:string,
         public bpm?:number,

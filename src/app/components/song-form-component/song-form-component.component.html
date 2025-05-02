@@ -43,6 +43,17 @@
         } 
     </div>
 
+    <div class="form-group">
+      <label for="name">Gènere de la canço*</label>
+      <input type="text" id="name" formControlName="genre" class="form-control" 
+             [class.is-invalid]="hasError('genre', 'required')">
+      @if(hasError('genre', 'required')){
+          <div class="invalid-feedback">
+              El gènere de la canço és obligatori
+          </div>
+      } 
+  </div>
+
     <div class="form-actions">
         <button type="button" class="btn-cancel" (click)="cancel()">
           Cancelar

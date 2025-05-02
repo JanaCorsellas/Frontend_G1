@@ -24,16 +24,17 @@ export class SongFormComponent implements OnChanges{
       title:['',[Validators.required]],
       artist:['',[Validators.required]],
       album:['',[Validators.required]],
-      icon:['',Validators.required],
+      genre:['',[Validators.required]],
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['songToEdit'] && this.songToEdit) {
       this.songForm.patchValue({
-       title: this.songToEdit.title || '',
-       artist: this.songToEdit.artist || '',
-       album: this.songToEdit.album || '',
+        title: this.songToEdit.title || '',
+        artist: this.songToEdit.artist || '',
+        album: this.songToEdit.album || '',
+        genre: this.songToEdit.genre || '',
       });
     }
   }
@@ -67,11 +68,10 @@ export class SongFormComponent implements OnChanges{
 
   resetForm():void{
     this.songForm.reset({
-     /* title:'',
-      description:'',
-      condition: '',
-      icon:'',
-      usersUnlocked:[]*/
+      title:'',
+      artist:'',
+      album: '',
+      genre: '',
     });
     this.songToEdit=null;
   }

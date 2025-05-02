@@ -37,6 +37,6 @@ private apiUrl = 'http://localhost:3000/api/songs';
 
   // Eliminar una cançó
   deleteSong(songId: string): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/delete/${songId}`);
+    return this.http.delete(`${this.apiUrl}/${songId}`);
   }
 }
