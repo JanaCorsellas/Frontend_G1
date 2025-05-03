@@ -110,9 +110,9 @@
               </div>
             } 
             <div class="song-profile">
-             <!--<div class="song-type-badge large" [ngClass]="selectedSong.type">
-                {{ selectedSong.type | uppercase }}
-              </div>-->
+             <div class="song-type-badge large" [ngClass]="selectedSong.type">
+                {{ selectedSong.genre | uppercase }}
+              </div>
               <h3 class="song-title">{{ selectedSong.title }}</h3>
             </div>
             
@@ -128,8 +128,13 @@
               </div>
               
               <div class="detail-item">
-                <div class="detail-label">album:</div>
+                <div class="detail-label">Àlbum:</div>
                 <div class="detail-value">{{ selectedSong.album}}</div>
+              </div>
+
+              <div class="detail-item">
+                <div class="detail-label">Gènere:</div>
+                <div class="detail-value">{{ selectedSong.genre}}</div>
               </div>
             
             <div class="form-actions">
