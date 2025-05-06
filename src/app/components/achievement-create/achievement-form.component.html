@@ -1,7 +1,7 @@
 <div class="achievement-create-container">
     <div class="header-with-back">
       <button type="button" class="btn-back" (click)="cancel()">
-        <i class="material-icons">arrow_back</i> Volver
+        <i class="material-icons">arrow_back</i> Tornar
       </button>
       <h2>{{ achievementToEdit ? 'Editar achievement' : 'Crear nou achievement' }}</h2>
     </div>
@@ -11,12 +11,12 @@
        <div  class="alert alert-danger">{{ error }}</div>
     }
       <div class="form-group">
-        <label for="name">Títol de l'achievement*</label>
+        <label for="name">Títol de l'assoliment*</label>
         <input type="text" id="name" formControlName="title" class="form-control" 
                [class.is-invalid]="hasError('title', 'required')">
         @if(hasError('title', 'required')){
            <div class="invalid-feedback">
-            El títol de l'achievement és obligatori
+            El títol de l'assoliment és obligatori
           </div>        
         }
     </div>
@@ -27,31 +27,25 @@
                [class.is-invalid]="hasError('description', 'required')">
         @if(hasError('description', 'required')){
             <div  class="invalid-feedback">
-                La descripció de l'achievement és obligatoria
+                La descripció de l'assoliment és obligatoria
             </div>
         }
       </div>
 
       <div class="form-group">
-        <label for="name">Condició del achievement*</label>
+        <label for="name">Condició de l'assoliment*</label>
         <input type="text" id="name" formControlName="condition" class="form-control" 
                [class.is-invalid]="hasError('condition', 'required')">
         @if(hasError('condition', 'required')){
             <div class="invalid-feedback">
-                La condició de l'achievement és obligatoria
+                La condició de l'assoliment és obligatoria
             </div>
         } 
       </div>
 
       <div class="form-group">
-        <label for="name">Icona de l'achievement*</label>
-        <input type="text" id="name" formControlName="icon" class="form-control" 
-               [class.is-invalid]="hasError('icon', 'required')">
-        @if(hasError('icon', 'required')){
-            <div class="invalid-feedback">
-                La icona de l'achievement és obligatoria
-            </div>
-        } 
+        <label for="name">Icona de l'assoliment*</label>
+        <input type="text" id="name" formControlName="icon" class="form-control" >
       </div>
 
       <div class="form-actions">

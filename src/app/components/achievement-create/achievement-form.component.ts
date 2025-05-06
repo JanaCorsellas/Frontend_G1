@@ -24,7 +24,7 @@ export class AchievementFormComponent implements OnChanges{
       title:['',[Validators.required]],
       description:['',[Validators.required]],
       condition:['',[Validators.required]],
-      icon:['',Validators.required],
+      icon:[''],
       usersUnlocked:[[]],
     });
   }
@@ -51,6 +51,11 @@ export class AchievementFormComponent implements OnChanges{
     this.error='';
 
     const achievementData=this.achievementForm.value;
+
+    if (!achievementData.icon || achievementData.icon.trim() === '') {
+      achievementData.icon = 'https://cdn-icons-png.flaticon.com/512/2887/2887330.png'; // Replace with your actual default icon path
+    }
+
     const request$ = this.achievementToEdit
     ? this.achievementService.updateAchievement(this.achievementToEdit._id, achievementData)
     : this.achievementService.createAchievement(achievementData);

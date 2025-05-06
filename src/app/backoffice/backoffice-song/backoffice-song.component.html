@@ -2,7 +2,7 @@
     <!-- Botó per crear una canço -->
     <div class="action-buttons">
       <button class="btn-create" (click)="showCreateSongForm()">
-        <i class="material-icons">add</i> Crear nova canço
+        <i class="material-icons">add</i> Crear nova cançó
       </button>
       <button class="btn-refresh-song" (click)="getSongs()">
         <i class="material-icons">refresh</i> Actualitzar
@@ -18,9 +18,9 @@
             <h3 class="song-name">{{ song.title }}</h3>
           </div>
           <div class="song-info">
-            <p><strong>Title:</strong> {{ song.title || 'Sense títul' }}</p>
-            <p><strong>Artist:</strong> {{ song.artist || 'Sense artista' }}</p>
-            <p><strong>Album:</strong> {{ song.album || 'Sense àlbum' }}</p>
+            <p><strong>Títol:</strong> {{ song.title || 'Sense títul' }}</p>
+            <p><strong>Artista:</strong> {{ song.artist || 'Sense artista' }}</p>
+            <p><strong>Àlbum:</strong> {{ song.album || 'Sense àlbum' }}</p>
           </div>
           <div class="song-actions">
             <button class="btn-edit" (click)="updateSong(song)">
@@ -71,7 +71,7 @@
       class="pagination-btn" 
       [disabled]="currentPage === totalPages"
       (click)="changePage(currentPage + 1)">
-      Siguiente »
+      Següent »
     </button>
   </div>
 }
@@ -83,21 +83,21 @@
       </div>
 }
   
-    <!-- Crear canço -->
+    <!-- Crear cançó -->
     <div class="full-screen-form" *ngIf="showCreateModal">
       <app-song-form-component (songCreated)="onSongCreated($event)" [songToEdit]="null"></app-song-form-component>
     </div>
    
-    <!-- Editar canço -->
+    <!-- Editar cançó -->
     <div class="full-screen-form" *ngIf="showEditModal && selectedSong">
       <app-song-form-component (songCreated)="onSongCreated($event)" [songToEdit]="selectedSong"></app-song-form-component>
     </div>
 
-   <!-- Detalls de la canço -->
+   <!-- Detalls de la cançó -->
     <div class="full-screen-form view-details" *ngIf="showViewModal && selectedSong">
         <div class="modal-content">
           <div class="modal-header">
-            <h2>Detalls de la canço</h2>
+            <h2>Detalls de la cançó</h2>
             <button class="close-btn" (click)="closeViewModal()">×</button>
           </div>
           
@@ -106,7 +106,7 @@
             @if(loading){
               <div class="loading-indicator">
                 <div class="spinner"></div>
-                <p>Carregant detalls de la cançp...</p>
+                <p>Carregant detalls de la cançó...</p>
               </div>
             } 
             <div class="song-profile">
@@ -123,7 +123,7 @@
               </div>
                             
               <div class="detail-item">
-                <div class="detail-label">Artist:</div>
+                <div class="detail-label">Artista:</div>
                 <div class="detail-value song-artist">{{ selectedSong.artist}}</div>
               </div>
               
