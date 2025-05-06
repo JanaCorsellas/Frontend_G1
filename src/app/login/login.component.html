@@ -1,19 +1,36 @@
 <div class = "container">
-    <form [formGroup]="formLogin" (ngSubmit)="login()">
-        <h1>Inici de sessió</h1>
-        <div class="mb-3">
-            <label for="username" class="form-label">Nom d'usuari:  </label>
-            <input [ngClass]="{'is-invalid': hasError('username','required') || hasError('username','email')}"
-            type="username" class="form-control" id="username" formControlName="username">
-            <div class="text-danger" *ngIf="hasError('username','required')">Nom d'usuari obligatori.</div>
-        </div>
-        <div class="mb-3">
-            <label for="password" class="form-label">Contrasenya:  </label>
-            <input [ngClass]="{'is-invalid': hasError('password','required') || hasError('password','minlength')}"
-            type="password" class="form-control" id="password" formControlName="password">
-            <div class="text-danger" *ngIf="hasError('password','required')">Contrasenya obligatòria.</div>
-            <div class="text-danger" *ngIf="hasError('password','minlength')">Contrasenya invàlida (ha de tenir com a mínim 8 caràcters).</div>
-        </div>
-        <button type="submit" class="btn btn-primary">Iniciar sessió</button>
-    </form>
-</div>
+            <form [formGroup]="formLogin" (ngSubmit)="login()">
+            <h1>Inici de sessió</h1>
+            <div class="mb-3">
+                            <label for="email" class="form-label">Correu electrònic:  </label>
+                <input [ngClass]="{'is-invalid': hasError('email','required') || hasError('email','email')}"
+                type="email" class="form-control" id="email" formControlName="email" required>
+                            <div class="text-danger" *ngIf="hasError('email','required')">Correu electrònic obligatori.</div>
+                <div class="text-danger" *ngIf="hasError('email','email')">Correu electrònic invàlid.</div>
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Contrasenya:  </label>
+                <input [ngClass]="{'is-invalid': hasError('password','required') || hasError('password','minlength')}"
+                type="password" class="form-control" id="password" formControlName="password" required>
+                <div class="text-danger" *ngIf="hasError('password','required')">Contrasenya obligatòria.</div>
+                            <div class="text-danger" *ngIf="hasError('password','minlength')">Contrasenya invàlida (ha de tenir com a mínim 6 caràcters).</div>
+            </div>
+    
+            <div class="text-danger" *ngIf="error">
+                {{ error }}
+            </div>
+    
+            <button type="submit" class="btn btn-primary" [disabled]="formLogin.invalid || loading">Iniciar sessió</button>
+        </form>
+    
+        <p>o</p>
+    
+        <button class="btn btn-secondary" (click)="loginWithGoogle()" [disabled]="loading">
+            Iniciar Sessió amb Google
+        </button>
+    
+        <p>¿No tienes cuenta? <a routerLink="/register">Regístrate aquí</a></p>
+    
+        <div *ngIf="loading">Cargando...</div>
+    
+    </div>

@@ -1,19 +1,39 @@
 <div class="container" id="title">
-    <h1></h1>
-  </div>
+      <h1>{{ title }}</h1>   </div>
   
-  <!-- Verificar si está logueado y redirigir según el rol -->
-  <div *ngIf="loggedin; else notLoggedIn">
-    <div *ngIf="isAdmin; else userView">
-      <app-backoffice></app-backoffice>
-    </div>
-    <ng-template #userView>
-      <!-- Usar router-outlet para la navegación dentro de la vista de usuario -->
-      <router-outlet></router-outlet>
-    </ng-template>
-  </div>
+    <nav>
+      <ng-container *ngIf="(authService.isAuthenticated$ | async) === false">
+        <a routerLink="/login">Login</a> |
+        <a routerLink="/register">Registro</a>
+      </ng-container>
   
-  <ng-template #notLoggedIn>
-    <app-register></app-register>
-    <app-login (exportLoggedIn)="getLoggedIn($event)"></app-login>
-  </ng-template>
+      <ng-container *ngIf="authService.isAuthenticated$ | async as isAuthenticated">
+         <a routerLink="/user-home">Mi Perfil</a> |
+        <a routerLink="/users">Usuarios</a> |
+  
+        <ng-container *ngIf="(authService.currentUser$ | async) as currentUser">
+          <ng-container *ngIf="currentUser?.role === 'admin'">
+             | <a routerLink="/admin">Panel Admin</a>
+          </ng-container>
+        </ng-container>
+  
+        | <a href="#" (click)="onLogout()">Logout</a> </ng-container>
+    </nav>
+  
+        <div *ngIf="(authService.isAuthenticated$ | async) as isAuthenticated; else notLoggedIn">
+              <div *ngIf="(authService.currentUser$ | async) as currentUser">
+         <div *ngIf="currentUser?.role === 'admin'; else userView">
+            <app-backoffice></app-backoffice>
+         </div>
+         <ng-template #userView>
+                    <router-outlet></router-outlet>
+          </ng-template>
+      </div>
+        <ng-template #noUserLoaded>
+           Cargando información de usuario...
+        </ng-template>
+    </div>
+  
+    <ng-template #notLoggedIn>
+              <p>Por favor, <a routerLink="/login">inicia sesión</a> o <a routerLink="/register">regístrate</a>.</p>
+        </ng-template>
