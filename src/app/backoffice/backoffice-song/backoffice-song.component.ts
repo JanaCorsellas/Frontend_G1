@@ -16,9 +16,8 @@ export class BackofficeSongComponent implements OnInit {
   songs: any[] = [];
   totalSongs = 0;
   filteredSongs: any[] = [];
-  paginatedSongs: any[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 6;
   totalPages = 0;
   pages: number[] = [];
   loadedSongs = false;
@@ -33,6 +32,7 @@ export class BackofficeSongComponent implements OnInit {
   artists: string[] = [];
   albums: string[] = [];
   genres: string[] = [];
+  pageSizes: number[] = [6, 12, 24, 48];
   filter = {
     title: '',
     artist: '',
@@ -127,6 +127,14 @@ export class BackofficeSongComponent implements OnInit {
       genre: ''
     };
     this.filteredSongs = [...this.songs];
+  }
+
+  changePageSize(event: Event) {
+    // Es passa l'event i no el número directament perquè $event.target.value pot ser NULL
+    const size = +(event.target as HTMLSelectElement).value;
+    this.currentPage = 1;
+    this.itemsPerPage = size;
+    this.getSongs(this.currentPage);
   }
 
   generatePageNumbers(): void {

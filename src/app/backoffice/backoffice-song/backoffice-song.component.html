@@ -42,6 +42,12 @@
         </label>
         <button type="button" class="btn-reset-filter" (click)="resetSearchFilter()">Restablir</button>
       </form>
+      <label>
+        Resultats per pàgina:
+        <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </label>
     </div>
     
     <!-- Contenidor de quadrícules per les cançons -->

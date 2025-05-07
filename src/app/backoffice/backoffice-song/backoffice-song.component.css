@@ -164,9 +164,10 @@
   align-items: center;
   gap: 24px;
   flex-wrap: wrap;
+  margin-bottom: 10px;
 }
 
-.filter-form label {
+.song-container label {
   align-items: center;
   margin-bottom: 0;
   font-weight: 500;
