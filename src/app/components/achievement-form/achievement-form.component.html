@@ -1,0 +1,60 @@
+<div class="achievement-create-container">
+    <div class="header-with-back">
+      <button type="button" class="btn-back" (click)="cancel()">
+        <i class="material-icons">arrow_back</i> Tornar
+      </button>
+      <h2>{{ achievementToEdit ? 'Editar achievement' : 'Crear nou achievement' }}</h2>
+    </div>
+  
+    <form [formGroup]="achievementForm" (ngSubmit)="onSubmit()">
+    @if(error){ 
+       <div  class="alert alert-danger">{{ error }}</div>
+    }
+      <div class="form-group">
+        <label for="name">Títol de l'assoliment*</label>
+        <input type="text" id="name" formControlName="title" class="form-control" 
+               [class.is-invalid]="hasError('title', 'required')">
+        @if(hasError('title', 'required')){
+           <div class="invalid-feedback">
+            El títol de l'assoliment és obligatori
+          </div>        
+        }
+    </div>
+
+      <div class="form-group">
+        <label for="name">Descripció*</label>
+        <input type="text" id="name" formControlName="description" class="form-control" 
+               [class.is-invalid]="hasError('description', 'required')">
+        @if(hasError('description', 'required')){
+            <div  class="invalid-feedback">
+                La descripció de l'assoliment és obligatoria
+            </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="name">Condició de l'assoliment*</label>
+        <input type="text" id="name" formControlName="condition" class="form-control" 
+               [class.is-invalid]="hasError('condition', 'required')">
+        @if(hasError('condition', 'required')){
+            <div class="invalid-feedback">
+                La condició de l'assoliment és obligatoria
+            </div>
+        } 
+      </div>
+
+      <div class="form-group">
+        <label for="name">Icona de l'assoliment*</label>
+        <input type="text" id="name" formControlName="icon" class="form-control" >
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-create" [disabled]="loading">
+          @if(loading){
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+          }
+          {{ achievementToEdit ? 'Guardar canvis' : 'Crear achievement' }}
+        </button>
+      </div>
+    </form>
+  </div>

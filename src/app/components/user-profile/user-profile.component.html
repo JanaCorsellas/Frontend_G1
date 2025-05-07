@@ -1,17 +1,17 @@
 <div class="profile-container">
     <header class="profile-header">
       <button class="back-btn" (click)="goToHome()">
-        <i class="material-icons">arrow_back</i> Volver
+        <i class="material-icons">arrow_back</i> Tornar
       </button>
-      <h1>Mi Perfil</h1>
+      <h1>El Meu Perfil</h1>
       <button class="logout-btn" (click)="logout()">
-        <i class="material-icons">exit_to_app</i> Cerrar sesión
+        <i class="material-icons">exit_to_app</i> Tancar sessió
       </button>
     </header>
   
     <div *ngIf="loading" class="loading-spinner">
       <div class="spinner"></div>
-      <p>Cargando datos del perfil...</p>
+      <p>Carregant dades del perfil...</p>
     </div>
   
     <div *ngIf="error" class="error-message">
@@ -30,7 +30,7 @@
         <div class="profile-info">
           <h2>{{ user.username }}</h2>
           <p class="user-email">{{ user.email }}</p>
-          <p class="user-level">Nivel: {{ user.level || 1 }}</p>
+          <p class="user-level">Nivell: {{ user.level || 1 }}</p>
         </div>
         <button class="edit-btn" (click)="toggleEditMode()">
           <i class="material-icons">{{ editMode ? 'close' : 'edit' }}</i>
@@ -41,39 +41,39 @@
       <div class="profile-body">
         <div *ngIf="!editMode" class="profile-details">
           <div class="detail-item">
-            <span class="detail-label">Biografía:</span>
-            <span class="detail-value">{{ user.bio || 'Sin biografía' }}</span>
+            <span class="detail-label">Biografia:</span>
+            <span class="detail-value">{{ user.bio || 'En blanc' }}</span>
           </div>
           
           <div class="detail-item">
-            <span class="detail-label">Distancia total:</span>
+            <span class="detail-label">Distància total:</span>
             <span class="detail-value">{{ (user.totalDistance / 1000).toFixed(2) }} km</span>
           </div>
           
           <div class="detail-item">
-            <span class="detail-label">Tiempo total:</span>
-            <span class="detail-value">{{ user.totalTime || 0 }} minutos</span>
+            <span class="detail-label">Temps total:</span>
+            <span class="detail-value">{{ user.totalTime || 0 }} minuts</span>
           </div>
           
           <div class="detail-item">
-            <span class="detail-label">Actividades:</span>
+            <span class="detail-label">Activitats:</span>
             <span class="detail-value">{{ user.activities?.length || 0 }}</span>
           </div>
           
           <div class="detail-item">
-            <span class="detail-label">Logros conseguidos:</span>
+            <span class="detail-label">Èxits aconseguits:</span>
             <span class="detail-value">{{ user.achievements?.length || 0 }}</span>
           </div>
           
           <div class="detail-item">
-            <span class="detail-label">Retos completados:</span>
+            <span class="detail-label">Reptes completats:</span>
             <span class="detail-value">{{ user.challengesCompleted?.length || 0 }}</span>
           </div>
         </div>
   
         <form *ngIf="editMode" [formGroup]="profileForm" (ngSubmit)="saveProfile()" class="edit-form">
           <div class="form-group">
-            <label for="username">Nombre de usuario:</label>
+            <label for="username">Nom d'usuari:</label>
             <input 
               type="text" 
               id="username" 
@@ -81,15 +81,15 @@
               [class.is-invalid]="hasError('username', 'required') || hasError('username', 'minlength')"
             >
             <div *ngIf="hasError('username', 'required')" class="invalid-feedback">
-              El nombre de usuario es obligatorio
+              El nom d'usuari és obligatori
             </div>
             <div *ngIf="hasError('username', 'minlength')" class="invalid-feedback">
-              El nombre de usuario debe tener al menos 4 caracteres
+              El nom d'usuari ha de contenir almenys 4 caràcters
             </div>
           </div>
           
           <div class="form-group">
-            <label for="email">Correo electrónico:</label>
+            <label for="email">Correu electrònic:</label>
             <input 
               type="email" 
               id="email" 
@@ -97,15 +97,15 @@
               [class.is-invalid]="hasError('email', 'required') || hasError('email', 'email')"
             >
             <div *ngIf="hasError('email', 'required')" class="invalid-feedback">
-              El correo electrónico es obligatorio
+              El correu electrònic és obligatori
             </div>
             <div *ngIf="hasError('email', 'email')" class="invalid-feedback">
-              El formato del correo electrónico no es válido
+              El format del correu no és vàlid
             </div>
           </div>
           
           <div class="form-group">
-            <label for="profilePicture">URL de imagen de perfil:</label>
+            <label for="profilePicture">URL d'imatge de perfil:</label>
             <input 
               type="text" 
               id="profilePicture" 
@@ -114,7 +114,7 @@
           </div>
           
           <div class="form-group">
-            <label for="bio">Biografía:</label>
+            <label for="bio">Biografia:</label>
             <textarea 
               id="bio" 
               formControlName="bio"
@@ -126,7 +126,7 @@
             <button type="button" class="btn-cancel" (click)="toggleEditMode()">Cancelar</button>
             <button type="submit" class="btn-save" [disabled]="profileForm.invalid || loading">
               <span *ngIf="loading" class="spinner-sm"></span>
-              Guardar cambios
+              Guardar canvis
             </button>
           </div>
         </form>

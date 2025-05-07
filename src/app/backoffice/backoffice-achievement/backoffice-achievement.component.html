@@ -1,0 +1,157 @@
+<div class="container">
+  <!-- Botó per crear un achievement -->
+  <div class="action-buttons">
+    <button class="btn-create" (click)="showCreateAchievementForm()">
+      <i class="material-icons">add</i> Crear nou assoliment
+    </button>
+    <button class="btn-refresh-achievement" (click)="getAchievements(1)">
+      <i class="material-icons">refresh</i> Actualitzar
+    </button>
+  </div>
+  
+  <!-- Llista paginada d'achievements -->
+  <div class="achievement-container" *ngIf="loadedAchievements">
+
+    <!-- Secció de filtratge -->
+    <div class="filter-container">
+      <label>
+        Resultats per pàgina:
+        <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+      </div>
+
+    <!-- Contenidor de quadrícules pels achievements -->
+    <div class="achievement-grid">
+      <div *ngFor="let achievement of filteredAchievements; trackBy: trackByAchievementId" 
+          class="achievement-card">
+        <div class="achievement-header">
+          <img [src]="achievement.icon || 'https://cdn-icons-png.flaticon.com/512/2887/2887330.png'" 
+                alt="Foto del achievement" 
+                class="icon-image">
+          <h3 class="achievement-name">{{ achievement.title }}</h3>
+        </div>
+        <div class="achievement-info">
+          <p><strong>Descripció:</strong> {{ achievement.description || 'Sense descripció' }}</p>
+          <p><strong>Condició:</strong> {{ achievement.condition || 'Sense condició' }}</p>
+        </div>
+        <div class="achievement-actions">
+          <button class="btn-edit" (click)="updateAchievement(achievement)">
+            <i class="material-icons">edit</i> Editar
+          </button>
+          <button class="btn-view" (click)="getAchievementsDetails(achievement)">
+            <i class="material-icons">visibility</i> Detalls
+          </button>
+          <button class="btn-delete" (click)="deleteAchievement(achievement)">
+            <i class="material-icons">delete</i> Eliminar
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Missatge si no hi ha achievements -->
+    <div *ngIf="filteredAchievements.length === 0" class="no-achievements">
+      <div class="empty-state">
+        <i class="material-icons large">info</i>
+        <h3>No s'han trobat assoliments</h3>
+        <p>No hi ha assoliments que coincideixin amb els criteris de búsqueda.</p>
+      </div>
+    </div>
+    
+    <!-- Paginació -->
+    <div class="pagination-controls" *ngIf="filteredAchievements.length > 0">
+      <button 
+          class="pagination-btn" 
+          [disabled]="currentPage === 1"
+          (click)="changePage(currentPage - 1)">
+          « Anterior
+      </button>
+    
+      <span *ngFor="let page of pages" 
+            class="page-number" 
+            [class.active]="page === currentPage"
+            (click)="changePage(page)">
+        {{page}}
+      </span>
+    
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)">
+        Següent »
+      </button>
+    </div>
+  
+    <!-- Crear achievement -->
+    <div class="full-screen-form" *ngIf="showCreateModal">
+      <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="null"></app-achievement-form>
+    </div>
+   
+    <!-- Editar achievement -->
+    <div class="full-screen-form" *ngIf="showEditModal && selectedAchievement">
+      <app-achievement-form (achievementCreated)="onAchievementCreated($event)" [achievementToEdit]="selectedAchievement"></app-achievement-form>
+    </div>
+
+   <!-- Detalls de l'achievement -->
+    <div class="full-screen-form view-details" *ngIf="showViewModal && selectedAchievement">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Detalls de l'assoliment</h2>
+          <button class="close-btn" (click)="closeViewModal()">×</button>
+        </div>
+        
+        <div class="modal-body achievement-details">
+
+          @if(loading){
+            <div class="loading-indicator">
+              <div class="spinner"></div>
+              <p>Carregant detalls de l'assoliment...</p>
+            </div>
+          } 
+          <div class="achievement-profile">
+            <div class="achievement-type-badge large" [ngClass]="selectedAchievement.type">
+              {{ selectedAchievement.type | uppercase }}
+            </div>
+            <h3 class="achievement-title">{{ selectedAchievement.name }}</h3>
+          </div>
+          
+          <div class="details-container">
+            <div class="detail-item">
+              <div class="detail-label">ID:</div>
+              <div class="detail-value">{{ selectedAchievement._id }}</div>
+            </div>
+                          
+            <div class="detail-item">
+              <div class="detail-label">Descripció:</div>
+              <div class="detail-value achievement-description">{{ selectedAchievement.description}}</div>
+            </div>
+            
+            <div class="detail-item">
+              <div class="detail-label">Condició:</div>
+              <div class="detail-value">{{ selectedAchievement.condition}}</div>
+            </div>
+
+            <div class="detail-item">
+              <div class="detail-label">Icona:</div>
+              <div class="detail-value">{{ selectedAchievement.icon}}</div>
+            </div>
+
+            <div class="detail-item" *ngIf="selectedAchievement.usersUnlocked && selectedAchievement.usersUnlocked.length > 0">
+              <div class="detail-label">Usuaris desbloquejats:</div>
+              <div class="detail-value">
+                <div *ngFor="let user of selectedAchievement.usersUnlocked">
+                  {{ user.username }}
+                </div>
+              </div>
+            </div>
+            
+            <div class="form-actions">
+              <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

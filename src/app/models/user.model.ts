@@ -8,6 +8,7 @@ export interface User {
   activities?: any[];
   visible?: boolean;
   visibility?: boolean;
+  role: string;
 }
 
 export class User implements User {
@@ -20,6 +21,7 @@ export class User implements User {
     public email: string,
     public activities?: any[],
     public visible?: boolean,
-    public visibility?: boolean
+    public visibility?: boolean,
+    public role: string = 'user' // Rol per defecte 'user'
   ) {}
 }

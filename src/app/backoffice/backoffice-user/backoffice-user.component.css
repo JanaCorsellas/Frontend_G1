@@ -173,6 +173,30 @@
   opacity: 0.9;
 }
 
+/* Estils addicionals pels filtres */
+.filter-container {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-left: 10px;
+}
+
+.filter-container label {
+  align-items: center;
+  margin-bottom: 0;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
 /* Estils per la paginació */
 .pagination-controls {
   display: flex;
@@ -216,13 +240,6 @@
 .page-number.active {
   background-color: #673ab7;
   color: white;
-}
-
-.pagination-info {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  margin-top: 10px;
 }
 
 /* Estils pel formulari a pantalla completa */
@@ -277,6 +294,49 @@
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+}
+
+.custom-select-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Make the select element consistent with input fields */
+.custom-select {
+  width: 103%;
+  height: 33px;
+  padding: 0 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 13px;
+  background-color: #fff;
+  appearance: none; /* Remove default dropdown arrow */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
+  line-height: normal;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.custom-select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+}
+
+/* Add a custom dropdown arrow */
+.custom-select-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 15px;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 8px;
+  height: 8px;
+  border-left: 2px solid #666;
+  border-bottom: 2px solid #666;
+  transform: rotate(-45deg) translateY(-50%);
+  pointer-events: none;
 }
 
 .edit-form .form-actions {

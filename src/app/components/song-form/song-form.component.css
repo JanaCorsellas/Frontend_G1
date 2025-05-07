@@ -1,12 +1,12 @@
-.user-create-container {
+.song-form-container {
   max-width: 100%;
   margin: 0 auto;
-  padding: 15px;
+  padding: 32px 24px;
   background-color: #fff;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
+  
 .header-with-back {
   display: flex;
   align-items: center;
@@ -22,6 +22,19 @@
   color: #3f51b5;
 }
 
+.btn-create {
+  display: flex;
+  align-items: center;
+  background-color: #673ab7;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s;
+}
+
 .btn-back {
   display: flex;
   align-items: center;
@@ -31,24 +44,15 @@
   cursor: pointer;
   font-size: 14px;
   padding: 5px;
+  margin-right: 24px;
 }
 
-.btn-back:hover {
+.btn-back-label:hover {
   text-decoration: underline;
 }
 
 .form-group {
   margin-bottom: 15px;
-}
-
-.form-row {
-  display: flex;
-  gap: 15px;
-  margin-bottom: 15px;
-}
-
-.form-group-half {
-  flex: 1;
 }
 
 label {
@@ -82,33 +86,7 @@ label {
   padding-top: 15px;
   border-top: 1px solid #eee;
 }
-
-.btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: background-color 0.3s;
-}
-
-.btn-primary {
-  background-color: #3f51b5;
-  color: white;
-}
-
-.btn-primary:hover {
-  background-color: #303f9f;
-}
-
-.btn:disabled {
-  opacity: 0.7;
-  cursor: not-allowed;
-}
-
+  
 .alert {
   padding: 10px 15px;
   margin-bottom: 15px;

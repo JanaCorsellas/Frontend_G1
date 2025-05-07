@@ -1,0 +1,67 @@
+<div class="song-form-container">
+    <div class="header-with-back">
+      <button type="button" class="btn-back" (click)="cancel()">
+        <i class="material-icons">arrow_back</i>
+        <span class="btn-back-label">Tornar</span>
+      </button>
+      <h2>{{ songToEdit ? 'Editar cançó' : 'Crear nova cançó' }}</h2>
+    </div>
+  
+    <form [formGroup]="songForm" (ngSubmit)="onSubmit()">
+    @if(error){ 
+       <div  class="alert alert-danger">{{ error }}</div>
+    }
+      <div class="form-group">
+        <label for="name">Títol de la cançó*</label>
+        <input type="text" id="name" formControlName="title" class="form-control" 
+               [class.is-invalid]="hasError('title', 'required')">
+        @if(hasError('title', 'required')){
+           <div class="invalid-feedback">
+            El títol de la cançó és obligatori
+          </div>        
+        }
+    </div>
+
+    <div class="form-group">
+        <label for="name">Artista de la cançó*</label>
+        <input type="text" id="name" formControlName="artist" class="form-control" 
+               [class.is-invalid]="hasError('artist', 'required')">
+        @if(hasError('artist', 'required')){
+            <div class="invalid-feedback">
+                L'artista de la cançó és obligatori
+            </div>
+        } 
+      </div>
+
+    <div class="form-group">
+        <label for="name">Àlbum de la cançó*</label>
+        <input type="text" id="name" formControlName="album" class="form-control" 
+               [class.is-invalid]="hasError('album', 'required')">
+        @if(hasError('album', 'required')){
+            <div class="invalid-feedback">
+                L'àlbum de la cançó és obligatori
+            </div>
+        } 
+    </div>
+
+    <div class="form-group">
+      <label for="name">Gènere de la cançó*</label>
+      <input type="text" id="name" formControlName="genre" class="form-control" 
+             [class.is-invalid]="hasError('genre', 'required')">
+      @if(hasError('genre', 'required')){
+          <div class="invalid-feedback">
+              El gènere de la cançó és obligatori
+          </div>
+      } 
+  </div>
+
+    <div class="form-actions">
+        <button type="submit" class="btn-create" [disabled]="loading">
+          @if (loading) {
+            <span class="spinner-border spinner-border-sm mr-1"></span>
+          }
+          {{ songToEdit ? 'Guardar canvis' : 'Crear cançó' }}
+        </button>
+    </div>
+  </form>
+</div>

@@ -1,4 +1,4 @@
-.activity-create-container {
+.achievement-create-container {
     max-width: 100%;
     margin: 0 auto;
     padding: 15px;
@@ -20,6 +20,19 @@
     flex-grow: 1;
     text-align: center;
     color: #3f51b5;
+  }
+  
+  .btn-create {
+    display: flex;
+    align-items: center;
+    background-color: #673ab7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
   }
   
   .btn-back {
@@ -83,7 +96,7 @@
     border-top: 1px solid #eee;
   }
   
-  .btn-save {
+  .btn {
     padding: 8px 16px;
     border: none;
     border-radius: 4px;
@@ -95,16 +108,25 @@
     transition: background-color 0.3s;
   }
   
-  .btn-save {
+  .btn-primary {
     background-color: #3f51b5;
     color: white;
   }
   
-  .btn-save:hover {
+  .btn-primary:hover {
     background-color: #303f9f;
   }
   
-  .btn-save:disabled {
+  .btn-secondary {
+    background-color: #f0f0f0;
+    color: #333;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #e0e0e0;
+  }
+  
+  .btn:disabled {
     opacity: 0.7;
     cursor: not-allowed;
   }

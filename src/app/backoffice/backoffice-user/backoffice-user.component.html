@@ -4,13 +4,24 @@
       <button class="btn-create" (click)="showCreateUserForm()">
         <i class="material-icons">add</i> Crear nou usuari
       </button>
-      <button class="btn-refresh-users" (click)="getUsers()">
+      <button class="btn-refresh-users" (click)="getUsers(1)">
         <i class="material-icons">refresh</i> Actualitzar
       </button>
     </div>
     
-    <!-- Llista paginada d'usuaris -->
-    <div class="users-container" *ngIf="loadedUsers">
+    <!-- Llista d'usuaris -->
+    <div class="user-container" *ngIf="loadedUsers">
+
+      <!-- Secció de filtratge -->
+      <div class="filter-container">
+      <label>
+        Resultats per pàgina:
+        <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+      </div>
+
       <!-- Taula d'usuaris -->
       <div class="users-grid">
         <div *ngFor="let user of users; trackBy: trackByUserId" 
@@ -24,6 +35,7 @@
             <h3 class="user-name">{{ user.username }}</h3>
           </div>
           <div class="user-info">
+            <p><strong>Rol:</strong> {{ user.role }}</p>
             <p><strong>Correu electrònic:</strong> {{ user.email }}</p>
             <p><strong>Nivell:</strong> {{ user.level || 'N/A' }}</p>
             <p class="user-bio"><strong>Bio:</strong> {{ user.bio || 'Sense biografia' }}</p>
@@ -70,11 +82,6 @@
           Següent »
         </button>
       </div>
-      
-      <div class="pagination-info">
-        Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
-        ({{ totalUsers }} usuaris en total)
-      </div>
     </div>
 
   <!-- Modal per crear usuaris -->
@@ -93,6 +100,16 @@
         <div class="form-group">
           <label for="edit-username">Nom d'usuari</label>
           <input type="text" id="edit-username" [(ngModel)]="selectedUser.username" name="username" class="form-control">
+        </div>
+
+        <div class="form-group">
+          <label for="edit-role">Rol</label>
+          <div class="custom-select-wrapper">
+            <select id="edit-role" [(ngModel)]="selectedUser.role" name="type" class="custom-select">
+              <option value="user">User</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
         </div>
         
         <div class="form-group">
@@ -140,6 +157,7 @@
         <p><strong>Correu electrònic:</strong> {{ selectedUser.email }}</p>
         <p><strong>Nivell:</strong> {{ selectedUser.level }}</p>
         <p><strong>Estat:</strong> {{ selectedUser.visible ? 'Visible' : 'Ocult' }}</p>
+        <p><strong>Rol:</strong> {{ selectedUser.role }}</p>
         <p><strong>Activitats:</strong></p>
         <ul>
           <li *ngFor="let activity of selectedUser.activities">

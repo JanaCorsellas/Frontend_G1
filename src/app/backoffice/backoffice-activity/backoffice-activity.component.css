@@ -11,7 +11,6 @@
   justify-content: flex-end;
   margin-bottom: 20px;
   gap: 10px;
-  max-height: 44px;
 }
 
 .btn-create {
@@ -35,7 +34,7 @@
   margin-right: 8px;
 }
 
-.btn-refresh-activities {
+.btn-refresh {
   display: flex;
   align-items: center;
   background-color: #3f51b5;
@@ -48,11 +47,11 @@
   transition: background-color 0.3s;
 }
 
-.btn-refresh-activities:hover {
+.btn-refresh:hover {
   background-color: #303f9f;
 }
 
-.btn-refresh-activities i {
+.btn-refresh i {
   margin-right: 8px;
 }
 
@@ -99,13 +98,6 @@ background-color: #f0f0f0;
 .page-number.active {
 background-color: #673ab7;
 color: white;
-}
-
-.pagination-info {
-text-align: center;
-color: #666;
-font-size: 14px;
-margin-top: 10px;
 }
 
 /* Estils per la quadrícula d'usuaris */
@@ -246,6 +238,15 @@ margin-top: 10px;
   margin-left: 10px;
 }
 
+.filter-container label {
+  align-items: center;
+  margin-bottom: 0;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
+/* Estils per la notificació de que no hi ha cap resultat */
 .no-activities {
   display: flex;
   justify-content: center;
@@ -280,18 +281,18 @@ margin-top: 10px;
 
 /* Estils pel modal de detalls de l'activitat */
 .full-screen-form {
-position: fixed;
-top: 0;
-left: 0;
-width: 100%;
-height: 100%;
-background-color: rgba(0, 0, 0, 0.5);
-z-index: 1000;
-display: flex;
-justify-content: center;
-align-items: flex-start;
-overflow-y: auto;
-padding: 20px 10px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow-y: auto;
+  padding: 20px 10px;
 }
 
 .modal-content {
