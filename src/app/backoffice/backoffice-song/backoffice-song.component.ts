@@ -181,8 +181,8 @@ export class BackofficeSongComponent implements OnInit {
       });
     }
   
-    getSongsDetails(song: any): void {
-      console.log("Veure detalls de la canço:", song);
+    getSongDetails(song: any): void {
+      console.log("Veure detalls de la cançó:", song);
       
       // Si la canço té un ID vàlid, intentem carregar des del servidor els detalls
       if (song._id) {

@@ -18,7 +18,7 @@
             <h3 class="song-name">{{ song.title }}</h3>
           </div>
           <div class="song-info">
-            <p><strong>Títol:</strong> {{ song.title || 'Sense títul' }}</p>
+            <p><strong>Títol:</strong> {{ song.title || 'Sense títol' }}</p>
             <p><strong>Artista:</strong> {{ song.artist || 'Sense artista' }}</p>
             <p><strong>Àlbum:</strong> {{ song.album || 'Sense àlbum' }}</p>
           </div>
@@ -26,7 +26,7 @@
             <button class="btn-edit" (click)="updateSong(song)">
               <i class="material-icons">edit</i> Editar
             </button>
-            <button class="btn-view" (click)="getSongsDetails(song)">
+            <button class="btn-view" (click)="getSongDetails(song)">
               <i class="material-icons">visibility</i> Detalls
             </button>
             <button class="btn-delete" (click)="deleteSong(song)">
