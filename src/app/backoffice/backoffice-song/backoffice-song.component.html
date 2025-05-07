@@ -7,29 +7,44 @@
     <button class="btn-refresh-song" (click)="getSongs()">
       <i class="material-icons">refresh</i> Actualitzar
     </button>
-    <button class="btn-filter-song" (click)="changeFilterSectionVisibility()">
-      <i class="material-icons">search</i> Filtrar cançons
-    </button>
-  </div>
-
-  <!-- Filter Section -->
-  <div *ngIf="showFilterSection" class="filter-section">
-    <form class="filter-form">
-      <label>
-        Artista:
-        <select [(ngModel)]="filter.artist" name="artist">
-          <option value="">Tots</option>
-          <option *ngFor="let artist of artists" [value]="artist">{{ artist }}</option>
-        </select>
-      </label>
-      <button type="submit" class="btn-apply-filter">Aplicar</button>
-      <button type="button" class="btn-reset-filter">Restablir</button>
-    </form>
   </div>
   
   <!-- Llista paginada de cançons -->
   <div class="song-container" *ngIf="loadedSongs">
     <h2>Cançons</h2>
+
+      <!-- Filter Section -->
+    <div class="filter-container">
+      <form class="filter-form" (ngSubmit)="applySearchFilter()">
+        <label>
+          Títol:
+          <input type="text" [(ngModel)]="filter.title" name="title" placeholder="Introdueix el nom de la cançó">
+        </label>
+        <label>
+          Artista:
+          <select [(ngModel)]="filter.artist" name="artist">
+            <option value="">Tots</option>
+            <option *ngFor="let artist of artists" [value]="artist">{{ artist }}</option>
+          </select>
+        </label>
+        <label>
+          Àlbum:
+          <select [(ngModel)]="filter.album" name="album">
+            <option value="">Tots</option>
+            <option *ngFor="let album of albums" [value]="album">{{ album }}</option>
+          </select>
+        </label>
+        <label>
+          Gènere:
+          <select [(ngModel)]="filter.genre" name="genre">
+            <option value="">Tots</option>
+            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+          </select>
+        </label>
+        <button type="submit" class="btn-apply-filter">Aplicar</button>
+        <button type="button" class="btn-reset-filter" (click)="resetSearchFilter()">Restablir</button>
+      </form>
+    </div>
     
     <!-- Contenidor de quadrícules per les cançons -->
     <div class="song-grid">
