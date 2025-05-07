@@ -1,146 +1,174 @@
 <div class="container">
-    <!-- Botó per crear una canço -->
-    <div class="action-buttons">
-      <button class="btn-create" (click)="showCreateSongForm()">
-        <i class="material-icons">add</i> Crear nova cançó
-      </button>
-      <button class="btn-refresh-song" (click)="getSongs()">
-        <i class="material-icons">refresh</i> Actualitzar
-      </button>
-    </div><!-- Llista paginada de cançons -->
-    <div class="song-container" *ngIf="loadedSongs">
-      <h2>Cançons</h2>
-      <!-- Contenidor de quadrícules per les cançons -->
-      <div class="song-grid">
-        <div *ngFor="let song of paginatedSongs; trackBy: trackBySongId" 
-            class="song-card">
-          <div class="song-header">
-            <h3 class="song-name">{{ song.title }}</h3>
-          </div>
-          <div class="song-info">
-            <p><strong>Títol:</strong> {{ song.title || 'Sense títol' }}</p>
-            <p><strong>Artista:</strong> {{ song.artist || 'Sense artista' }}</p>
-            <p><strong>Àlbum:</strong> {{ song.album || 'Sense àlbum' }}</p>
-          </div>
-          <div class="song-actions">
-            <button class="btn-edit" (click)="updateSong(song)">
-              <i class="material-icons">edit</i> Editar
-            </button>
-            <button class="btn-view" (click)="getSongDetails(song)">
-              <i class="material-icons">visibility</i> Detalls
-            </button>
-            <button class="btn-delete" (click)="deleteSong(song)">
-              <i class="material-icons">delete</i> Eliminar
-            </button>
-          </div>
+  <div class="action-buttons">
+    <!-- Botó per crear una cançó -->
+    <button class="btn-create" (click)="showCreateSongForm()">
+      <i class="material-icons">add</i> Crear nova cançó
+    </button>
+    <!-- Botó per actualitzar la llista de cançons -->
+    <button class="btn-refresh-song" (click)="getSongs()">
+      <i class="material-icons">refresh</i> Actualitzar
+    </button>
+  </div>
+  
+  <!-- Llista paginada de cançons -->
+  <div class="song-container" *ngIf="loadedSongs">
+    <h2>Cançons</h2>
+
+      <!-- Filter Section -->
+    <div class="filter-container">
+      <form class="filter-form" (change)="applySearchFilter()">
+        <label>
+          Títol:
+          <input type="text" [(ngModel)]="filter.title" name="title" placeholder="Introdueix el nom de la cançó">
+        </label>
+        <label>
+          Artista:
+          <select [(ngModel)]="filter.artist" name="artist">
+            <option value="">Tots</option>
+            <option *ngFor="let artist of artists" [value]="artist">{{ artist }}</option>
+          </select>
+        </label>
+        <label>
+          Àlbum:
+          <select [(ngModel)]="filter.album" name="album">
+            <option value="">Tots</option>
+            <option *ngFor="let album of albums" [value]="album">{{ album }}</option>
+          </select>
+        </label>
+        <label>
+          Gènere:
+          <select [(ngModel)]="filter.genre" name="genre">
+            <option value="">Tots</option>
+            <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
+          </select>
+        </label>
+        <button type="button" class="btn-reset-filter" (click)="resetSearchFilter()">Restablir</button>
+      </form>
+    </div>
+    
+    <!-- Contenidor de quadrícules per les cançons -->
+    <div class="song-grid">
+      <div *ngFor="let song of paginatedSongs; trackBy: trackBySongId" 
+          class="song-card">
+        <div class="song-header">
+          <h3 class="song-name">{{ song.title }}</h3>
         </div>
-      </div>
-  
-  
-  
-      <!-- Missatge si no hi ha cançons 
-      <div *ngIf="filteredSongs.length === 0" class="no-songs">
-        <div class="empty-state">
-          <i class="material-icons large">hiking</i>
-          <h3>No s'han trobat cançons</h3>
-          <p>No hi ha cançons que coincideixin amb els criteris de búsqueda.</p>
-          <button class="btn-create" (click)="showCreateSongForm()">
-            <i class="material-icons">add</i> Crear nova canço
+        <div class="song-info">
+          <p><strong>Títol:</strong> {{ song.title || 'Sense títol' }}</p>
+          <p><strong>Artista:</strong> {{ song.artist || 'Sense artista' }}</p>
+          <p><strong>Àlbum:</strong> {{ song.album || 'Sense àlbum' }}</p>
+        </div>
+        <div class="song-actions">
+          <button class="btn-edit" (click)="updateSong(song)">
+            <i class="material-icons">edit</i> Editar
+          </button>
+          <button class="btn-view" (click)="getSongDetails(song)">
+            <i class="material-icons">visibility</i> Detalls
+          </button>
+          <button class="btn-delete" (click)="deleteSong(song)">
+            <i class="material-icons">delete</i> Eliminar
           </button>
         </div>
       </div>
-    -->
-      <!-- Paginació -->
-      @if(totalPages > 1){
-      <div class="pagination-controls" >
-        <button 
-            class="pagination-btn" 
-            [disabled]="currentPage === 1"
-            (click)="changePage(currentPage - 1)">
-            « Anterior
-        </button>
+    </div>
 
-        <span *ngFor="let page of pages" 
-          class="page-number" 
-          [class.active]="page === currentPage"
-          (click)="changePage(page)">
-          {{page}}
-        </span>
-    
-    <button 
-      class="pagination-btn" 
-      [disabled]="currentPage === totalPages"
-      (click)="changePage(currentPage + 1)">
-      Següent »
-    </button>
-  </div>
-}
-       
-      @if(totalSongs > 0){
-      <div class="pagination-info">
-        Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
-        ({{ totalSongs }} cançons en total)
+    <!-- Missatge si no hi ha cançons -->
+    <div *ngIf="filteredSongs.length === 0" class="no-songs">
+      <div class="empty-state">
+        <i class="material-icons large">hiking</i>
+        <h3>No s'han trobat cançons</h3>
+        <p>No hi ha cançons que coincideixin amb els criteris de búsqueda.</p>
       </div>
-}
-  
-    <!-- Crear cançó -->
-    <div class="full-screen-form" *ngIf="showCreateModal">
-      <app-song-form-component (songCreated)="onSongCreated($event)" [songToEdit]="null"></app-song-form-component>
     </div>
-   
-    <!-- Editar cançó -->
-    <div class="full-screen-form" *ngIf="showEditModal && selectedSong">
-      <app-song-form-component (songCreated)="onSongCreated($event)" [songToEdit]="selectedSong"></app-song-form-component>
-    </div>
+    
+    <!-- Paginació -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+      <button 
+          class="pagination-btn" 
+          [disabled]="currentPage === 1"
+          (click)="changePage(currentPage - 1)">
+          « Anterior
+      </button>
 
-   <!-- Detalls de la cançó -->
-    <div class="full-screen-form view-details" *ngIf="showViewModal && selectedSong">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h2>Detalls de la cançó</h2>
-            <button class="close-btn" (click)="closeViewModal()">×</button>
+      <span *ngFor="let page of pages" 
+        class="page-number" 
+        [class.active]="page === currentPage"
+        (click)="changePage(page)">
+        {{page}}
+      </span>
+  
+      <button 
+        class="pagination-btn" 
+        [disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)">
+        Següent »
+      </button>
+    </div>
+      
+    <div class="pagination-info" *ngIf="totalSongs > 0">
+      Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
+      ({{ totalSongs }} cançons en total)
+    </div>
+  </div>
+
+  <!-- Crear cançó -->
+  <div class="full-screen-form" *ngIf="showCreateModal">
+    <app-song-form-component (songCreated)="onSongCreated($event)" [songToEdit]="null"></app-song-form-component>
+  </div>
+  
+  <!-- Editar cançó -->
+  <div class="full-screen-form" *ngIf="showEditModal && selectedSong">
+    <app-song-form-component (songCreated)="onSongCreated($event)" [songToEdit]="selectedSong"></app-song-form-component>
+  </div>
+
+  <!-- Detalls de la cançó -->
+  <div class="full-screen-form view-details" *ngIf="showViewModal && selectedSong">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Detalls de la cançó</h2>
+        <button class="close-btn" (click)="closeViewModal()">×</button>
+      </div>
+      
+      <div class="modal-body song-details">
+
+        <div class="loading-indicator" *ngIf="loading">
+          <div class="spinner"></div>
+          <p>Carregant detalls de la cançó...</p>
+        </div>
+        
+        <div class="song-profile">
+          <div class="song-type-badge large" [ngClass]="selectedSong.type">
+            {{ selectedSong.genre | uppercase }}
+          </div>
+          <h3 class="song-title">{{ selectedSong.title }}</h3>
+        </div>
+        
+        <div class="details-container">
+          <div class="detail-item">
+            <div class="detail-label">ID:</div>
+            <div class="detail-value">{{ selectedSong._id }}</div>
+          </div>
+                        
+          <div class="detail-item">
+            <div class="detail-label">Artista:</div>
+            <div class="detail-value song-artist">{{ selectedSong.artist}}</div>
           </div>
           
-          <div class="modal-body song-details">
+          <div class="detail-item">
+            <div class="detail-label">Àlbum:</div>
+            <div class="detail-value">{{ selectedSong.album}}</div>
+          </div>
 
-            @if(loading){
-              <div class="loading-indicator">
-                <div class="spinner"></div>
-                <p>Carregant detalls de la cançó...</p>
-              </div>
-            } 
-            <div class="song-profile">
-             <div class="song-type-badge large" [ngClass]="selectedSong.type">
-                {{ selectedSong.genre | uppercase }}
-              </div>
-              <h3 class="song-title">{{ selectedSong.title }}</h3>
-            </div>
-            
-            <div class="details-container">
-              <div class="detail-item">
-                <div class="detail-label">ID:</div>
-                <div class="detail-value">{{ selectedSong._id }}</div>
-              </div>
-                            
-              <div class="detail-item">
-                <div class="detail-label">Artista:</div>
-                <div class="detail-value song-artist">{{ selectedSong.artist}}</div>
-              </div>
-              
-              <div class="detail-item">
-                <div class="detail-label">Àlbum:</div>
-                <div class="detail-value">{{ selectedSong.album}}</div>
-              </div>
-
-              <div class="detail-item">
-                <div class="detail-label">Gènere:</div>
-                <div class="detail-value">{{ selectedSong.genre}}</div>
-              </div>
-            
-            <div class="form-actions">
-              <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
-            </div>
+          <div class="detail-item">
+            <div class="detail-label">Gènere:</div>
+            <div class="detail-value">{{ selectedSong.genre}}</div>
+          </div>
+        
+          <div class="form-actions">
+          <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
 </div>
