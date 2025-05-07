@@ -139,6 +139,96 @@
   opacity: 0.9;
 }
 
+/* Estils addicionals pels filtres */
+.filter-container {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-left: 10px;
+}
+
+.filter-form {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.filter-form label {
+  align-items: center;
+  margin-bottom: 0;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+  min-width: 170px;
+}
+
+.filter-form input[type="text"],
+.filter-form select {
+  margin-left: 10px;
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  min-width: 140px;
+  font-size: 14px;
+}
+
+.btn-reset-filter {
+  margin-left: 30px;  /* Space to the left of the button */
+  padding: 10px 15px;
+  background-color: #f44336;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-reset-filter:hover {
+  background-color: #d32f2f;
+}
+
+.no-activities {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  max-width: 500px;
+}
+
+.empty-state .material-icons.large {
+  font-size: 48px;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.empty-state h3 {
+  color: #555;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  color: #777;
+  margin-bottom: 20px;
+}
+
 /* Estils per la paginació */
 .pagination-controls {
   display: flex;

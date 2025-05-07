@@ -1,9 +1,10 @@
 <div class="container">
-  <!-- Botó per crear una cançó -->
   <div class="action-buttons">
+    <!-- Botó per crear una cançó -->
     <button class="btn-create" (click)="showCreateSongForm()">
       <i class="material-icons">add</i> Crear nova cançó
     </button>
+    <!-- Botó per actualitzar la llista de cançons -->
     <button class="btn-refresh-song" (click)="getSongs()">
       <i class="material-icons">refresh</i> Actualitzar
     </button>
@@ -15,7 +16,7 @@
 
       <!-- Filter Section -->
     <div class="filter-container">
-      <form class="filter-form" (ngSubmit)="applySearchFilter()">
+      <form class="filter-form" (change)="applySearchFilter()">
         <label>
           Títol:
           <input type="text" [(ngModel)]="filter.title" name="title" placeholder="Introdueix el nom de la cançó">
@@ -41,7 +42,6 @@
             <option *ngFor="let genre of genres" [value]="genre">{{ genre }}</option>
           </select>
         </label>
-        <button type="submit" class="btn-apply-filter">Aplicar</button>
         <button type="button" class="btn-reset-filter" (click)="resetSearchFilter()">Restablir</button>
       </form>
     </div>

@@ -112,6 +112,7 @@ export class BackofficeSongComponent implements OnInit {
           this.artists = this.getFilterValues('artist');
           this.genres = this.getFilterValues('genre');
           this.albums = this.getFilterValues('album');
+          this.resetSearchFilter();
 
           this.loading = false;
           this.loadedSongs = true;
@@ -128,6 +129,14 @@ export class BackofficeSongComponent implements OnInit {
           this.totalPages = Math.ceil(this.totalSongs / this.itemsPerPage);
           this.generatePageNumbers();
           this.updatePaginatedSongs();
+
+          //Carreguem la llista de variables pels filtres de búsqueda
+          this.titles = this.getFilterValues('title');
+          this.artists = this.getFilterValues('artist');
+          this.genres = this.getFilterValues('genre');
+          this.albums = this.getFilterValues('album');
+          this.resetSearchFilter();
+          
           this.loadedSongs = true;
         }
       });
