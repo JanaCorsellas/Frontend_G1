@@ -3,7 +3,7 @@
       <button type="button" class="btn-back" (click)="cancel()">
         <i class="material-icons">arrow_back</i> Tornar
       </button>
-      <h2>{{ songToEdit ? 'Editar canço' : 'Crear nova canço' }}</h2>
+      <h2>{{ songToEdit ? 'Editar cançó' : 'Crear nova cançó' }}</h2>
     </div>
   
     <form [formGroup]="songForm" (ngSubmit)="onSubmit()">
@@ -62,7 +62,7 @@
           @if(loading){
             <span class="spinner-border spinner-border-sm mr-1"></span>
           }
-          {{ songToEdit ? 'Guardar canvis' : 'Crear achievement' }}
+          {{ songToEdit ? 'Guardar canvis' : 'Crear cançó' }}
         </button>
     </div>
   </form>

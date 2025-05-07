@@ -60,8 +60,8 @@ export class SongFormComponent implements OnChanges{
       },
       error:(error)=>{
         this.loading=false;
-        this.error=error.message || 'Error al guardar la canço. Torna-ho a intentar.';
-        console.error('Error al guardar la canço:', error);
+        this.error=error.message || 'Error al guardar la cançó. Torna-ho a intentar.';
+        console.error('Error al guardar la cançó:', error);
       }
     });
   }

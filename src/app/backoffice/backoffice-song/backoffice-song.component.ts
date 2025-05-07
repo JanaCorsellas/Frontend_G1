@@ -4,10 +4,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 import { SongFormComponent } from '../../components/song-form-component/song-form-component.component';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-backoffice-song',
-  imports: [SongFormComponent,CommonModule],
+  imports: [SongFormComponent,CommonModule,FormsModule],
   templateUrl: './backoffice-song.component.html',
   styleUrl: './backoffice-song.component.css'
 })
@@ -28,6 +29,15 @@ export class BackofficeSongComponent implements OnInit {
   selectedType: string = '';
   loading = false;
   error = '';
+  artists: string[] = [];
+  albums: string[] = [];
+  genres: string[] = [];
+  showFilterSection = false;
+  filter = {
+    artist: '',
+    album: '',
+    genre: ''
+  };
 
   
   constructor(
@@ -75,13 +85,12 @@ export class BackofficeSongComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Dades rebudes del servidor:', response);
-            console.log('Cançons rebudes:',response.song)
             
             if (Array.isArray(response)) {
               this.songs = response;
               this.totalSongs = response.length;
               this.totalPages = Math.ceil(this.totalSongs / this.itemsPerPage);
-              console.log(this.songs);
+              console.log('Cançons rebudes:', this.songs);
             } else if (response && response.song) {
               this.songs = response.song;
               this.totalSongs = response.totalSongs || response.song.length;
@@ -92,10 +101,10 @@ export class BackofficeSongComponent implements OnInit {
               this.totalSongs = this.allMockSongs.length;
               this.totalPages = Math.ceil(this.totalSongs / this.itemsPerPage);
             }
-            
             this.filteredSongs = [...this.songs];
             this.generatePageNumbers();
             this.updatePaginatedSongs();
+            this.artists = this.getFilterValues('artist');
             this.loading = false;
             this.loadedSongs = true;
           },
@@ -114,6 +123,30 @@ export class BackofficeSongComponent implements OnInit {
             this.loadedSongs = true;
           }
         });
+    }
+
+    changeFilterSectionVisibility(): void {
+      this.showFilterSection = !this.showFilterSection;
+    }
+
+    getFilterValues(field: string): string[] {
+      const set = new Set<string>();
+      this.songs.forEach(song => {
+      if (song[field]) {
+          set.add(song[field]);
+        }
+      });
+      return Array.from(set).sort();
+    }
+
+    applyArtistFilter() {
+      if (this.filter.artist) {
+        this.filteredSongs = this.songs.filter(song => song.artist === this.filter.artist);
+      } else {
+        this.filteredSongs = [...this.songs];
+      }
+      this.currentPage = 1;
+      this.updatePaginatedSongs();
     }
   
     updatePaginatedSongs(): void {
@@ -145,7 +178,7 @@ export class BackofficeSongComponent implements OnInit {
     }
   
     updateSong(song: any): void {
-      console.log('Editar canço:', song);
+      console.log('Editar cançó:', song);
       this.selectedSong = { ...song }; // Crear una còpia per no modificar l'original
       
       this.showEditModal = true;
@@ -154,18 +187,18 @@ export class BackofficeSongComponent implements OnInit {
     }
   
     deleteSong(song: any): void {
-      console.log('Eliminar canço:', song);
+      console.log('Eliminar cançó:', song);
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        data: { message: `Estàs segur de que vols eliminar la canço "${song.title}"?` }
+        data: { message: `Estàs segur de que vols eliminar la cançó "${song.title}"?` }
       });
   
       dialogRef.afterClosed().subscribe(result => {
         if (result) {
           this.songsService.deleteSong(song._id).subscribe({
             next: () => {
-              console.log(`Canço ${song._id} eliminada`);
+              console.log(`Cançó ${song._id} eliminada`);
               
-              // Eliminar la canço de les dades de prova
+              // Eliminar la cançó de les dades de prova
               const index = this.allMockSongs.findIndex(a => a._id === song._id);
               if (index !== -1) {
                 this.allMockSongs.splice(index, 1);
@@ -174,7 +207,7 @@ export class BackofficeSongComponent implements OnInit {
               this.getSongs();
             },
             error: (error) => {
-              console.error("Error al eliminar la canço:", error);
+              console.error("Error al eliminar la cançó:", error);
             }
           });
         }
@@ -184,7 +217,7 @@ export class BackofficeSongComponent implements OnInit {
     getSongDetails(song: any): void {
       console.log("Veure detalls de la cançó:", song);
       
-      // Si la canço té un ID vàlid, intentem carregar des del servidor els detalls
+      // Si la cançó té un ID vàlid, intentem carregar des del servidor els detalls
       if (song._id) {
         this.loading = true;
         
@@ -224,7 +257,7 @@ export class BackofficeSongComponent implements OnInit {
         this.showCreateModal = false;
         this.showEditModal = false;
         if (song) {
-          this.getSongs(); // Recargar la llista després de crear un nova canço
+          this.getSongs(); // Recargar la llista després de crear un nova cançó
         }
     }
   
@@ -232,13 +265,14 @@ export class BackofficeSongComponent implements OnInit {
         this.showViewModal = false;
         this.selectedSong = null;
         
-        // Si s'han fet canis durant la visualització, actualitzar la llista
+        // Si s'han fet canvis durant la visualització, actualitzar la llista
         if (this.loadedSongs) {
           this.getSongs();
         }
-          }
+    }
 
     trackBySongId(index: number, song: any): string {
       return song._id;
-  }
+    }
+
 }
