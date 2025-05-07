@@ -17,9 +17,11 @@ import { User } from '../../models/user.model';
 })
 export class UsersComponent implements OnInit {
   users: User[] = [];
+  filteredUsers: any[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 6;
   totalPages = 0;
+  pageSizes: number[] = [6, 12, 24, 48];
   totalUsers = 0;
   pages: number[] = [];
   loading = false;
@@ -30,16 +32,6 @@ export class UsersComponent implements OnInit {
   showViewModal = false;
   selectedUser: User | null = null;
   
-  // Dades d'exemple
-  allMockUsers: User[] = [
-    { _id: '1', username: 'Usuari1', email: 'usuari1@example.com', level: 1, bio: "Bio d'usuari 1", profilePicture: '', visible: true, visibility: true, role: 'admin' },
-    { _id: '2', username: 'Usuari2', email: 'usuari2@example.com', level: 2, bio: "Bio d'usuari 2", profilePicture: '', visible: true, visibility: true, role: 'user' },
-    { _id: '3', username: 'Usuari3', email: 'usuari3@example.com', level: 3, bio: "Bio d'usuari 3", profilePicture: '', visible: false, visibility: false, role: 'user' },  
-    { _id: '4', username: 'Usuari4', email: 'usuari4@example.com', level: 1, bio: "Bio d'usuari 4", profilePicture: '', visible: true, visibility: true, role: 'user' },
-    { _id: '5', username: 'Usuari5', email: 'usuari5@example.com', level: 2, bio: "Bio d'usuari 5", profilePicture: '', visible: false, visibility: false, role: 'user' },
-    { _id: '6', username: 'Usuari6', email: 'usuari6@example.com', level: 3, bio: "Bio d'usuari 1", profilePicture: '', visible: true, visibility: true, role: 'user' },
-  ];
-  
   constructor(
     private userService: UserService,
     private dialog: MatDialog,
@@ -47,10 +39,10 @@ export class UsersComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getUsers();
+    this.getUsers(1);
   }
 
-  getUsers(): void {
+  getUsers(page: number): void {
     this.loadedUsers = false;
     this.loading = true;
     
@@ -58,8 +50,8 @@ export class UsersComponent implements OnInit {
     this.userService.getUsers(this.currentPage, this.itemsPerPage, true)
       .subscribe({
         next: (response) => {
+
           console.log('Resposta del servidor:', response);
-          console.log('Usuaris rebuts:', response.users);
           
           if (response.users && response.users.length > 0) {
             this.users = response.users.map((user: User) => ({
@@ -67,44 +59,38 @@ export class UsersComponent implements OnInit {
               // Utilitzar qualsevol de les dues propietats, prioritzant visibility (del backend)
               visible: user.visibility !== undefined ? user.visibility : (user.visible !== undefined ? user.visible : true)
             }));
-            console.log('Usuaris processats:', this.users);
+
             this.totalUsers = response.totalUsers;
             this.totalPages = response.totalPages;
+            this.filteredUsers = [...this.users];
+
+            this.generatePageNumbers();
+
           } else {
-            console.log("No s'han trobat usuaris, utilitzant dades de simulació.");
-            this.testPagination();
+            console.warn("No s'han rebut usuaris del servidor.");
           }
-          this.generatePageNumbers();
+          
           this.loading = false;
           this.loadedUsers = true;
+
         },
         error: (err) => {
           console.error('Error al carregar usuaris:', err);
           this.error = 'Error al carregar usuaris';
           this.loading = false;
-          
-          // En cas d'error, treballem amb les dades de simulació
-          //this.testPagination();
+
           this.generatePageNumbers();
           this.loadedUsers = true;
         }
       });
   }
 
-  // Mètode per simular la paginació amb dades de prova
-  testPagination(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = Math.min(startIndex + this.itemsPerPage, this.allMockUsers.length);
-    
-    // Obtenir els usuaris de la pàgina actual
-    this.users = this.allMockUsers.slice(startIndex, endIndex).map(user => ({
-      ...user,
-      visible: user.visibility !== undefined ? user.visibility : (user.visible !== undefined ? user.visible : true)
-    }));
-    
-    // Calcular el total d'usuaris i pàgines
-    this.totalUsers = this.allMockUsers.length;
-    this.totalPages = Math.ceil(this.totalUsers / this.itemsPerPage);
+  changePageSize(event: Event) {
+    // Es passa l'event i no el número directament perquè $event.target.value pot ser NULL
+    const size = +(event.target as HTMLSelectElement).value;
+    this.currentPage = 1;
+    this.itemsPerPage = size;
+    this.getUsers(this.currentPage);
   }
 
   generatePageNumbers(): void {
@@ -119,7 +105,7 @@ export class UsersComponent implements OnInit {
       return;
     }
     this.currentPage = page;
-    this.getUsers();
+    this.getUsers(page);
   }
 
   showCreateUserForm(): void {
@@ -168,7 +154,7 @@ export class UsersComponent implements OnInit {
   deleteUser(user: User): void {
     console.log('Eliminar usuari:', user);
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: { message: `Estás segur de que vols eliminar l'usuari ${user.username}?` }
+      data: { message: `Estàs segur de que vols eliminar l'usuari ${user.username}?` }
     });
 
     //Borrar les activitats associades a l'usuari
@@ -190,14 +176,7 @@ export class UsersComponent implements OnInit {
         this.userService.deleteUser(user._id).subscribe({
           next: () => {
             console.log(`Usuari ${user._id} eliminat`);
-            
-            // Borrem l'usuari de la llista de prova
-            const index = this.allMockUsers.findIndex(u => u._id === user._id);
-            if (index !== -1) {
-              this.allMockUsers.splice(index, 1);
-            }
-            
-            this.getUsers();
+            this.getUsers(1);
           },
           error: (error) => {
             console.error("Error al eliminar l'usuari:", error);
@@ -210,6 +189,7 @@ export class UsersComponent implements OnInit {
   getUserDetails(user: User): void {
     console.log("Veure detalls de l'usuari:", user);
     this.selectedUser = { ...user }; // Crear una copia per no modificar l'usuari
+
     // Obtenir els detalls de les activitats
     if (this.selectedUser.activities && this.selectedUser.activities.length > 0 && user.activities) {
       this.selectedUser.activities = []; // Inicialitzem l'array de les activitats
@@ -233,7 +213,7 @@ export class UsersComponent implements OnInit {
   onUserCreated(success: boolean): void {
     this.showCreateModal = false;
     if (success) {
-      this.getUsers();
+      this.getUsers(1);
     }
   }
 
@@ -244,7 +224,7 @@ export class UsersComponent implements OnInit {
         next: () => {
           console.log(`Usuari ${this.selectedUser?._id} actualitzat correctament.`);
           this.showEditModal = false;
-          this.getUsers();
+          this.getUsers(1);
         },
         error: (error) => {
           console.error("Error al actualitzar l'usuari:", error);
