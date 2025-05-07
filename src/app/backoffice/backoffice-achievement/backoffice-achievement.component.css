@@ -203,6 +203,30 @@
   margin-bottom: 20px;
 }
 
+/* Estils addicionals pels filtres */
+.filter-container {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.filter-container select {
+  padding: 8px 12px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin-left: 10px;
+}
+
+.filter-container label {
+  align-items: center;
+  margin-bottom: 0;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
+}
+
 /* Estils per la paginació */
 .pagination-controls {
   display: flex;

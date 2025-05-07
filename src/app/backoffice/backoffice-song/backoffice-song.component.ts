@@ -19,6 +19,7 @@ export class BackofficeSongComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 6;
   totalPages = 0;
+  pageSizes: number[] = [6, 12, 24, 48];
   pages: number[] = [];
   loadedSongs = false;
   showCreateModal = false;
@@ -32,14 +33,12 @@ export class BackofficeSongComponent implements OnInit {
   artists: string[] = [];
   albums: string[] = [];
   genres: string[] = [];
-  pageSizes: number[] = [6, 12, 24, 48];
   filter = {
     title: '',
     artist: '',
     album: '',
     genre: ''
   };
-
   
   constructor(
     private songsService: SongService,
@@ -60,8 +59,8 @@ export class BackofficeSongComponent implements OnInit {
           console.log('Dades rebudes del servidor:', response);
           if (response.songs.length > 0 && response.songs) {
             this.songs = response.songs;
-            this.totalSongs = response.totalSongs || response.song.length;
-            this.totalPages = response.totalPages || Math.ceil(this.totalSongs / this.itemsPerPage);
+            this.totalSongs = response.totalSongs;
+            this.totalPages = response.totalPages;
             this.filteredSongs = [...this.songs];
             
             this.generatePageNumbers();

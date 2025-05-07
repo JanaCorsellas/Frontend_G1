@@ -4,16 +4,27 @@
     <button class="btn-create" (click)="showCreateAchievementForm()">
       <i class="material-icons">add</i> Crear nou assoliment
     </button>
-    <button class="btn-refresh-achievement" (click)="getAchievements()">
+    <button class="btn-refresh-achievement" (click)="getAchievements(1)">
       <i class="material-icons">refresh</i> Actualitzar
     </button>
   </div>
   
   <!-- Llista paginada d'achievements -->
   <div class="achievement-container" *ngIf="loadedAchievements">
+
+    <!-- Secció de filtratge -->
+    <div class="filter-container">
+      <label>
+        Resultats per pàgina:
+        <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+      </div>
+
     <!-- Contenidor de quadrícules pels achievements -->
     <div class="achievement-grid">
-      <div *ngFor="let achievement of paginatedAchievements; trackBy: trackByAchievementId" 
+      <div *ngFor="let achievement of filteredAchievements; trackBy: trackByAchievementId" 
           class="achievement-card">
         <div class="achievement-header">
           <img [src]="achievement.icon || 'https://cdn-icons-png.flaticon.com/512/2887/2887330.png'" 

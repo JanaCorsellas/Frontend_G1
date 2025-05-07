@@ -13,14 +13,14 @@
     <div class="user-container" *ngIf="loadedUsers">
 
       <!-- Secció de filtratge -->
-    <div class="filter-container">
+      <div class="filter-container">
       <label>
         Resultats per pàgina:
         <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
           <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
         </select>
       </label>
-    </div>
+      </div>
 
       <!-- Taula d'usuaris -->
       <div class="users-grid">
