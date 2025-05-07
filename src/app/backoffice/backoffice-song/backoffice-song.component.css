@@ -51,6 +51,10 @@
   background-color: #303f9f;
 }
 
+.btn-refresh-song i {
+  margin-right: 8px;
+}
+
 /* Estils per la quadrícula d'usuaris */
 .song-container {
   margin-top: 30px;
@@ -182,7 +186,7 @@
 }
 
 .btn-reset-filter {
-  margin-left: 30px;  /* Space to the left of the button */
+  margin-left: 30px;
   padding: 10px 15px;
   background-color: #f44336;
   color: #fff;
@@ -197,6 +201,7 @@
   background-color: #d32f2f;
 }
 
+/* Estils per la notificació de que no hi ha cap resultat */
 .no-activities {
   display: flex;
   justify-content: center;
@@ -205,6 +210,7 @@
 }
 
 .empty-state {
+  display: initial;
   text-align: center;
   padding: 30px;
   background-color: white;
@@ -217,6 +223,7 @@
   font-size: 48px;
   color: #ccc;
   margin-bottom: 15px;
+  display: block;
 }
 
 .empty-state h3 {
@@ -263,13 +270,6 @@
 .page-number.active {
   background-color: #673ab7;
   color: white;
-}
-
-.pagination-info {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  margin-top: 10px;
 }
 
 /* Estils pel formulari a pantalla completa */

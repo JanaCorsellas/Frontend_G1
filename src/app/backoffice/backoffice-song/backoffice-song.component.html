@@ -5,16 +5,14 @@
       <i class="material-icons">add</i> Crear nova cançó
     </button>
     <!-- Botó per actualitzar la llista de cançons -->
-    <button class="btn-refresh-song" (click)="getSongs()">
+    <button class="btn-refresh-song" (click)="getSongs(1)">
       <i class="material-icons">refresh</i> Actualitzar
     </button>
   </div>
   
   <!-- Llista paginada de cançons -->
   <div class="song-container" *ngIf="loadedSongs">
-    <h2>Cançons</h2>
-
-      <!-- Filter Section -->
+    <!-- Secció de filtratge -->
     <div class="filter-container">
       <form class="filter-form" (change)="applySearchFilter()">
         <label>
@@ -48,7 +46,7 @@
     
     <!-- Contenidor de quadrícules per les cançons -->
     <div class="song-grid">
-      <div *ngFor="let song of paginatedSongs; trackBy: trackBySongId" 
+      <div *ngFor="let song of filteredSongs; trackBy: trackBySongId" 
           class="song-card">
         <div class="song-header">
           <h3 class="song-name">{{ song.title }}</h3>
@@ -75,14 +73,14 @@
     <!-- Missatge si no hi ha cançons -->
     <div *ngIf="filteredSongs.length === 0" class="no-songs">
       <div class="empty-state">
-        <i class="material-icons large">hiking</i>
+        <i class="material-icons large">info</i>
         <h3>No s'han trobat cançons</h3>
         <p>No hi ha cançons que coincideixin amb els criteris de búsqueda.</p>
       </div>
     </div>
     
     <!-- Paginació -->
-    <div class="pagination-controls" *ngIf="totalPages > 1">
+    <div class="pagination-controls" *ngIf="filteredSongs.length > 0">
       <button 
           class="pagination-btn" 
           [disabled]="currentPage === 1"
@@ -103,11 +101,6 @@
         (click)="changePage(currentPage + 1)">
         Següent »
       </button>
-    </div>
-      
-    <div class="pagination-info" *ngIf="totalSongs > 0">
-      Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
-      ({{ totalSongs }} cançons en total)
     </div>
   </div>
 
