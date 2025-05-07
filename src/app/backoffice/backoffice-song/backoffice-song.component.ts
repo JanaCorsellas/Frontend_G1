@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { SongService } from '../../services/songs/song.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { SongFormComponent } from '../../components/song-form-component/song-form-component.component';
+import { SongFormComponent } from '../../components/song-form/song-form.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-backoffice-song',
-  imports: [SongFormComponent,CommonModule,FormsModule],
+  imports: [SongFormComponent, CommonModule, FormsModule],
   templateUrl: './backoffice-song.component.html',
   styleUrl: './backoffice-song.component.css'
 })

@@ -5,8 +5,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 @Component({
   selector: 'app-song-form-component',
   imports: [ReactiveFormsModule],
-  templateUrl: './song-form-component.component.html',
-  styleUrl: './song-form-component.component.css'
+  templateUrl: './song-form.component.html',
+  styleUrl: './song-form.component.css'
 })
 export class SongFormComponent implements OnChanges{
   songForm: FormGroup;

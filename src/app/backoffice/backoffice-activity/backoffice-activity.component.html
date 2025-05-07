@@ -65,14 +65,11 @@
         <i class="material-icons large">hiking</i>
         <h3>No s'han trobat activitats</h3>
         <p>No hi ha activitats que coincideixin amb els criteris de búsqueda.</p>
-        <button class="btn-create" (click)="showCreateActivityForm()">
-          <i class="material-icons">add</i> Crear nova activitat
-        </button>
       </div>
     </div>
     
     <!-- Paginació -->
-    <div class="pagination-controls" *ngIf="totalPages > 1">
+    <div class="pagination-controls">
       <button 
         class="pagination-btn" 
         [disabled]="currentPage === 1"

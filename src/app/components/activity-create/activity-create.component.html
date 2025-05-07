@@ -1,7 +1,7 @@
 <div class="activity-create-container">
     <div class="header-with-back">
       <button type="button" class="btn-back" (click)="cancel()">
-        <i class="material-icons">arrow_back</i> Volver
+        <i class="material-icons">arrow_back</i> Tornar
       </button>
       <h2>Crear nova activitat</h2>
     </div>
@@ -33,7 +33,7 @@
       </div>
   
       <div class="form-group">
-        <label for="type">Tipus d'actividad*</label>
+        <label for="type">Tipus d'activitat*</label>
         <select id="type" formControlName="type" class="form-control">
           <option value="running">Running</option>
           <option value="cycling">Cycling</option>
@@ -109,23 +109,20 @@
             La velocitat mitja és obligatòria
           </div>
           <div *ngIf="hasError('averageSpeed', 'min')" class="invalid-feedback">
-            La velocitat mijta no pot ser negativa
+            La velocitat mitja no pot ser negativa
           </div>
         </div>
       </div>
   
       <div class="form-group">
-        <label for="caloriesBurned">Calorías cremades</label>
+        <label for="caloriesBurned">Caloríes cremades</label>
         <input type="number" id="caloriesBurned" formControlName="caloriesBurned" class="form-control">
       </div>
   
       <div class="form-actions">
-        <button type="button" class="btn-cancel" (click)="cancel()">
-          Cancelar
-        </button>
         <button type="submit" class="btn-save" [disabled]="activityForm.invalid || loading">
           <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-          Crear actividad
+          Crear activitat
         </button>
       </div>
     </form>

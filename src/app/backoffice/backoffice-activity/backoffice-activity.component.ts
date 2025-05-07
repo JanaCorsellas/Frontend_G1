@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivityService } from '../services/activity.service';
-import { UserService } from '../services/user.service';
+import { ActivityService } from '../../services/activity.service';
+import { UserService } from '../../services/user.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { ActivityCreateComponent } from '../components/activity-create/activity-create.component';
-import { ActivityHistoryComponent } from '../activity-history/activity-history.component';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { ActivityCreateComponent } from '../../components/activity-create/activity-create.component';
+import { ActivityHistoryComponent } from '../../activity-history/activity-history.component';
 
 @Component({
   selector: 'app-activities',

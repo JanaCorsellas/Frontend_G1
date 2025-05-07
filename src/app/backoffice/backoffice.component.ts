@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivitiesComponent } from '../backoffice-activity/backoffice-activity.component';
-import { UsersComponent } from '../backoffice-user/backoffice-user.component';
+import { ActivitiesComponent } from './backoffice-activity/backoffice-activity.component';
+import { UsersComponent } from './backoffice-user/backoffice-user.component';
 import { AuthService } from '../services/auth.service'; // Adjust the path as needed
 import { AchievementComponent} from '../backoffice/backoffice-achievement/backoffice-achievement.component';
 import { BackofficeSongComponent } from '../backoffice/backoffice-song/backoffice-song.component';
@@ -12,7 +12,7 @@ import { BackofficeSongComponent } from '../backoffice/backoffice-song/backoffic
   templateUrl: './backoffice.component.html',
   styleUrls: ['./backoffice.component.css'],
   standalone: true,
-  imports: [CommonModule, FormsModule, ActivitiesComponent, UsersComponent,AchievementComponent, BackofficeSongComponent ]
+  imports: [CommonModule, FormsModule, ActivitiesComponent, UsersComponent, AchievementComponent, BackofficeSongComponent ]
 })
 export class BackOfficeComponent implements OnInit {
   
@@ -22,7 +22,6 @@ export class BackOfficeComponent implements OnInit {
   constructor(private authService: AuthService) {}
 
   logout() {
-    console.log('BackOfficeComponent: Cerrando sesión y redirigiendo al login');
     this.authService.logout();
   }
   

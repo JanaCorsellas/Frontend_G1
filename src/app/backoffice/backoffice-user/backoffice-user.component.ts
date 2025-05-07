@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { UserService } from '../services/user.service';
-import { ActivityService } from '../services/activity.service';
+import { UserService } from '../../services/user.service';
+import { ActivityService } from '../../services/activity.service';
 import { MatDialog } from '@angular/material/dialog';
-import { ConfirmDialogComponent } from '../confirm-dialog/confirm-dialog.component';
-import { UserCreateComponent } from '../components/user-create/user-create.component';
-import { User } from '../models/user.model';
+import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
+import { UserCreateComponent } from '../../components/user-create/user-create.component';
+import { User } from '../../models/user.model';
 
 @Component({
   selector: 'app-users',

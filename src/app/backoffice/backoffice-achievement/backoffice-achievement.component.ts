@@ -3,7 +3,7 @@ import { AchievementService } from '../../services/achievements/achievement.serv
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AchievementFormComponent } from '../../components/achievement-create/achievement-form.component';
+import { AchievementFormComponent } from '../../components/achievement-form/achievement-form.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -106,7 +106,7 @@ export class AchievementComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Dades rebudes del servidor:', response);
-          console.log('achievements rebuts:',response.achievement)
+          console.log('Achievements rebuts:',response.achievement)
           
           if (Array.isArray(response)) {
             this.achievements = response;

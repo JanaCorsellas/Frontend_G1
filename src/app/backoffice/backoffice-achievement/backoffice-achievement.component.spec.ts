@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BackofficeAchievementComponent } from './backofficeAchievements/backoffice-achievement.component';
+import { AchievementComponent } from './backoffice-achievement.component';
 
-describe('BackofficeAchievementComponent', () => {
-  let component: BackofficeAchievementComponent;
-  let fixture: ComponentFixture<BackofficeAchievementComponent>;
+describe('AchievementComponent', () => {
+  let component: AchievementComponent;
+  let fixture: ComponentFixture<AchievementComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [BackofficeAchievementComponent]
+      imports: [AchievementComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(BackofficeAchievementComponent);
+    fixture = TestBed.createComponent(AchievementComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
