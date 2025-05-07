@@ -3,7 +3,7 @@ import { AchievementService } from '../../services/achievements/achievement.serv
 import { MatDialog } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AchievementFormComponent } from '../../components/achievement-create/achievement-form.component';
+import { AchievementFormComponent } from '../../components/achievement-form/achievement-form.component';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -17,10 +17,10 @@ export class AchievementComponent implements OnInit {
   achievements: any[] = [];
   totalAchievements = 0;
   filteredAchievements: any[] = [];
-  paginatedAchievements: any[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 6;
   totalPages = 0;
+  pageSizes: number[] = [6, 12, 24, 48];
   pages: number[] = [];
   loadedAchievements = false;
   showCreateModal = false;
@@ -30,75 +30,17 @@ export class AchievementComponent implements OnInit {
   selectedType: string = '';
   loading = false;
   error = '';
-
   
   constructor(
     private achievementService: AchievementService,
     private dialog: MatDialog
   ) {}
 
-  allMockAchievements: any[] = [
-    { 
-      _id: '1', 
-      title: 'Running en el parc', 
-      description: 'asdsa', 
-      condition: 'asdda',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
-      usersUnlocked: '1234', 
-
-    },
-    { 
-      _id: '1', 
-      title: 'Running en el parc', 
-      description: 'asdsa', 
-      condition: 'asdda',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
-      usersUnlocked: '1234', 
-
-    },
-    { 
-      _id: '1', 
-      title: 'Running en el parc', 
-      description: 'asdsa', 
-      condition: 'asdda',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
-      usersUnlocked: '1234', 
-
-    },
-    { 
-      _id: '1', 
-      title: 'Running en el parc', 
-      description: 'asdsa', 
-      condition: 'asdda',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
-      usersUnlocked: '1234', 
-
-    },
-    { 
-      _id: '2', 
-      title: 'Caminant per la platja', 
-      description: 'asdasd', 
-      condition: 'asdasd',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
-      usersUnlocked: '1234', 
-
-    },
-    { 
-      _id: '3', 
-      title: 'Ciclisme a la muntanya', 
-      description: 'asdasd', 
-      condition: 'asdasd',
-      icon: 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/800px-User_icon_2.svg.png',
-      usersUnlocked: '1234', 
-
-    },
-  ];
-
   ngOnInit(): void {
-    this.getAchievements();
+    this.getAchievements(1);
   }
 
-  getAchievements(): void {
+  getAchievements(page: number): void {
     this.loading = true;
     this.loadedAchievements = false;
     
@@ -106,51 +48,40 @@ export class AchievementComponent implements OnInit {
       .subscribe({
         next: (response) => {
           console.log('Dades rebudes del servidor:', response);
-          console.log('achievements rebuts:',response.achievement)
-          
-          if (Array.isArray(response)) {
-            this.achievements = response;
-            this.totalAchievements = response.length;
-            this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
-            console.log(this.achievements);
-          } else if (response && response.achievement) {
-            this.achievements = response.achievement;
-            this.totalAchievements = response.totalAchievements || response.achievement.length;
-            this.totalPages = response.totalPages || Math.ceil(this.totalAchievements / this.itemsPerPage);
+          if (response.achievements.length > 0 && response.achievements) {
+            this.achievements = response.achievements;
+            this.totalAchievements = response.totalAchievements;
+            this.totalPages = response.totalPages;
+            this.filteredAchievements = [...this.achievements];
+            
+            this.generatePageNumbers();
+
           } else {
-            console.warn("No s'han rebut achievements del servidor.");
-            this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
-            this.totalAchievements = this.allMockAchievements.length;
-            this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
+            console.warn("No s'han rebut reptes del servidor.");
           }
           
           this.filteredAchievements = [...this.achievements];
           this.generatePageNumbers();
-          this.updatePaginatedAchievements();
           this.loading = false;
           this.loadedAchievements = true;
         },
         error: (err) => {
-          console.error('Error al carregar achievements:', err);
-          this.error = 'Error al carregar achievements';
+          console.error('Error al carregar reptes:', err);
+          this.error = 'Error al carregar reptes';
           this.loading = false;
-          
-          // En cas d'error, utilitzem les dades d'exemple
-          this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
-          this.filteredAchievements = [...this.achievements];
-          this.totalAchievements = this.allMockAchievements.length;
-          this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
+
           this.generatePageNumbers();
-          this.updatePaginatedAchievements();
           this.loadedAchievements = true;
         }
       });
   }
 
-  updatePaginatedAchievements(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedAchievements = this.filteredAchievements.slice(startIndex, endIndex);
+  changePageSize(event: Event) {
+    // Es passa l'event i no el número directament perquè $event.target.value pot ser NULL
+    const size = +(event.target as HTMLSelectElement).value;
+    this.currentPage = 1;
+    this.itemsPerPage = size;
+    this.getAchievements(this.currentPage);
   }
 
   generatePageNumbers(): void {
@@ -165,7 +96,7 @@ export class AchievementComponent implements OnInit {
       return;
     }
     this.currentPage = page;
-    this.updatePaginatedAchievements();
+    this.getAchievements(page);
   }
 
   showCreateAchievementForm(): void {
@@ -195,14 +126,7 @@ export class AchievementComponent implements OnInit {
         this.achievementService.deleteAchievement(achievement._id).subscribe({
           next: () => {
             console.log(`Achievement ${achievement._id} eliminat`);
-            
-            // Eliminar l'achievement de les dades de prova
-            const index = this.allMockAchievements.findIndex(a => a._id === achievement._id);
-            if (index !== -1) {
-              this.allMockAchievements.splice(index, 1);
-            }
-            
-            this.getAchievements();
+            this.getAchievements(1);
           },
           error: (error) => {
             console.error("Error al eliminar l'achievement:", error);
@@ -255,7 +179,7 @@ export class AchievementComponent implements OnInit {
       this.showCreateModal = false;
       this.showEditModal = false;
       if (achievement) {
-        this.getAchievements(); // Recargar la llista després de crear un nou achievement
+        this.getAchievements(1); // Recargar la llista després de crear un nou achievement
       }
   }
 
@@ -265,7 +189,7 @@ export class AchievementComponent implements OnInit {
       
       // Si s'han fet canis durant la visualització, actualitzar la llista
       if (this.loadedAchievements) {
-        this.getAchievements();
+        this.getAchievements(1);
       }
   }
    

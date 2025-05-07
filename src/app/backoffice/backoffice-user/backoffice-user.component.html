@@ -4,13 +4,24 @@
       <button class="btn-create" (click)="showCreateUserForm()">
         <i class="material-icons">add</i> Crear nou usuari
       </button>
-      <button class="btn-refresh-users" (click)="getUsers()">
+      <button class="btn-refresh-users" (click)="getUsers(1)">
         <i class="material-icons">refresh</i> Actualitzar
       </button>
     </div>
     
-    <!-- Llista paginada d'usuaris -->
-    <div class="users-container" *ngIf="loadedUsers">
+    <!-- Llista d'usuaris -->
+    <div class="user-container" *ngIf="loadedUsers">
+
+      <!-- Secció de filtratge -->
+      <div class="filter-container">
+      <label>
+        Resultats per pàgina:
+        <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
+          <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
+        </select>
+      </label>
+      </div>
+
       <!-- Taula d'usuaris -->
       <div class="users-grid">
         <div *ngFor="let user of users; trackBy: trackByUserId" 
@@ -70,11 +81,6 @@
           (click)="changePage(currentPage + 1)">
           Següent »
         </button>
-      </div>
-      
-      <div class="pagination-info">
-        Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
-        ({{ totalUsers }} usuaris en total)
       </div>
     </div>
 

@@ -16,8 +16,8 @@ private apiUrl = 'http://localhost:3000/api/songs';
     return this.http.post(this.apiUrl, songData);
   }
   
-  // Obtenir cançons paginades
-  getSongs(page: number = 1, limit: number = 5, includeHidden: boolean = false): Observable<any> {
+  // Obtenir cançons
+  getSongs(page: number, limit: number, includeHidden: boolean = false): Observable<any> {
     let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());

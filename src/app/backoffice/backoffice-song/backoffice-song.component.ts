@@ -2,13 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { SongService } from '../../services/songs/song.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from '../../confirm-dialog/confirm-dialog.component';
-import { SongFormComponent } from '../../components/song-form-component/song-form-component.component';
+import { SongFormComponent } from '../../components/song-form/song-form.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-backoffice-song',
-  imports: [SongFormComponent,CommonModule,FormsModule],
+  imports: [SongFormComponent, CommonModule, FormsModule],
   templateUrl: './backoffice-song.component.html',
   styleUrl: './backoffice-song.component.css'
 })
@@ -16,10 +16,10 @@ export class BackofficeSongComponent implements OnInit {
   songs: any[] = [];
   totalSongs = 0;
   filteredSongs: any[] = [];
-  paginatedSongs: any[] = [];
   currentPage = 1;
-  itemsPerPage = 5;
+  itemsPerPage = 6;
   totalPages = 0;
+  pageSizes: number[] = [6, 12, 24, 48];
   pages: number[] = [];
   loadedSongs = false;
   showCreateModal = false;
@@ -39,80 +39,42 @@ export class BackofficeSongComponent implements OnInit {
     album: '',
     genre: ''
   };
-
   
   constructor(
     private songsService: SongService,
     private dialog: MatDialog
   ) {}
 
-  allMockSongs: any[] = [
-    {
-      _id: '1', 
-      title: 'Bohemian Rhapsody', 
-      artist: 'Queen', 
-      album: 'At night at the opera',
-    },{
-      _id: '2', 
-      title: 'Stairway to Heaven', 
-      artist: 'Led Zeppelin', 
-      album: 'Led Zeppelin IV',
-    },{
-      _id: '3', 
-      title: 'Hotel California', 
-      artist: 'Eagles', 
-      album: 'Hotel California',
-    },{
-      _id: '4', 
-      title: 'Imagine', 
-      artist: 'John Lennon', 
-      album: 'Imagine',
-    },{
-      _id: '5', 
-      title: 'Smells Like Teen Spirit', 
-      artist: 'Nirvana', 
-      album: 'Nevermind',
-    }
-  ]
-
   ngOnInit(): void {
-    this.getSongs();
+    this.getSongs(1);
   }
 
-  getSongs(): void {
+  getSongs(page: number): void {
     this.loading = true;
     this.loadedSongs = false;
     
-    this.songsService.getSongs(this.currentPage, this.itemsPerPage)
+    this.songsService.getSongs(page, this.itemsPerPage)
       .subscribe({
         next: (response) => {
           console.log('Dades rebudes del servidor:', response);
-          
-          if (Array.isArray(response)) {
-            this.songs = response;
-            this.totalSongs = response.length;
-            this.totalPages = Math.ceil(this.totalSongs / this.itemsPerPage);
-            console.log('Cançons rebudes:', this.songs);
-          } else if (response && response.song) {
-            this.songs = response.song;
-            this.totalSongs = response.totalSongs || response.song.length;
-            this.totalPages = response.totalPages || Math.ceil(this.totalSongs / this.itemsPerPage);
+          if (response.songs.length > 0 && response.songs) {
+            this.songs = response.songs;
+            this.totalSongs = response.totalSongs;
+            this.totalPages = response.totalPages;
+            this.filteredSongs = [...this.songs];
+            
+            this.generatePageNumbers();
+
+            //Carreguem la llista de variables pels filtres de búsqueda
+            this.titles = this.getFilterValues('title');
+            this.artists = this.getFilterValues('artist');
+            this.genres = this.getFilterValues('genre');
+            this.albums = this.getFilterValues('album');
+            this.resetSearchFilter();
+
           } else {
             console.warn("No s'han rebut cançons del servidor.");
-            this.songs = this.allMockSongs.slice(0, this.itemsPerPage);
-            this.totalSongs = this.allMockSongs.length;
-            this.totalPages = Math.ceil(this.totalSongs / this.itemsPerPage);
           }
-          this.filteredSongs = [...this.songs];
-          this.generatePageNumbers();
-          this.updatePaginatedSongs();
-
-          //Carreguem la llista de variables pels filtres de búsqueda
-          this.titles = this.getFilterValues('title');
-          this.artists = this.getFilterValues('artist');
-          this.genres = this.getFilterValues('genre');
-          this.albums = this.getFilterValues('album');
-          this.resetSearchFilter();
 
           this.loading = false;
           this.loadedSongs = true;
@@ -122,13 +84,7 @@ export class BackofficeSongComponent implements OnInit {
           this.error = 'Error al carregar cançons';
           this.loading = false;
           
-          // En cas d'error, utilitzem les dades d'exemple
-          this.songs = this.allMockSongs.slice(0, this.itemsPerPage);
-          this.filteredSongs = [...this.songs];
-          this.totalSongs = this.allMockSongs.length;
-          this.totalPages = Math.ceil(this.totalSongs / this.itemsPerPage);
           this.generatePageNumbers();
-          this.updatePaginatedSongs();
 
           //Carreguem la llista de variables pels filtres de búsqueda
           this.titles = this.getFilterValues('title');
@@ -160,7 +116,6 @@ export class BackofficeSongComponent implements OnInit {
             (!this.filter.genre || song.genre === this.filter.genre);
     });
     this.currentPage = 1;
-    this.updatePaginatedSongs();
   }
 
   resetSearchFilter() {
@@ -171,14 +126,14 @@ export class BackofficeSongComponent implements OnInit {
       genre: ''
     };
     this.filteredSongs = [...this.songs];
-    this.currentPage = 1;
-    this.updatePaginatedSongs();
   }
 
-  updatePaginatedSongs(): void {
-    const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-    const endIndex = startIndex + this.itemsPerPage;
-    this.paginatedSongs = this.filteredSongs.slice(startIndex, endIndex);
+  changePageSize(event: Event) {
+    // Es passa l'event i no el número directament perquè $event.target.value pot ser NULL
+    const size = +(event.target as HTMLSelectElement).value;
+    this.currentPage = 1;
+    this.itemsPerPage = size;
+    this.getSongs(this.currentPage);
   }
 
   generatePageNumbers(): void {
@@ -193,7 +148,7 @@ export class BackofficeSongComponent implements OnInit {
       return;
     }
     this.currentPage = page;
-    this.updatePaginatedSongs();
+    this.getSongs(page);
   }
 
   showCreateSongForm(): void {
@@ -223,14 +178,7 @@ export class BackofficeSongComponent implements OnInit {
         this.songsService.deleteSong(song._id).subscribe({
           next: () => {
             console.log(`Cançó ${song._id} eliminada`);
-            
-            // Eliminar la cançó de les dades de prova
-            const index = this.allMockSongs.findIndex(a => a._id === song._id);
-            if (index !== -1) {
-              this.allMockSongs.splice(index, 1);
-            }
-            
-            this.getSongs();
+            this.getSongs(1);
           },
           error: (error) => {
             console.error("Error al eliminar la cançó:", error);
@@ -257,20 +205,21 @@ export class BackofficeSongComponent implements OnInit {
         next: (detailedSong) => {
           console.log("Dades completes de la canço:", detailedSong);
           
-      // Crear una còpia per no perdre les dades que ja tenim
-        const updatedSong = { ...this.selectedSong };
+          // Crear una còpia per no perdre les dades que ja tenim
+          const updatedSong = { ...this.selectedSong };
+            
+          // Actualitzar amb les noves dades
+          Object.assign(updatedSong, detailedSong);
           
-      // Actualitzar amb les noves dades
-        Object.assign(updatedSong, detailedSong);
-      // Actualizar l'estat amb les dades processades
-        this.selectedSong = updatedSong;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error("Error al carregar els detalls de la canço:", error);
-        // Mantenim les dades que ja teniem
-        this.loading = false;
-      }
+          // Actualizar l'estat amb les dades processades
+          this.selectedSong = updatedSong;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error("Error al carregar els detalls de la canço:", error);
+          // Mantenim les dades que ja teniem
+          this.loading = false;
+        }
     });
   } else {
   // Si no hi ha ID, només mostrar les dades que ja tenim
@@ -283,7 +232,7 @@ export class BackofficeSongComponent implements OnInit {
       this.showCreateModal = false;
       this.showEditModal = false;
       if (song) {
-        this.getSongs(); // Recargar la llista després de crear un nova cançó
+        this.getSongs(1); // Recargar la llista després de crear un nova cançó
       }
   }
 
@@ -293,7 +242,7 @@ export class BackofficeSongComponent implements OnInit {
       
       // Si s'han fet canvis durant la visualització, actualitzar la llista
       if (this.loadedSongs) {
-        this.getSongs();
+        this.getSongs(1);
       }
   }
 

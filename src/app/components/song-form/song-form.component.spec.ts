@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SongFormComponent } from './song-form-component.component';
+import { SongFormComponent } from './song-form.component';
 
 describe('SongFormComponent', () => {
   let component: SongFormComponent;

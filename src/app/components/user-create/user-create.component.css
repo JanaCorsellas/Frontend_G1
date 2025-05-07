@@ -104,15 +104,6 @@ label {
   background-color: #303f9f;
 }
 
-.btn-secondary {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.btn-secondary:hover {
-  background-color: #e0e0e0;
-}
-
 .btn:disabled {
   opacity: 0.7;
   cursor: not-allowed;
