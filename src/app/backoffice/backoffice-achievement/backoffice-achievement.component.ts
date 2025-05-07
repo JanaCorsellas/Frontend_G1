@@ -119,9 +119,9 @@ export class AchievementComponent implements OnInit {
             this.totalPages = response.totalPages || Math.ceil(this.totalAchievements / this.itemsPerPage);
           } else {
             console.warn("No s'han rebut achievements del servidor.");
-            this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
-            this.totalAchievements = this.allMockAchievements.length;
-            this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
+            // this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
+            // this.totalAchievements = this.allMockAchievements.length;
+            // this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
           }
           
           this.filteredAchievements = [...this.achievements];
@@ -136,10 +136,10 @@ export class AchievementComponent implements OnInit {
           this.loading = false;
           
           // En cas d'error, utilitzem les dades d'exemple
-          this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
-          this.filteredAchievements = [...this.achievements];
-          this.totalAchievements = this.allMockAchievements.length;
-          this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
+          // this.achievements = this.allMockAchievements.slice(0, this.itemsPerPage);
+          // this.filteredAchievements = [...this.achievements];
+          // this.totalAchievements = this.allMockAchievements.length;
+          // this.totalPages = Math.ceil(this.totalAchievements / this.itemsPerPage);
           this.generatePageNumbers();
           this.updatePaginatedAchievements();
           this.loadedAchievements = true;

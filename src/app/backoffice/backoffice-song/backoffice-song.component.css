@@ -34,7 +34,7 @@
   margin-right: 8px;
 }
 
-.btn-refresh-song {
+.btn-refresh {
   display: flex;
   align-items: center;
   background-color: #3f51b5;
@@ -47,11 +47,11 @@
   transition: background-color 0.3s;
 }
 
-.btn-refresh-song:hover {
+.btn-refresh:hover {
   background-color: #303f9f;
 }
 
-.btn-refresh-song i {
+.btn-refresh i {
   margin-right: 8px;
 }
 
@@ -173,7 +173,6 @@
   font-weight: 500;
   color: #333;
   font-size: 14px;
-  min-width: 170px;
 }
 
 .filter-form input[type="text"],

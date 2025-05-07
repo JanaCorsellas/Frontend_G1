@@ -11,8 +11,6 @@
   
   <!-- Llista paginada d'achievements -->
   <div class="achievement-container" *ngIf="loadedAchievements">
-    <h2>Assoliments</h2>
-    
     <!-- Contenidor de quadrícules pels achievements -->
     <div class="achievement-grid">
       <div *ngFor="let achievement of paginatedAchievements; trackBy: trackByAchievementId" 
@@ -44,14 +42,14 @@
     <!-- Missatge si no hi ha achievements -->
     <div *ngIf="filteredAchievements.length === 0" class="no-achievements">
       <div class="empty-state">
-        <i class="material-icons large">hiking</i>
-        <h3>No s'han trobat activitats</h3>
-        <p>No hi ha activitats que coincideixin amb els criteris de búsqueda.</p>
+        <i class="material-icons large">info</i>
+        <h3>No s'han trobat assoliments</h3>
+        <p>No hi ha assoliments que coincideixin amb els criteris de búsqueda.</p>
       </div>
     </div>
     
     <!-- Paginació -->
-    <div class="pagination-controls" >
+    <div class="pagination-controls" *ngIf="filteredAchievements.length > 0">
       <button 
           class="pagination-btn" 
           [disabled]="currentPage === 1"
@@ -73,13 +71,6 @@
         Següent »
       </button>
     </div>
-       
-    @if(totalAchievements > 0){
-    <div class="pagination-info">
-      Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
-      ({{ totalAchievements }} assoliments en total)
-    </div>
-    }
   
     <!-- Crear achievement -->
     <div class="full-screen-form" *ngIf="showCreateModal">

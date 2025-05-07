@@ -218,13 +218,6 @@
   color: white;
 }
 
-.pagination-info {
-  text-align: center;
-  color: #666;
-  font-size: 14px;
-  margin-top: 10px;
-}
-
 /* Estils pel formulari a pantalla completa */
 .full-screen-form {
   position: fixed;

@@ -4,16 +4,15 @@
     <button class="btn-create" (click)="showCreateActivityForm()">
       <i class="material-icons">add</i> Crear nova activitat
     </button>
-    <button class="btn-refresh-activities" (click)="getActivities()">
+    <button class="btn-refresh" (click)="getActivities()">
       <i class="material-icons">refresh</i> Actualitzar
     </button>
   </div>
   
   <!-- Llista paginada d'activitats -->
   <div class="activities-container" *ngIf="loadedActivities">
-    <h2>Activitats</h2>
     
-    <!-- Filtre per tipus d'activitat -->
+    <!-- Secció de filtratge -->
     <div class="filter-container">
       <label for="activity-type">Filtrar per tipus:</label>
       <select id="activity-type" [(ngModel)]="selectedType" (change)="filterActivities()">
@@ -60,7 +59,7 @@
     </div>
 
     <!-- Missatge si no hi ha activitats -->
-    <div *ngIf="filteredActivities.length === 0" class="no-activities">
+    <div class="no-activities" *ngIf="filteredActivities.length === 0">
       <div class="empty-state">
         <i class="material-icons large">hiking</i>
         <h3>No s'han trobat activitats</h3>
@@ -69,7 +68,7 @@
     </div>
     
     <!-- Paginació -->
-    <div class="pagination-controls">
+    <div class="pagination-controls" *ngIf="filteredActivities.length > 0">
       <button 
         class="pagination-btn" 
         [disabled]="currentPage === 1"
@@ -88,13 +87,8 @@
         class="pagination-btn" 
         [disabled]="currentPage === totalPages"
         (click)="changePage(currentPage + 1)">
-        Siguiente »
+        Següent »
       </button>
-    </div>
-    
-    <div class="pagination-info" *ngIf="totalActivities > 0">
-      Mostrant pàgina {{ currentPage }} de {{ totalPages }} 
-      ({{ totalActivities }} activitats en total)
     </div>
   </div>
 
