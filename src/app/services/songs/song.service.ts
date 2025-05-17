@@ -7,7 +7,7 @@ import {Song} from '../../models/song.model';
   providedIn: 'root'
 })
 export class SongService {
-private apiUrl = 'http://localhost:3000/api/songs';
+private apiUrl = 'http://localhost:8080/api/songs';
 
   constructor(private http: HttpClient) { }
   

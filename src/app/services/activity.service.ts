@@ -9,7 +9,7 @@ export class ActivityService {
   getActivityHistory() {
     throw new Error('Method not implemented.');
   }
-  private apiUrl = 'http://localhost:3000/api/activities';
+  private apiUrl = 'http://localhost:8080/api/activities';
 
   constructor(private http: HttpClient) { }
 
