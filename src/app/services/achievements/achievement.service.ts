@@ -8,11 +8,11 @@ import { Achievement } from '../../models/achievement.model';
   providedIn: 'root'
 })
 export class AchievementService {
-  private apiUrl = 'http://localhost:8080/api/achievements';
+  private apiUrl = 'http://ea1-api.upc.edu/api/achievements';
 
   constructor(private http: HttpClient) { }
   
-  // Crear un nou acjievement
+  // Crear un nou achievement
   createAchievement(achievementData: any): Observable<any> {
     return this.http.post(this.apiUrl, achievementData);
   }

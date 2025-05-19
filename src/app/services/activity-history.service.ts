@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ActivityHistoryService {
-  private apiUrl = 'http://localhost:8080/api/activity-history';
+  private apiUrl = 'http://ea1-api.upc.edu/api/activity-history';
 
   constructor(private http: HttpClient) { }
 
