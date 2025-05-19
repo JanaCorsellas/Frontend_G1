@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = "http://localhost:3000/api/";
+  private apiUrl = "http://ea1-api.upc.edu/api/";
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser = this.currentUserSubject.asObservable();
 

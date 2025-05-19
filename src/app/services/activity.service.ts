@@ -9,7 +9,7 @@ export class ActivityService {
   getActivityHistory() {
     throw new Error('Method not implemented.');
   }
-  private apiUrl = 'http://localhost:3000/api/activities';
+  private apiUrl = 'http://ea1-api.upc.edu/api/activities';
 
   constructor(private http: HttpClient) { }
 
