@@ -12,7 +12,7 @@ export class AchievementService {
 
   constructor(private http: HttpClient) { }
   
-  // Crear un nou acjievement
+  // Crear un nou achievement
   createAchievement(achievementData: any): Observable<any> {
     return this.http.post(this.apiUrl, achievementData);
   }
