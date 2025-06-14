@@ -16,6 +16,5 @@ export const routes: Routes = [
   { path: 'users', component: UserListComponent },
   { path: 'users/edit/:id', component: UserEditComponent },
   { path: 'profile', redirectTo: '/user-profile', pathMatch: 'full' }, // Redirección por si alguien usa la ruta antigua
-  { path: '', redirectTo: '/login', pathMatch: 'full' }, // Redirección por defecto al login
-  { path: '**', redirectTo: '/login' } // Redirección para rutas no encontradas
+  { path: '**', redirectTo: '/' }
 ];

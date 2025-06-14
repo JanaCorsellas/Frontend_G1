@@ -1,6 +1,72 @@
-#title {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
+.home-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.title .footer {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-top: 3rem;
+  margin-bottom: 2rem;
+}
+
+.subtitle {
+  font-size: 1.1rem;
+  color: #606060;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+
+.auth-section.card {
+  max-width: 400px;
+  margin: 3rem auto;
+  padding: 2.5rem 2rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.auth-toggle {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.toggle-btn {
+  background: none;
+  border: none;
+  padding: 0.75rem 2rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: #888;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-bottom 0.2s;
+}
+
+.toggle-btn.active {
+  color: #1976d2;
+  border-bottom: 2px solid #1976d2;
+  font-weight: 600;
+}
+
+.material-icons {
+  font-size: 18px;
+  margin-right: 5px;
+}
+
+.auth-form {
+  width: 100%;
+}
+
+.copyright-footer {
+  font-size: 1.1rem;
+  color: #606060;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  font-size: small;
 }

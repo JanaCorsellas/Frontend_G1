@@ -1,19 +1,55 @@
 <div class="container" id="title">
-    <h1></h1>
+  <div class="home-header">
+    <h1 class="title">TAZER</h1>
+    <p class="subtitle" *ngIf="!loggedin">
+      Administra la plataforma de manera eficient i segura. Si us plau inicia sessió o registra't per començar.
+    </p>
   </div>
-  
-  <!-- Verificar si está logueado y redirigir según el rol -->
-  <div *ngIf="loggedin; else notLoggedIn">
-    <div *ngIf="isAdmin; else userView">
-      <app-backoffice></app-backoffice>
-    </div>
-    <ng-template #userView>
-      <!-- Usar router-outlet para la navegación dentro de la vista de usuario -->
-      <router-outlet></router-outlet>
-    </ng-template>
+</div>
+
+<div *ngIf="loggedin; else notLoggedIn">
+  <div *ngIf="isAdmin; else userView">
+    <app-backoffice></app-backoffice>
   </div>
-  
-  <ng-template #notLoggedIn>
-    <app-register></app-register>
-    <app-login (exportLoggedIn)="getLoggedIn($event)"></app-login>
+  <ng-template #userView>
+    <router-outlet></router-outlet>
   </ng-template>
+</div>
+
+<ng-template #notLoggedIn>
+  <div class="auth-section card">
+    <div class="auth-toggle">
+      <button
+        class="toggle-btn"
+        [class.active]="authMode === 'login'"
+        (click)="authMode = 'login'">
+        <i class="material-icons">login</i> Iniciar sessió
+      </button>
+      <button
+        class="toggle-btn"
+        [class.active]="authMode === 'register'"
+        (click)="authMode = 'register'">
+        <i class="material-icons">person_add</i> Registrar
+      </button>
+    </div>
+    <div class="auth-form">
+      <app-login
+        *ngIf="authMode === 'login'"
+        (exportLoggedIn)="getLoggedIn($event)">
+      </app-login>
+      <app-register
+        *ngIf="authMode === 'register'">
+      </app-register>
+    </div>
+  </div>
+</ng-template>
+
+<footer>
+  <div class="container" id="footer">
+    <div class="home-header">
+      <p class="copyright-footer">
+        Copyright 2025 - UPC
+      </p>
+    </div>
+  </div>
+</footer>
