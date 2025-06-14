@@ -8,7 +8,7 @@ import { Achievement } from '../../models/achievement.model';
   providedIn: 'root'
 })
 export class AchievementService {
-  private apiUrl = 'http://ea1-api.upc.edu/api/achievements';
+  private apiUrl = `${import.meta.env.NG_APP_API_URL}/achievements`;
 
   constructor(private http: HttpClient) { }
   

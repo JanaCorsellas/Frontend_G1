@@ -7,7 +7,7 @@ import { User } from '../models/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://ea1-api.upc.edu/api/users';
+  private apiUrl = `${import.meta.env.NG_APP_API_URL}/users`;
 
   constructor(private http: HttpClient) { }
 

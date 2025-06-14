@@ -7,7 +7,7 @@ import {Song} from '../../models/song.model';
   providedIn: 'root'
 })
 export class SongService {
-private apiUrl = 'http://ea1-api.upc.edu/api/songs';
+  private apiUrl = `${import.meta.env.NG_APP_API_URL}/songs`;
 
   constructor(private http: HttpClient) { }
   
