@@ -43,7 +43,7 @@ export class AuthService {
     localStorage.removeItem('currentUser');
     this.currentUserSubject.next(null);
     // Añadimos redirección al login
-    this.router.navigate(['/login']);
+    this.router.navigate(['/']);
   }
   
   register(registerData: { username: string; email: string; password: string }): Observable<any> {
