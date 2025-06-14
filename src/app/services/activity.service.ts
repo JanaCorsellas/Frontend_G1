@@ -9,7 +9,7 @@ export class ActivityService {
   getActivityHistory() {
     throw new Error('Method not implemented.');
   }
-  private apiUrl = 'http://ea1-api.upc.edu/api/activities';
+  private apiUrl = `${import.meta.env.NG_APP_API_URL}/activities`;
 
   constructor(private http: HttpClient) { }
 

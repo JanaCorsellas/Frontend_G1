@@ -8,13 +8,13 @@ import { Router } from '@angular/router';
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = "http://ea1-api.upc.edu/api/";
+  private apiUrl = `${import.meta.env.NG_APP_API_URL}/users`;
   private currentUserSubject = new BehaviorSubject<any>(null);
   public currentUser = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
-    private router: Router // Añadimos el Router para poder redirigir
+    private router: Router
   ) {
     this.checkLoginStatus();
   }
@@ -29,7 +29,7 @@ export class AuthService {
   }
 
   login(credentials: { username: string; password: string }): Observable<any> {
-    return this.http.post(this.apiUrl + "users/login", credentials).pipe(
+    return this.http.post(this.apiUrl + "/login", credentials).pipe(
       tap((response: any) => {
         if (response && response.user) {
           localStorage.setItem('currentUser', JSON.stringify(response.user));
@@ -47,7 +47,7 @@ export class AuthService {
   }
   
   register(registerData: { username: string; email: string; password: string }): Observable<any> {
-    return this.http.post(`${this.apiUrl}users/register`, registerData);
+    return this.http.post(`${this.apiUrl}/register`, registerData);
   }
   
   checkLoginStatus(): void {
