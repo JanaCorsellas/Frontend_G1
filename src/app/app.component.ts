@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { RouterModule, Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { LoginComponent } from './login/login.component';
 import { RegisterComponent } from './register/register.component';
@@ -20,10 +20,25 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
     BackOfficeComponent,
   ]
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   loggedin: boolean = false;
   isAdmin: boolean = false;
-  title = `Tazer's Backoffice`;
+  title = `TAZER`;
+  authMode: 'login' | 'register' = 'login';
+
+  constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        if (event.urlAfterRedirects.startsWith('/register')) {
+          this.authMode = 'register';
+        } else if (event.urlAfterRedirects.startsWith('/login')) {
+          this.authMode = 'login';
+        }
+      }
+    });
+  }
 
   // Método para manejar el evento exportLoggedIn
   getLoggedIn(loggedIn: boolean) {

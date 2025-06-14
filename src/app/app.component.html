@@ -17,9 +17,39 @@
 </div>
 
 <ng-template #notLoggedIn>
-  <div class="auth-section">
-    <app-login (exportLoggedIn)="getLoggedIn($event)"></app-login>
-    <div class="divider"></div>
-    <app-register></app-register>
+  <div class="auth-section card">
+    <div class="auth-toggle">
+      <button
+        class="toggle-btn"
+        [class.active]="authMode === 'login'"
+        (click)="authMode = 'login'">
+        <i class="material-icons">login</i> Iniciar sessió
+      </button>
+      <button
+        class="toggle-btn"
+        [class.active]="authMode === 'register'"
+        (click)="authMode = 'register'">
+        <i class="material-icons">person_add</i> Registrar
+      </button>
+    </div>
+    <div class="auth-form">
+      <app-login
+        *ngIf="authMode === 'login'"
+        (exportLoggedIn)="getLoggedIn($event)">
+      </app-login>
+      <app-register
+        *ngIf="authMode === 'register'">
+      </app-register>
+    </div>
   </div>
 </ng-template>
+
+<footer>
+  <div class="container" id="footer">
+    <div class="home-header">
+      <p class="copyright-footer">
+        Copyright 2025 - UPC
+      </p>
+    </div>
+  </div>
+</footer>

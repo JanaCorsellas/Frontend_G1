@@ -18,7 +18,7 @@ export class AuthGuardService {
     // Verificar si hay un usuario autenticado
     if (!this.authService.isLoggedIn()) {
       console.log('AuthGuard: No hay usuario autenticado, redirigiendo a login');
-      this.router.navigate(['/login']);
+      this.router.navigate(['/']);
       return false;
     }
     
@@ -30,7 +30,7 @@ export class AuthGuardService {
       // Verificar si el usuario es admin
       if (!this.authService.isAdmin()) {
         console.log('AuthGuard: Usuario no es admin, redirigiendo a home');
-        this.router.navigate(['/home']);
+        this.router.navigate(['/']);
         return false;
       }
     }
