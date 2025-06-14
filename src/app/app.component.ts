@@ -23,6 +23,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 export class AppComponent {
   loggedin: boolean = false;
   isAdmin: boolean = false;
+  title = `Tazer's Backoffice`;
 
   // Método para manejar el evento exportLoggedIn
   getLoggedIn(loggedIn: boolean) {
