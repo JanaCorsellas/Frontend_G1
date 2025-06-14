@@ -1,176 +1,363 @@
 <div class="container">
   <!-- Botons per realitzar accions importants -->
-    <div class="action-buttons">
-      <button class="btn-create" (click)="showCreateUserForm()">
-        <i class="material-icons">add</i> Crear nou usuari
-      </button>
-      <button class="btn-refresh-users" (click)="getUsers(1)">
-        <i class="material-icons">refresh</i> Actualitzar
-      </button>
-    </div>
-    
-    <!-- Llista d'usuaris -->
-    <div class="user-container" *ngIf="loadedUsers">
+  <div class="action-buttons">
+    <button class="btn-create" (click)="showCreateUserForm()">
+      <i class="material-icons">add</i> Crear nou usuari
+    </button>
+    <button class="btn-refresh-users" (click)="getUsers(1)">
+      <i class="material-icons">refresh</i> Actualitzar
+    </button>
+  </div>
+  
+  <!-- Llista d'usuaris -->
+  <div class="user-container" *ngIf="loadedUsers">
 
-      <!-- Secció de filtratge -->
-      <div class="filter-container">
+    <!-- Secció de filtratge -->
+    <div class="filter-container">
       <label>
         Resultats per pàgina:
         <select [(ngModel)]="itemsPerPage" (change)="changePageSize($event)" name="page-size-selector">
           <option *ngFor="let size of pageSizes" [value]="size">{{ size }}</option>
         </select>
       </label>
-      </div>
+    </div>
 
-      <!-- Taula d'usuaris -->
-      <div class="users-grid">
-        <div *ngFor="let user of users; trackBy: trackByUserId" 
-             class="user-card"
-             [class.hidden]="!user.visible">
+    <!-- Taula d'usuaris -->
+    <div class="users-grid">
+      <div *ngFor="let user of users; trackBy: trackByUserId" 
+           class="user-card"
+           [class.hidden]="!user.visible">
 
-          <div class="user-header">
-            <img [src]="user.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
-                 alt="Foto de perfil" 
-                 class="profile-image">
-            <h3 class="user-name">{{ user.username }}</h3>
-          </div>
-          <div class="user-info">
-            <p><strong>Rol:</strong> {{ user.role }}</p>
-            <p><strong>Correu electrònic:</strong> {{ user.email }}</p>
-            <p><strong>Nivell:</strong> {{ user.level || 'N/A' }}</p>
-            <p class="user-bio"><strong>Bio:</strong> {{ user.bio || 'Sense biografia' }}</p>
-          </div>
-          <div class="user-actions">
-            <button class="btn-edit" (click)="updateUser(user)">
-              <i class="material-icons">edit</i> Editar
-            </button>
-            <button class="btn-hide" (click)="updateUserVisibility(user)">
-              <i class="material-icons">{{ user.visible ? 'visibility_off' : 'visibility' }}</i> 
-              {{ user.visible ? 'Ocultar' : 'Mostrar' }}
-              <span *ngIf="!user.visible" class="status-badge">(Ocult)</span>
-            </button>
-            <button class="btn-delete" (click)="deleteUser(user)">
-              <i class="material-icons">delete</i> Eliminar
-            </button>
-            <button class="btn-view" (click)="getUserDetails(user)">
-              <i class="material-icons">visibility</i> Detalls
-            </button>
+        <div class="user-header">
+          <img [src]="user.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+               alt="Foto de perfil" 
+               class="profile-image">
+          <h3 class="user-name">{{ user.username }}</h3>
+        </div>
+        
+        <div class="user-info">
+          <p><strong>Rol:</strong> {{ user.role }}</p>
+          <p><strong>Correu electrònic:</strong> {{ user.email }}</p>
+          <p><strong>Nivell:</strong> {{ user.level || 'N/A' }}</p>
+          <p class="user-bio"><strong>Bio:</strong> {{ user.bio || 'Sense biografia' }}</p>
+          
+          <!-- NOVA SECCIÓ: Informació de seguiment -->
+          <div class="follow-stats">
+            <p><strong>Seguidors:</strong> {{ user.followersCount || 0 }}</p>
+            <p><strong>Seguint:</strong> {{ user.followingCount || 0 }}</p>
           </div>
         </div>
+        
+        <div class="user-actions">
+          <button class="btn-edit" (click)="updateUser(user)">
+            <i class="material-icons">edit</i> Editar
+          </button>
+          <button class="btn-view" (click)="viewUser(user)">
+            <i class="material-icons">visibility</i> Veure
+          </button>
+          <button class="btn-hide" (click)="updateUserVisibility(user)">
+            <i class="material-icons">{{ user.visible ? 'visibility_off' : 'visibility' }}</i> 
+            {{ user.visible ? 'Ocultar' : 'Mostrar' }}
+          </button>
+          <button class="btn-delete" (click)="deleteUser(user)">
+            <i class="material-icons">delete</i> Eliminar
+          </button>
+        </div>
+
+        <!-- NOVA SECCIÓ: Botons de gestió de seguiment -->
+        <div class="follow-actions">
+          <button class="btn-followers" (click)="viewFollowers(user)">
+            <i class="material-icons">people</i> Seguidors ({{ user.followersCount || 0 }})
+          </button>
+          <button class="btn-following" (click)="viewFollowing(user)">
+            <i class="material-icons">person_add</i> Seguint ({{ user.followingCount || 0 }})
+          </button>
+          <button class="btn-manage-follow" (click)="manageFollowing(user)">
+            <i class="material-icons">manage_accounts</i> Gestionar Seguiment
+          </button>
+        </div>
       </div>
+    </div>
+
+    <!-- Paginació -->
+    <div class="pagination-controls" *ngIf="totalPages > 1">
+      <button class="pagination-btn" 
+              [disabled]="currentPage === 1" 
+              (click)="changePage(currentPage - 1)">
+        Anterior
+      </button>
       
-      <!-- Paginació -->
-      <div class="pagination-controls">
-        <button 
-          class="pagination-btn" 
-          [disabled]="currentPage === 1"
-          (click)="changePage(currentPage - 1)">
-          « Anterior
-        </button>
-        
-        <span *ngFor="let page of pages" 
-              class="page-number" 
-              [class.active]="page === currentPage"
-              (click)="changePage(page)">
-          {{page}}
-        </span>
-        
-        <button 
-          class="pagination-btn" 
-          [disabled]="currentPage === totalPages"
-          (click)="changePage(currentPage + 1)">
-          Següent »
-        </button>
-      </div>
-    </div>
-
-  <!-- Modal per crear usuaris -->
-  <div class="full-screen-form" *ngIf="showCreateModal">
-    <app-user-create (userCreated)="onUserCreated($event)"></app-user-create>
-  </div>
-
-  <!-- Modal per editar usuaris -->
-  <div class="full-screen-form" *ngIf="showEditModal && selectedUser">
-    <div class="modal-header">
-      <h2>Editar usuari: {{ selectedUser.username }}</h2>
-      <button class="close-btn" (click)="showEditModal = false">×</button>
-    </div>
-    <div class="modal-body">
-      <form class="edit-form">
-        <div class="form-group">
-          <label for="edit-username">Nom d'usuari</label>
-          <input type="text" id="edit-username" [(ngModel)]="selectedUser.username" name="username" class="form-control">
-        </div>
-
-        <div class="form-group">
-          <label for="edit-role">Rol</label>
-          <div class="custom-select-wrapper">
-            <select id="edit-role" [(ngModel)]="selectedUser.role" name="type" class="custom-select">
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          </div>
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-email">Correu electrònic</label>
-          <input type="email" id="edit-email" [(ngModel)]="selectedUser.email" name="email" class="form-control">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-level">Nivell</label>
-          <input type="number" id="edit-level" [(ngModel)]="selectedUser.level" name="level" class="form-control">
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-bio">Biografia</label>
-          <textarea id="edit-bio" [(ngModel)]="selectedUser.bio" name="bio" class="form-control" rows="3"></textarea>
-        </div>
-        
-        <div class="form-group">
-          <label for="edit-profilePicture">URL d'imatge de perfil</label>
-          <input type="text" id="edit-profilePicture" [(ngModel)]="selectedUser.profilePicture" name="profilePicture" class="form-control">
-        </div>
-        
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" (click)="showEditModal = false">Cancelar</button>
-          <button type="button" class="btn-save" (click)="onUserEdited(true)">Guardar canvis</button>
-        </div>
-      </form>
+      <span *ngFor="let page of pages" 
+            class="page-number" 
+            [class.active]="page === currentPage" 
+            (click)="changePage(page)">
+        {{ page }}
+      </span>
+      
+      <button class="pagination-btn" 
+              [disabled]="currentPage === totalPages" 
+              (click)="changePage(currentPage + 1)">
+        Següent
+      </button>
     </div>
   </div>
 
-  <!-- Modal para veure els detalls d'usuari -->
-  <div class="full-screen-form view-details" *ngIf="showViewModal && selectedUser">
-    <div class="modal-header">
-      <h2>Detalls de l'usuari</h2>
-      <button class="close-btn" (click)="closeViewModal()">×</button>
-    </div>
-    <div class="modal-body user-details">
-      <div class="user-profile">
-        <img [src]="selectedUser.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" alt="Foto de perfil" class="profile-image-large">
-        <h3>{{ selectedUser.username }}</h3>
+  <!-- Loading spinner -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Carregant usuaris...</p>
+  </div>
+
+  <!-- Error message -->
+  <div *ngIf="error" class="error-message">
+    <p>{{ error }}</p>
+    <button (click)="getUsers(currentPage)">Tornar a intentar</button>
+  </div>
+</div>
+
+<!-- MODAL: Crear Usuari -->
+<div *ngIf="showCreateModal" class="full-screen-form">
+  <div class="modal-header">
+    <h2>Crear Nou Usuari</h2>
+    <button class="btn-close" (click)="closeCreateModal()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <app-user-create (userCreated)="onUserCreated()"></app-user-create>
+  </div>
+</div>
+
+<!-- MODAL: Editar Usuari -->
+<div *ngIf="showEditModal && selectedUser" class="full-screen-form">
+  <div class="modal-header">
+    <h2>Editar Usuari: {{ selectedUser.username }}</h2>
+    <button class="btn-close" (click)="closeEditModal()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="edit-form" (ngSubmit)="onUserUpdated()">
+      <div class="form-group">
+        <label for="username">Nom d'usuari:</label>
+        <input type="text" id="username" [(ngModel)]="selectedUser.username" name="username" required>
       </div>
-      
-      <div class="user-details-info">
-        <p><strong>ID:</strong> {{ selectedUser._id }}</p>
-        <p><strong>Correu electrònic:</strong> {{ selectedUser.email }}</p>
-        <p><strong>Nivell:</strong> {{ selectedUser.level }}</p>
-        <p><strong>Estat:</strong> {{ selectedUser.visible ? 'Visible' : 'Ocult' }}</p>
-        <p><strong>Rol:</strong> {{ selectedUser.role }}</p>
-        <p><strong>Activitats:</strong></p>
-        <ul>
-          <li *ngFor="let activity of selectedUser.activities">
-            <strong>{{activity.name}}</strong>
-          </li>
-        </ul>
-        <p><strong>Biografia:</strong></p>
-        <div class="bio-text">{{ selectedUser.bio || 'Aquest usuari no té biografia.' }}</div>
+      <div class="form-group">
+        <label for="email">Correu electrònic:</label>
+        <input type="email" id="email" [(ngModel)]="selectedUser.email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Rol:</label>
+        <div class="custom-select-wrapper">
+          <select id="role" [(ngModel)]="selectedUser.role" name="role" class="custom-select" required>
+            <option value="user">Usuari</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="level">Nivell:</label>
+        <input type="number" id="level" [(ngModel)]="selectedUser.level" name="level" min="1">
+      </div>
+      <div class="form-group">
+        <label for="bio">Biografia:</label>
+        <textarea id="bio" [(ngModel)]="selectedUser.bio" name="bio" rows="4"></textarea>
       </div>
       
       <div class="form-actions">
-        <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
+        <button type="submit" class="btn-save">Guardar Canvis</button>
+        <button type="button" class="btn-cancel" (click)="closeEditModal()">Cancel·lar</button>
       </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL: Veure Usuari -->
+<div *ngIf="showViewModal && selectedUser" class="full-screen-form">
+  <div class="modal-header">
+    <h2>Detalls de l'usuari: {{ selectedUser.username }}</h2>
+    <button class="btn-close" (click)="closeViewModal()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="user-details">
+      <div class="profile-section">
+        <img [src]="selectedUser.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+             alt="Foto de perfil" class="large-profile-image">
+        <h3>{{ selectedUser.username }}</h3>
+      </div>
+      
+      <p><strong>Correu electrònic:</strong> {{ selectedUser.email }}</p>
+      <p><strong>Nivell:</strong> {{ selectedUser.level || 'N/A' }}</p>
+      <p><strong>Visibilitat:</strong> {{ selectedUser.visible ? 'Visible' : 'Ocult' }}</p>
+      <p><strong>Rol:</strong> {{ selectedUser.role }}</p>
+      <p><strong>Seguidors:</strong> {{ selectedUser.followersCount || 0 }}</p>
+      <p><strong>Seguint:</strong> {{ selectedUser.followingCount || 0 }}</p>
+      <p><strong>Activitats:</strong></p>
+      <ul>
+        <li *ngFor="let activity of selectedUser.activities">
+          <strong>{{activity.name}}</strong>
+        </li>
+      </ul>
+      <p><strong>Biografia:</strong></p>
+      <div class="bio-text">{{ selectedUser.bio || 'Aquest usuari no té biografia.' }}</div>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn-back" (click)="closeViewModal()">Tornar a la llista</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Veure Seguidors -->
+<div *ngIf="showFollowersModal" class="full-screen-form">
+  <div class="modal-header">
+    <h2>Seguidors de {{ selectedUserForFollow?.username }}</h2>
+    <button class="btn-close" (click)="closeFollowersModal()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="followLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Carregant seguidors...</p>
+    </div>
+    
+    <div *ngIf="!followLoading" class="followers-list">
+      <p class="stats-text"><strong>Total de seguidors:</strong> {{ followers.length }}</p>
+      
+      <div class="user-list">
+        <div *ngFor="let follower of followers" class="follow-user-card">
+          <img [src]="follower.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+               alt="Foto de perfil" class="small-profile-image">
+          <div class="user-info-mini">
+            <h4>{{ follower.username }}</h4>
+            <p>Nivell: {{ follower.level || 'N/A' }}</p>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="followers.length === 0" class="empty-state">
+        <p>Aquest usuari no té seguidors.</p>
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn-back" (click)="closeFollowersModal()">Tancar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Veure Usuaris que Segueix -->
+<div *ngIf="showFollowingModal" class="full-screen-form">
+  <div class="modal-header">
+    <h2>{{ selectedUserForFollow?.username }} segueix a</h2>
+    <button class="btn-close" (click)="closeFollowingModal()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="followLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Carregant usuaris seguits...</p>
+    </div>
+    
+    <div *ngIf="!followLoading" class="following-list">
+      <p class="stats-text"><strong>Total d'usuaris que segueix:</strong> {{ following.length }}</p>
+      
+      <div class="user-list">
+        <div *ngFor="let followedUser of following" class="follow-user-card">
+          <img [src]="followedUser.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+               alt="Foto de perfil" class="small-profile-image">
+          <div class="user-info-mini">
+            <h4>{{ followedUser.username }}</h4>
+            <p>Nivell: {{ followedUser.level || 'N/A' }}</p>
+          </div>
+          <div class="follow-actions-mini">
+            <button class="btn-unfollow-mini" (click)="unfollowUser(followedUser)">
+              <i class="material-icons">person_remove</i> Deixar de seguir
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="following.length === 0" class="empty-state">
+        <p>Aquest usuari no segueix a ningú.</p>
+      </div>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn-back" (click)="closeFollowingModal()">Tancar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Gestionar Seguiment -->
+<div *ngIf="showFollowManagementModal" class="full-screen-form">
+  <div class="modal-header">
+    <h2>Gestionar seguiment de {{ selectedUserForFollow?.username }}</h2>
+    <button class="btn-close" (click)="closeFollowManagementModal()">
+      <i class="material-icons">close</i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="search-section">
+      <div class="search-input-group">
+        <input type="text" 
+               [(ngModel)]="searchTerm" 
+               (input)="searchUsersToFollow()"
+               placeholder="Buscar usuaris per seguir..."
+               class="search-input">
+        <button class="btn-search" (click)="searchUsersToFollow()">
+          <i class="material-icons">search</i>
+        </button>
+      </div>
+    </div>
+    
+    <div *ngIf="followLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Buscant usuaris...</p>
+    </div>
+    
+    <div *ngIf="!followLoading && searchResults.length > 0" class="search-results">
+      <h3>Resultats de la cerca ({{ searchResults.length }})</h3>
+      
+      <div class="user-list">
+        <div *ngFor="let user of searchResults" class="follow-user-card">
+          <img [src]="user.profilePicture || 'https://cdn-icons-png.freepik.com/512/456/456212.png'" 
+               alt="Foto de perfil" class="small-profile-image">
+          <div class="user-info-mini">
+            <h4>{{ user.username }}</h4>
+            <p>Nivell: {{ user.level || 'N/A' }}</p>
+            <p>Seguidors: {{ user.followersCount || 0 }}</p>
+          </div>
+          <div class="follow-actions-mini">
+            <button *ngIf="!user.isFollowing" 
+                    class="btn-follow-mini" 
+                    (click)="followUser(user)">
+              <i class="material-icons">person_add</i> Seguir
+            </button>
+            <button *ngIf="user.isFollowing" 
+                    class="btn-unfollow-mini" 
+                    (click)="unfollowUser(user)">
+              <i class="material-icons">person_remove</i> Deixar de seguir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div *ngIf="!followLoading && searchTerm && searchResults.length === 0" class="empty-state">
+      <p>No s'han trobat usuaris amb el terme "{{ searchTerm }}".</p>
+    </div>
+    
+    <div *ngIf="!searchTerm" class="empty-state">
+      <p>Escriu un nom d'usuari per buscar persones a seguir.</p>
+    </div>
+    
+    <div class="form-actions">
+      <button type="button" class="btn-back" (click)="closeFollowManagementModal()">Tancar</button>
     </div>
   </div>
 </div>
