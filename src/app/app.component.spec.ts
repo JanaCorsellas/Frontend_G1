@@ -14,16 +14,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have the 'TAZER' title`, () => {
+  it(`should have the 'TRAZER' title`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual(`TAZER`);
+    expect(app.title).toEqual(`TRAZER`);
   });
 
   it('should render the welcome message', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain(`TAZER`);
+    expect(compiled.querySelector('h1')?.textContent).toContain(`TRAZER`);
   });
 });

@@ -23,7 +23,7 @@ import { UserProfileComponent } from './components/user-profile/user-profile.com
 export class AppComponent implements OnInit {
   loggedin: boolean = false;
   isAdmin: boolean = false;
-  title = `TAZER`;
+  title = `TRAZER`;
   authMode: 'login' | 'register' = 'login';
 
   constructor(private router: Router) {}
